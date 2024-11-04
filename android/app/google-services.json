@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "947941160893",
+    "firebase_url": "https://tankyou-bda5b-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "tankyou-bda5b",
+    "storage_bucket": "tankyou-bda5b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:947941160893:android:4ec7cc44ae3f95cc3784d4",
+        "android_client_info": {
+          "package_name": "com.example.tankyou"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "947941160893-gvha0h44254dpc3po16q6tsqc96m2dqu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tankyou",
+            "certificate_hash": "dcd467eff0050f854c053d256abc4454b8c2eeb8"
+          }
+        },
+        {
+          "client_id": "947941160893-gmnhi2lvogn7tipjhqtrb9jihung39sj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAW_eYhE5atLexZnVakK-9GfzKGJ05RnYs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "947941160893-gmnhi2lvogn7tipjhqtrb9jihung39sj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

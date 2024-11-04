@@ -1,0 +1,166 @@
+import 'package:confetti/confetti.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:tankyou/auth/auth.dart';
+import 'package:tankyou/components/my_button.dart';
+import 'package:tankyou/components/my_icon.dart';
+import 'package:tankyou/components/my_svg_icon.dart';
+import 'package:tankyou/components/my_text.dart';
+import 'package:tankyou/helper/functions.dart';
+import 'package:tankyou/helper/widgets.dart';
+import 'package:tankyou/views/main_page.dart';
+
+class RegisterPage extends StatefulWidget {
+  final void Function()? onTap;
+
+  const RegisterPage({super.key, required this.onTap});
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final _confettiController = ConfettiController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPwController = TextEditingController();
+  final ValueNotifier<bool> _isConfettiPlaying = ValueNotifier<bool>(false);
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _register() async {
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+    String confirmPassword = _confirmPwController.text.trim();
+
+    if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+      displayMessageToUser('Please fill in all fields.', context);
+      return;
+    } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
+      displayMessageToUser('Please enter a valid email address.', context);
+      return;
+    } else if (password.length < 6) {
+      displayMessageToUser('Password too short.', context);
+      return;
+    } else if (password != confirmPassword) {
+      displayMessageToUser('Passwords don\'t match.', context);
+      return;
+    }
+
+    showLoadingDialog(context);
+
+    User? user = await registerWithEmailPassword(email, password);
+    Navigator.pop(context);
+
+    logCurrentUser();
+
+    if (user != null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MainPage(user: user)),
+      );
+    } else {
+      displayMessageToUser('Registration failed. Please try again.', context);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            body: SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 40),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              MyButton(
+                                onPressed: () => toggleConfetti(_confettiController, _isConfettiPlaying),
+                                resetAfterPress: false,
+                                child: const MySvgIcon(filepath: 'assets/tankyou_logo.svg', size: 150)
+                              ),
+                            ],
+                          ),
+                        ),
+                        buildTextField(
+                          _emailController, 
+                          const MyIcon(icon: Icons.mail), 
+                          'Email',
+                          ),
+                        const SizedBox(height: 15),
+                        buildTextField( 
+                            _passwordController, 
+                            const MyIcon(icon: Icons.key), 'Password', 
+                            isPassword: true,
+                          ),
+                        const SizedBox(height: 15),
+                        buildTextField(
+                          _confirmPwController, 
+                          const MyIcon(icon: Icons.key),
+                          'Confirm Password', 
+                          isPassword:  true,
+                        ),
+                        const SizedBox(height: 40),
+                        MyButton(
+                          onPressed: _register,
+                          child: const MyText( text: 'Register', 
+                            isBold: true,
+                            letterSpacing: 2.0,
+                            size: 16,
+                          ), 
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 25),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                buildHyperlink(context, 
+                                    'Already have an account?', () {}),
+                                const SizedBox(width: 10),
+                                GestureDetector(
+                                  onTap: widget.onTap,
+                                  child: const MyText( text: 'Login Here',
+                                    isBold: true,
+                                    letterSpacing: 2.0,
+                                    )
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          createConfetti(_confettiController),
+        ],
+      ),
+    );
+  }
+}

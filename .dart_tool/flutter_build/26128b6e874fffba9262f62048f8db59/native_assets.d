@@ -1,0 +1,1 @@
+ C:\\Users\\User\\Documents\\Visual\ Studio\ Code\\Self\ Learning\\tankyou\\.dart_tool\\flutter_build\\26128b6e874fffba9262f62048f8db59\\native_assets.yaml: 

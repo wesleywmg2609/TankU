@@ -1,0 +1,42 @@
+com.example.tankyou.app-jetified-ads-adservices-1.0.0-beta05-0 C:\Users\User\.gradle\caches\transforms-3\00119d37ccc9a1078c0e403ff21a1603\transformed\jetified-ads-adservices-1.0.0-beta05\res
+com.example.tankyou.app-jetified-savedstate-1.2.1-1 C:\Users\User\.gradle\caches\transforms-3\010887bb3359843376c02ecf4bf2ef43\transformed\jetified-savedstate-1.2.1\res
+com.example.tankyou.app-core-runtime-2.2.0-2 C:\Users\User\.gradle\caches\transforms-3\08235bf0a8760a790ea7b8b4eab82236\transformed\core-runtime-2.2.0\res
+com.example.tankyou.app-jetified-play-services-base-18.5.0-3 C:\Users\User\.gradle\caches\transforms-3\0e2e515c445ae8a5e92ab6406cf1025e\transformed\jetified-play-services-base-18.5.0\res
+com.example.tankyou.app-jetified-profileinstaller-1.3.1-4 C:\Users\User\.gradle\caches\transforms-3\1e1e8719823df11c58e964840aa823f6\transformed\jetified-profileinstaller-1.3.1\res
+com.example.tankyou.app-jetified-play-services-measurement-api-22.1.2-5 C:\Users\User\.gradle\caches\transforms-3\237a292b4fadcd2c23d1ee378f33a01b\transformed\jetified-play-services-measurement-api-22.1.2\res
+com.example.tankyou.app-jetified-credentials-1.2.0-rc01-6 C:\Users\User\.gradle\caches\transforms-3\24c1e520e2b1e7ad04d8500a33fb9ad9\transformed\jetified-credentials-1.2.0-rc01\res
+com.example.tankyou.app-jetified-activity-1.9.2-7 C:\Users\User\.gradle\caches\transforms-3\2d91bc83866874eb6317ae5ae27d2dc9\transformed\jetified-activity-1.9.2\res
+com.example.tankyou.app-jetified-window-1.2.0-8 C:\Users\User\.gradle\caches\transforms-3\3e108fe9d597d03770ae82acaebb5b63\transformed\jetified-window-1.2.0\res
+com.example.tankyou.app-lifecycle-viewmodel-2.7.0-9 C:\Users\User\.gradle\caches\transforms-3\52dfd6d7c21c1e36dbdf0d304093d642\transformed\lifecycle-viewmodel-2.7.0\res
+com.example.tankyou.app-jetified-startup-runtime-1.1.1-10 C:\Users\User\.gradle\caches\transforms-3\53f114d110e356c36b5f50ab357f361f\transformed\jetified-startup-runtime-1.1.1\res
+com.example.tankyou.app-jetified-core-ktx-1.13.1-11 C:\Users\User\.gradle\caches\transforms-3\58accd456bc756075136cc5a7dae18d3\transformed\jetified-core-ktx-1.13.1\res
+com.example.tankyou.app-jetified-lifecycle-process-2.7.0-12 C:\Users\User\.gradle\caches\transforms-3\5d9083683aa46ad6646ca7a884bd56df\transformed\jetified-lifecycle-process-2.7.0\res
+com.example.tankyou.app-browser-1.4.0-13 C:\Users\User\.gradle\caches\transforms-3\5ecd5a1cc2195013671502cd2470e636\transformed\browser-1.4.0\res
+com.example.tankyou.app-jetified-annotation-experimental-1.4.0-14 C:\Users\User\.gradle\caches\transforms-3\6707c561045b071954f9f1d8398a2530\transformed\jetified-annotation-experimental-1.4.0\res
+com.example.tankyou.app-jetified-core-1.0.0-15 C:\Users\User\.gradle\caches\transforms-3\6dde453803d512b3f23cc981e264e9e0\transformed\jetified-core-1.0.0\res
+com.example.tankyou.app-lifecycle-livedata-core-2.7.0-16 C:\Users\User\.gradle\caches\transforms-3\9ec76326f098fb11057ae8a1fda52a48\transformed\lifecycle-livedata-core-2.7.0\res
+com.example.tankyou.app-fragment-1.7.1-17 C:\Users\User\.gradle\caches\transforms-3\a49cd171355a6a39687e69f028c8bcbc\transformed\fragment-1.7.1\res
+com.example.tankyou.app-jetified-firebase-common-21.0.0-18 C:\Users\User\.gradle\caches\transforms-3\abd144767df15dffddd52de2fe329b95\transformed\jetified-firebase-common-21.0.0\res
+com.example.tankyou.app-jetified-play-services-basement-18.4.0-19 C:\Users\User\.gradle\caches\transforms-3\bb4aceea626ef6ec2db1cf5b297099f2\transformed\jetified-play-services-basement-18.4.0\res
+com.example.tankyou.app-jetified-window-java-1.2.0-20 C:\Users\User\.gradle\caches\transforms-3\bf78d940cc78ca45c77421e3af64376e\transformed\jetified-window-java-1.2.0\res
+com.example.tankyou.app-core-1.13.1-21 C:\Users\User\.gradle\caches\transforms-3\c666c258fca39b3353b46678a6b928ab\transformed\core-1.13.1\res
+com.example.tankyou.app-lifecycle-runtime-2.7.0-22 C:\Users\User\.gradle\caches\transforms-3\c8996eb6ce8efabee1883fe1486006c9\transformed\lifecycle-runtime-2.7.0\res
+com.example.tankyou.app-jetified-lifecycle-viewmodel-savedstate-2.7.0-23 C:\Users\User\.gradle\caches\transforms-3\ca2eed4266fd24517e583e6618aa3924\transformed\jetified-lifecycle-viewmodel-savedstate-2.7.0\res
+com.example.tankyou.app-jetified-play-services-auth-21.0.0-24 C:\Users\User\.gradle\caches\transforms-3\d704a615673b1d9b392f0e3702ffeeb0\transformed\jetified-play-services-auth-21.0.0\res
+com.example.tankyou.app-jetified-credentials-play-services-auth-1.2.0-rc01-25 C:\Users\User\.gradle\caches\transforms-3\ee5298c99c04ce0d7253977776b1c013\transformed\jetified-credentials-play-services-auth-1.2.0-rc01\res
+com.example.tankyou.app-jetified-ads-adservices-java-1.0.0-beta05-26 C:\Users\User\.gradle\caches\transforms-3\ef32a48d0d3949f55634c41ccb8173a2\transformed\jetified-ads-adservices-java-1.0.0-beta05\res
+com.example.tankyou.app-jetified-tracing-1.2.0-27 C:\Users\User\.gradle\caches\transforms-3\fee79d0d8ef3af5dbc14ef6d22d028cf\transformed\jetified-tracing-1.2.0\res
+com.example.tankyou.app-debug-28 C:\Users\User\Documents\Visual Studio Code\Self Learning\tankyou\android\app\src\debug\res
+com.example.tankyou.app-main-29 C:\Users\User\Documents\Visual Studio Code\Self Learning\tankyou\android\app\src\main\res
+com.example.tankyou.app-pngs-30 C:\Users\User\Documents\Visual Studio Code\Self Learning\tankyou\build\app\generated\res\pngs\debug
+com.example.tankyou.app-res-31 C:\Users\User\Documents\Visual Studio Code\Self Learning\tankyou\build\app\generated\res\processDebugGoogleServices
+com.example.tankyou.app-resValues-32 C:\Users\User\Documents\Visual Studio Code\Self Learning\tankyou\build\app\generated\res\resValues\debug
+com.example.tankyou.app-packageDebugResources-33 C:\Users\User\Documents\Visual Studio Code\Self Learning\tankyou\build\app\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.example.tankyou.app-packageDebugResources-34 C:\Users\User\Documents\Visual Studio Code\Self Learning\tankyou\build\app\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.example.tankyou.app-merged_res-35 C:\Users\User\Documents\Visual Studio Code\Self Learning\tankyou\build\app\intermediates\merged_res\debug
+com.example.tankyou.app-packaged_res-36 C:\Users\User\Documents\Visual Studio Code\Self Learning\tankyou\build\firebase_auth\intermediates\packaged_res\debug
+com.example.tankyou.app-packaged_res-37 C:\Users\User\Documents\Visual Studio Code\Self Learning\tankyou\build\firebase_core\intermediates\packaged_res\debug
+com.example.tankyou.app-packaged_res-38 C:\Users\User\Documents\Visual Studio Code\Self Learning\tankyou\build\firebase_database\intermediates\packaged_res\debug
+com.example.tankyou.app-packaged_res-39 C:\Users\User\Documents\Visual Studio Code\Self Learning\tankyou\build\flutter_plugin_android_lifecycle\intermediates\packaged_res\debug
+com.example.tankyou.app-packaged_res-40 C:\Users\User\Documents\Visual Studio Code\Self Learning\tankyou\build\google_sign_in_android\intermediates\packaged_res\debug
+com.example.tankyou.app-packaged_res-41 C:\Users\User\Documents\Visual Studio Code\Self Learning\tankyou\build\image_picker_android\intermediates\packaged_res\debug
