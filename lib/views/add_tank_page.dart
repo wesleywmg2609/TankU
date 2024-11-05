@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tankyou/components/my_app_bar.dart';
 import 'package:tankyou/components/my_box_shadow.dart';
 import 'package:tankyou/components/my_button.dart';
 import 'package:tankyou/components/my_date_field.dart';
@@ -9,9 +10,9 @@ import 'package:tankyou/components/my_dropdown.dart';
 import 'package:tankyou/components/my_icon.dart';
 import 'package:tankyou/components/my_overlay_icon.dart';
 import 'package:tankyou/components/my_text.dart';
+import 'package:tankyou/components/my_text_field.dart';
 import 'package:tankyou/database/database.dart';
 import 'package:tankyou/helper/functions.dart';
-import 'package:tankyou/helper/widgets.dart';
 import 'package:tankyou/models/tank.dart';
 
 class AddTankPage extends StatefulWidget {
@@ -166,11 +167,10 @@ class _AddTankPageState extends State<AddTankPage> {
         body: SafeArea(
           child: Column(
             children: [
-              buildAppBar(
-                'Add Tank',
+              MyAppBar(
+                title: 'Add Tank',
                 trailing: const MyIcon(icon: Icons.check),
                 onTrailingPressed: _addTank,
-                
               ),
               Expanded(
                 child: SingleChildScrollView(
@@ -233,9 +233,9 @@ class _AddTankPageState extends State<AddTankPage> {
                           )
                         else
                           const SizedBox(height: 15),
-                        buildTextField(
-                            _nameController,
-                            const MyOverlayIcon(icon: Icons.call_to_action, svgFilepath: 'assets/fish.svg', padding: 3),
+                        MyTextField(
+                            controller: _nameController,
+                            icon: const MyOverlayIcon(icon: Icons.call_to_action, svgFilepath: 'assets/fish.svg', padding: 3), labelText: 
                             'Tank Name',
                             ),
                         const SizedBox(height: 15),
@@ -285,28 +285,28 @@ class _AddTankPageState extends State<AddTankPage> {
                         Row(
                           children: [
                             Expanded(
-                                child: buildTextField(
-                                    _widthController,
+                                child: MyTextField(
+                                    controller:_widthController, icon:
                                     const MyIcon(icon: Icons.aspect_ratio),
-                                    'Width',
+                                    labelText: 'Width',
                                     isNumeric: true
                                   )
                                 ),
                             const SizedBox(width: 10),
                             Expanded(
-                                child: buildTextField(
-                                    _depthController,
-                                    const MyIcon(icon: Icons.aspect_ratio),
-                                    'Depth',
+                                child: MyTextField(
+                                    controller: _depthController,
+                                    icon: const MyIcon(icon: Icons.aspect_ratio),
+                                    labelText: 'Depth',
                                     isNumeric: true
                                   )
                                 ),
                             const SizedBox(width: 10),
                             Expanded(
-                                child: buildTextField(
-                                    _heightController,
-                                    const MyIcon(icon: Icons.aspect_ratio),
-                                    'Height',
+                                child: MyTextField(
+                                    controller: _heightController,
+                                    icon: const MyIcon(icon: Icons.aspect_ratio),
+                                    labelText: 'Height',
                                     isNumeric: true
                                   )
                                 ),
@@ -332,10 +332,10 @@ class _AddTankPageState extends State<AddTankPage> {
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: buildTextField(
-                                        _equipmentControllers[index],
-                                        const MyIcon(icon: Icons.build),
-                                        'Equipment Name',
+                                    child: MyTextField(
+                                        controller: _equipmentControllers[index],
+                                        icon: const MyIcon(icon: Icons.build),
+                                        labelText: 'Equipment Name',
                                         ),
                                   ),
                                   GestureDetector(

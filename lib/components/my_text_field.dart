@@ -5,7 +5,7 @@ import 'package:tankyou/components/my_box_shadow.dart';
 
 class MyTextField extends StatefulWidget {
   final TextEditingController controller;
-  final Widget child;
+  final Widget icon;
   final String labelText;
   final bool isPassword;
   final bool isNumeric;
@@ -13,9 +13,9 @@ class MyTextField extends StatefulWidget {
   const MyTextField({
     super.key,
     required this.controller,
-    required this.child,
+    required this.icon,
     required this.labelText,
-    required this.isPassword,
+    this.isPassword = false,
     this.isNumeric = false,
   });
 
@@ -83,7 +83,7 @@ class _MyTextFieldState extends State<MyTextField> {
               border: InputBorder.none,
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
-              prefixIcon: widget.child,
+              prefixIcon: widget.icon,
               floatingLabelBehavior: FloatingLabelBehavior.never,
               contentPadding: const EdgeInsets.only(top: 16),
               labelText: !_isFocused && widget.controller.text.isEmpty

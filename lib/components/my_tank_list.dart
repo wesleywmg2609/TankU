@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:tankyou/helper/widgets.dart';
+import 'package:tankyou/components/my_tank_item.dart';
 import 'package:tankyou/models/tank.dart';
 
 class MyTankList extends StatefulWidget {
   final List<Tank> listItems;
   final User user;
 
-  MyTankList(this.listItems, this.user);
+  const MyTankList({
+    super.key, 
+    required this.listItems, 
+    required this.user
+  });
 
   @override
   State<MyTankList> createState() => _MyTankListState();
@@ -23,7 +27,7 @@ class _MyTankListState extends State<MyTankList> {
         itemBuilder: (context, index) {
           var tank = widget.listItems[index];
 
-          return buildTankItem(context, tank);
+          return MyTankItem(tank: tank);
         });
   }
 }

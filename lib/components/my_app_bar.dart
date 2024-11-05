@@ -8,10 +8,10 @@ class MyAppBar extends StatefulWidget {
   final String title;
   final String? subtitle;
   final Widget? leading;
-  final dynamic Function()? leadingOnPressed;
+  final dynamic Function()? onLeadingPressed;
   final bool? isLeadingPressed;
   final Widget? trailing;
-  final dynamic Function()? trailingOnPressed;
+  final dynamic Function()? onTrailingPressed;
   final bool? isTrailingPressed;
 
   const MyAppBar({
@@ -19,10 +19,10 @@ class MyAppBar extends StatefulWidget {
     required this.title,
     this.subtitle,
     this.leading,
-    this.leadingOnPressed,
+    this.onLeadingPressed,
     this.isLeadingPressed,
     this.trailing,
-    this.trailingOnPressed,
+    this.onTrailingPressed,
     this.isTrailingPressed,
   });
 
@@ -41,7 +41,7 @@ class _MyAppBarState extends State<MyAppBar> {
         children: [
           if (widget.leading != null)
             MyButton(
-              onPressed: widget.leadingOnPressed!,
+              onPressed: widget.onLeadingPressed!,
               resetAfterPress: false,
               isPressed: widget.isLeadingPressed!,
               child: widget.leading!,
@@ -80,7 +80,7 @@ class _MyAppBarState extends State<MyAppBar> {
           ),
           if (widget.trailing != null)
             MyButton(
-              onPressed: widget.trailingOnPressed!,
+              onPressed: widget.onTrailingPressed!,
               child: widget.trailing!,
             )
           else

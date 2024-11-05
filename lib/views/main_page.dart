@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tankyou/components/my_app_bar.dart';
 import 'package:tankyou/components/my_box_shadow.dart';
 import 'package:tankyou/components/my_drawer.dart';
 import 'package:tankyou/components/my_icon.dart';
 import 'package:tankyou/components/my_nav_bar.dart';
-import 'package:tankyou/helper/widgets.dart';
 import 'package:tankyou/views/2_page.dart';
 import 'package:tankyou/views/3_page.dart';
 import 'package:tankyou/views/4_page.dart';
@@ -151,8 +151,8 @@ class _MainPageState extends State<MainPage> {
                     ),
                     child: Column(
                       children: [
-                        buildAppBar(
-                          pageConfigs[_selectedIndex]['title'],
+                        MyAppBar(
+                          title: pageConfigs[_selectedIndex]['title'],
                           leading: const MyIcon(icon: Icons.menu),
                           onLeadingPressed: _openDrawer,
                           isLeadingPressed: _isDrawerOpen.value,

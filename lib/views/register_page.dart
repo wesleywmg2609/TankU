@@ -3,11 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tankyou/auth/auth.dart';
 import 'package:tankyou/components/my_button.dart';
+import 'package:tankyou/components/my_confetti.dart';
+import 'package:tankyou/components/my_hyperlink.dart';
 import 'package:tankyou/components/my_icon.dart';
 import 'package:tankyou/components/my_svg_icon.dart';
 import 'package:tankyou/components/my_text.dart';
+import 'package:tankyou/components/my_text_field.dart';
 import 'package:tankyou/helper/functions.dart';
-import 'package:tankyou/helper/widgets.dart';
 import 'package:tankyou/views/main_page.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -103,22 +105,22 @@ class _RegisterPageState extends State<RegisterPage> {
                             ],
                           ),
                         ),
-                        buildTextField(
-                          _emailController, 
-                          const MyIcon(icon: Icons.mail), 
-                          'Email',
+                        MyTextField(
+                          controller: _emailController, 
+                          icon: const MyIcon(icon: Icons.mail), 
+                          labelText: 'Email',
                           ),
                         const SizedBox(height: 15),
-                        buildTextField( 
-                            _passwordController, 
-                            const MyIcon(icon: Icons.key), 'Password', 
+                        MyTextField( 
+                            controller: _passwordController, 
+                            icon: const MyIcon(icon: Icons.key), labelText: 'Password', 
                             isPassword: true,
                           ),
                         const SizedBox(height: 15),
-                        buildTextField(
-                          _confirmPwController, 
-                          const MyIcon(icon: Icons.key),
-                          'Confirm Password', 
+                        MyTextField(
+                          controller: _confirmPwController, 
+                          icon: const MyIcon(icon: Icons.key),
+                          labelText: 'Confirm Password', 
                           isPassword:  true,
                         ),
                         const SizedBox(height: 40),
@@ -137,8 +139,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                buildHyperlink(context, 
-                                    'Already have an account?', () {}),
+                                MyHyperlink(text:  
+                                    'Already have an account?', onTap: () {}),
                                 const SizedBox(width: 10),
                                 GestureDetector(
                                   onTap: widget.onTap,
@@ -158,7 +160,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ),
           ),
-          createConfetti(_confettiController),
+          MyConfetti(controller: _confettiController),
         ],
       ),
     );

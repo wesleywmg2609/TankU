@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tankyou/components/my_tank_list.dart';
 import 'package:tankyou/database/database.dart';
-import 'package:tankyou/helper/widgets.dart';
 import 'package:tankyou/models/tank.dart';
 
 // ignore: must_be_immutable
@@ -43,7 +43,7 @@ class TankListPageState extends State<TankListPage> {
         child: Column(
               children: [
                 Expanded(
-                  child: buildTankList(tanks, widget.user),
+                  child: MyTankList(listItems: tanks, user: widget.user),
                 ),
               ],
             )

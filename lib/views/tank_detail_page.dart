@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tankyou/components/my_app_bar.dart';
 import 'package:tankyou/components/my_box_shadow.dart';
 import 'package:tankyou/components/my_icon.dart';
-import 'package:tankyou/helper/widgets.dart';
+import 'package:tankyou/components/my_image.dart';
 import 'package:tankyou/models/tank.dart';
 
 class TankDetailPage extends StatefulWidget {
@@ -26,8 +27,8 @@ class _TankDetailPageState extends State<TankDetailPage> {
       body: SafeArea(
         child: Column(
           children: [
-            buildAppBar(
-              'Tank Info',
+            MyAppBar(
+              title: 'Tank Info',
               subtitle: widget.tank.name.toString(),
               trailing: const MyIcon(icon: Icons.edit),
               onTrailingPressed: () {},
@@ -47,7 +48,7 @@ class _TankDetailPageState extends State<TankDetailPage> {
                 child: Center(
                   child: Row(
                     children: [
-                      loadImage(widget.tank, 150),
+                      MyImageLoader(tank: widget.tank, size: 150),
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),

@@ -3,11 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tankyou/auth/auth.dart';
 import 'package:tankyou/components/my_button.dart';
+import 'package:tankyou/components/my_confetti.dart';
+import 'package:tankyou/components/my_hyperlink.dart';
 import 'package:tankyou/components/my_icon.dart';
 import 'package:tankyou/components/my_svg_icon.dart';
 import 'package:tankyou/components/my_text.dart';
+import 'package:tankyou/components/my_text_field.dart';
 import 'package:tankyou/helper/functions.dart';
-import 'package:tankyou/helper/widgets.dart';
 import 'package:tankyou/views/main_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -123,25 +125,25 @@ Future<void> _login() async {
                             ],
                           ),
                         ),
-                        buildTextField( 
-                          _emailController, 
-                          const MyIcon(icon: Icons.mail), 
-                          'Email',
+                        MyTextField( 
+                          controller: _emailController, 
+                          icon: const MyIcon(icon: Icons.mail), 
+                          labelText: 'Email',
                           ),
                         const SizedBox(height: 15),
-                        buildTextField(
-                          _passwordController, 
-                          const MyIcon(icon: Icons.key),
-                          'Password', 
+                        MyTextField(
+                          controller: _passwordController, 
+                          icon: const MyIcon(icon: Icons.key),
+                          labelText: 'Password', 
                           isPassword: true, 
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 25),
                           child: Align(
                             alignment: Alignment.centerRight,
-                            child: buildHyperlink(
-                              context, 
-                                'Forgot my password?', () {}),
+                            child: MyHyperlink(
+                              text:
+                                'Forgot my password?', onTap:() {}),
                           ),
                         ),
                         MyButton(
@@ -159,9 +161,9 @@ Future<void> _login() async {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                buildHyperlink(
-                                  context, 
-                                    'Don\'t have an account?', () {}),
+                                MyHyperlink(
+                                  text:
+                                    'Don\'t have an account?', onTap: () {}),
                                 const SizedBox(width: 10),
                                 GestureDetector(
                                   onTap: widget.onTap,
@@ -216,7 +218,7 @@ Future<void> _login() async {
               ),
             ),
           ),
-          createConfetti(_confettiController),
+          MyConfetti(controller: _confettiController),
         ],
       ),
     );
