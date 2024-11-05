@@ -1,17 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tankyou/components/my_button.dart';
 import 'package:tankyou/components/my_image.dart';
 import 'package:tankyou/components/my_text.dart';
 import 'package:tankyou/helper/functions.dart';
 import 'package:tankyou/models/tank.dart';
-import 'package:tankyou/views/tank_detail_page.dart';
+import 'package:tankyou/views/tank_info_page.dart';
 
 // ignore: must_be_immutable
 class MyTankItem extends StatefulWidget {
-  Tank tank;
+  final User user;
+  final Tank tank;
 
-  MyTankItem({
+  const MyTankItem({
     super.key,
+    required this.user,
     required this.tank,
   });
 
@@ -46,7 +49,7 @@ class _MyTankItemState extends State<MyTankItem> {
       child: MyButton(
           child: Row(
             children: [
-              MyImageLoader(tank: widget.tank, size: 100),
+              MyImageLoader(url: widget.tank.imageUrl, size: 100),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric( 
@@ -83,7 +86,7 @@ class _MyTankItemState extends State<MyTankItem> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => TankDetailPage(tank: widget.tank),
+                  builder: (context) => TankInfoPage(user: widget.user, tank: widget.tank),
                 ),
               );
             },

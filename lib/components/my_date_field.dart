@@ -7,11 +7,13 @@ import 'package:tankyou/components/my_theme.dart';
 class MyDateField extends StatefulWidget {
   final TextEditingController controller;
   final Widget icon;
+  final DateTime? initialDate;
 
   const MyDateField({
     super.key,
     required this.controller,
     required this.icon,
+    this.initialDate,
   });
 
   @override
@@ -24,7 +26,7 @@ class _MyDateFieldState extends State<MyDateField> {
   @override
   void initState() {
     super.initState();
-    _selectedDate ??= DateTime.now();
+    _selectedDate = widget.initialDate ?? DateTime.now();
     widget.controller.text = DateFormat.yMd().format(_selectedDate!);
   }
 

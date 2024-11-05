@@ -4,8 +4,8 @@ import 'package:tankyou/components/my_tank_item.dart';
 import 'package:tankyou/models/tank.dart';
 
 class MyTankList extends StatefulWidget {
-  final List<Tank> listItems;
   final User user;
+  final List<Tank> listItems;
 
   const MyTankList({
     super.key, 
@@ -27,7 +27,7 @@ class _MyTankListState extends State<MyTankList> {
         itemBuilder: (context, index) {
           var tank = widget.listItems[index];
 
-          return MyTankItem(tank: tank);
+          return MyTankItem(user: widget.user, tank: tank);
         });
   }
 }

@@ -1,23 +1,27 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tankyou/components/my_app_bar.dart';
 import 'package:tankyou/components/my_box_shadow.dart';
 import 'package:tankyou/components/my_icon.dart';
 import 'package:tankyou/components/my_image.dart';
 import 'package:tankyou/models/tank.dart';
+import 'package:tankyou/views/edit_tank_page.dart';
 
-class TankDetailPage extends StatefulWidget {
+class TankInfoPage extends StatefulWidget {
+  final User user;
   final Tank tank;
 
-  const TankDetailPage({
+  TankInfoPage({
     super.key,
+    required this.user,
     required this.tank,
   });
 
   @override
-  State<TankDetailPage> createState() => _TankDetailPageState();
+  State<TankInfoPage> createState() => _TankInfoPageState();
 }
 
-class _TankDetailPageState extends State<TankDetailPage> {
+class _TankInfoPageState extends State<TankInfoPage> {
   @override
   Widget build(BuildContext context) {
     MyBoxShadows shadows = MyBoxShadows();
@@ -31,7 +35,11 @@ class _TankDetailPageState extends State<TankDetailPage> {
               title: 'Tank Info',
               subtitle: widget.tank.name.toString(),
               trailing: const MyIcon(icon: Icons.edit),
-              onTrailingPressed: () {},
+              onTrailingPressed: ()  {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => EditTankPage(user: widget.user, tank: widget.tank,)));
+                      },
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -48,7 +56,7 @@ class _TankDetailPageState extends State<TankDetailPage> {
                 child: Center(
                   child: Row(
                     children: [
-                      MyImageLoader(tank: widget.tank, size: 150),
+                      MyImageLoader(url: widget.tank.imageUrl, size: 150),
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),

@@ -2,14 +2,14 @@ import 'package:firebase_database/firebase_database.dart';
 
 class Tank {
   // ignore: unused_field
-  late DatabaseReference _id;
+  late DatabaseReference id;
   String? uid;
   String? imageUrl;
   String? name;
   String? waterType;
-  double? width;
-  double? depth;
-  double? height;
+  int? width;
+  int? depth;
+  int? height;
   String? setupAt;
   List<String>? equipments;
   String createdAt;
@@ -18,7 +18,7 @@ class Tank {
       : this.createdAt = createdAt ?? DateTime.now().toIso8601String();
 
   void setId(DatabaseReference id) {
-    this._id = id;
+    this.id = id;
   }
 
   Map<String, dynamic> toJson() {
@@ -43,9 +43,9 @@ Tank createTank(Map<String, dynamic> record) {
     'imageUrl': record['imageUrl'] ?? '',
     'name': record['name'] ?? '',
     'waterType': record['waterType'] ?? '',
-    'width': record['width']?.toDouble() ?? 0.0,
-    'depth': record['depth']?.toDouble() ?? 0.0,
-    'height': record['height']?.toDouble() ?? 0.0,
+    'width': record['width']?.toInt() ?? 0,
+    'depth': record['depth']?.toInt() ?? 0,
+    'height': record['height']?.toInt() ?? 0,
     'setupAt': record['setupAt'] ?? '',
     'equipments': List<String>.from(record['equipments'] ?? []),
     'createdAt': record['createdAt'] ?? DateTime.now().toIso8601String(),

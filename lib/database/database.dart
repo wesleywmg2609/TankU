@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:tankyou/helper/functions.dart';
 import 'package:tankyou/models/tank.dart';
 
 final _databaseReference = FirebaseDatabase.instance.ref();
@@ -14,6 +15,16 @@ DatabaseReference addTankToDatabase(Tank tank) {
 void updateTankToDatabase(Tank tank, DatabaseReference id) {
   id.update(tank.toJson());
 }
+
+Future<void> removeImageFromDatabase(DatabaseReference id) async {
+  try {
+    await id.update({'imageUrl': null});
+  } catch (e) {
+    logger("Error updating database: $e");
+    throw e;
+  }
+}
+
 
 Future<List<Tank>> getAllTanks(String uid) async {
   DatabaseEvent databaseEvent = await _databaseReference.child('tanks/').once();
