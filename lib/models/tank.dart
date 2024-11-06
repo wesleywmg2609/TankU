@@ -3,14 +3,14 @@ import 'package:firebase_database/firebase_database.dart';
 class Tank {
   // ignore: unused_field
   late DatabaseReference id;
-  String? uid;
+  String uid;
   String? imageUrl;
-  String? name;
+  String name;
   String? waterType;
   int? width;
   int? depth;
   int? height;
-  String? setupAt;
+  String setupAt;
   List<String>? equipments;
   String createdAt;
 

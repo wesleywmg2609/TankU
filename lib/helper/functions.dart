@@ -44,7 +44,7 @@ void displayMessageToUser(String message, BuildContext context) {
       return Center(
         child: GestureDetector(
           onTap: () {
-            Navigator.pop(context, true);
+            Navigator.pop(context);
           },
           child: Container(
             width: double.infinity,

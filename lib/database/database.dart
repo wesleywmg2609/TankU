@@ -25,13 +25,12 @@ Future<void> removeImageFromDatabase(DatabaseReference id) async {
   }
 }
 
-
 Future<List<Tank>> getAllTanks(String uid) async {
   DatabaseEvent databaseEvent = await _databaseReference.child('tanks/').once();
   DataSnapshot dataSnapshot = databaseEvent.snapshot;
 
   List<Tank> tanks = [];
-  
+
   (dataSnapshot.value as Map?)?.forEach((key, value) {
     if (value is Map && value['uid'] == uid) {
       Tank tank = createTank(value.cast<String, dynamic>());
@@ -39,16 +38,47 @@ Future<List<Tank>> getAllTanks(String uid) async {
       tanks.add(tank);
     }
   });
-  
+
   return tanks;
 }
+
+Future<Tank?> getTankById(DatabaseReference tankRef, String uid) async {
+  DatabaseEvent databaseEvent = await tankRef.once();
+  DataSnapshot dataSnapshot = databaseEvent.snapshot;
+
+  if (dataSnapshot.exists) {
+    if (dataSnapshot.value is Map) {
+      Map<String, dynamic> tankData = Map<String, dynamic>.from(dataSnapshot.value as Map);
+      if (tankData.containsKey('uid')) {
+        if (tankData['uid'] == uid) {
+          Tank tank = createTank(tankData);
+          tank.setId(tankRef);
+          logger('succes');
+          return tank;
+        } else {
+          logger('UID does not match: ${tankData['uid']} != $uid');
+        }
+      } else {
+        logger('UID field is missing in tank data.');
+      }
+    } else {
+      logger('Data is not a Map.');
+    }
+  } else {
+    logger('No valid data found at the reference.');
+  }
+
+  return null; // Return null if no matching tank is found
+}
+
 
 Future<String> generateTankName(String userId, String name) async {
   name = name.trim();
   if (name.isEmpty) {
-    DatabaseEvent databaseEvent = await _databaseReference.child('tanks/').once();
+    DatabaseEvent databaseEvent =
+        await _databaseReference.child('tanks/').once();
     DataSnapshot dataSnapshot = databaseEvent.snapshot;
-    
+
     int count = 0;
     if (dataSnapshot.exists) {
       for (var child in dataSnapshot.children) {
@@ -58,7 +88,7 @@ Future<String> generateTankName(String userId, String name) async {
       }
     }
     return 'Tank ${count + 1}';
-  } 
+  }
   return name;
 }
 

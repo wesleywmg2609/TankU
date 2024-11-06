@@ -7,13 +7,12 @@ import 'package:tankyou/components/my_theme.dart';
 class MyDateField extends StatefulWidget {
   final TextEditingController controller;
   final Widget icon;
-  final DateTime? initialDate;
-
+  final DateTime initialDate;
   const MyDateField({
     super.key,
     required this.controller,
     required this.icon,
-    this.initialDate,
+    required this.initialDate,
   });
 
   @override
@@ -21,19 +20,19 @@ class MyDateField extends StatefulWidget {
 }
 
 class _MyDateFieldState extends State<MyDateField> {
-  DateTime? _selectedDate;
+  late DateTime _selectedDate;
 
   @override
   void initState() {
     super.initState();
-    _selectedDate = widget.initialDate ?? DateTime.now();
-    widget.controller.text = DateFormat.yMd().format(_selectedDate!);
+    _selectedDate = widget.initialDate;
+    widget.controller.text = DateFormat.yMd().format(_selectedDate); 
   }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate!,
+      initialDate: _selectedDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
       builder: (BuildContext context, Widget? child) {
@@ -49,10 +48,10 @@ class _MyDateFieldState extends State<MyDateField> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
-        widget.controller.text = DateFormat.yMd().format(_selectedDate!);
+        widget.controller.text = DateFormat.yMd().format(_selectedDate);
       });
     } else {
-      widget.controller.text = DateFormat.yMd().format(_selectedDate!);
+      widget.controller.text = DateFormat.yMd().format(_selectedDate);
     }
   }
 

@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:tankyou/components/my_app_bar.dart';
-import 'package:tankyou/components/my_box_shadow.dart';
 import 'package:tankyou/components/my_button.dart';
 import 'package:tankyou/components/my_date_field.dart';
 import 'package:tankyou/components/my_dropdown.dart';
 import 'package:tankyou/components/my_icon.dart';
+import 'package:tankyou/components/my_image_picker.dart';
 import 'package:tankyou/components/my_overlay_icon.dart';
 import 'package:tankyou/components/my_text.dart';
 import 'package:tankyou/components/my_text_field.dart';
@@ -30,92 +29,107 @@ class AddTankPage extends StatefulWidget {
 class _AddTankPageState extends State<AddTankPage> {
   File? _image;
   String? _selectedWaterType;
-  final _nameController = TextEditingController();
-  final _widthController = TextEditingController();
-  final _depthController = TextEditingController();
-  final _heightController = TextEditingController();
-  final _setupAtController = TextEditingController();
+  final _controllers = {
+    'name': TextEditingController(),
+    'width': TextEditingController(),
+    'depth': TextEditingController(),
+    'height': TextEditingController(),
+    'setupAt': TextEditingController(),
+  };
   final List<TextEditingController> _equipmentControllers = [];
-   final ValueNotifier<int> _volumeNotifier = ValueNotifier<int>(0);
+  final ValueNotifier<int> _volumeNotifier = ValueNotifier<int>(0);
 
+  @override
+  void initState() {
+    super.initState();
+    _addVolumeListeners();
+  }
 
-    void _resetFields() {
-      _nameController.clear();
-      _widthController.clear();
-      _depthController.clear();
-      _heightController.clear();
-      _selectedWaterType = null;
-      _image = null;
-      _volumeNotifier.value = 0;
+  void _addVolumeListeners() {
+    _controllers['width']?.addListener(_calculateVolume);
+    _controllers['depth']?.addListener(_calculateVolume);
+    _controllers['height']?.addListener(_calculateVolume);
+  }
 
-      for (var controller in _equipmentControllers) {
-        controller.dispose();
-      }
-      _equipmentControllers.clear();
-    }
+  @override
+  void dispose() {
+    _controllers.values.forEach((controller) => controller.dispose());
+    _equipmentControllers.forEach((controller) => controller.dispose());
+    _volumeNotifier.dispose();
+    super.dispose();
+  }
 
   Future<void> _addTank() async {
+    showLoadingDialog(context);
 
-  showLoadingDialog(context);
+    String name =
+        await generateTankName(widget.user.uid, _controllers['name']!.text);
+    String? imageUrl;
+    String? waterType = _selectedWaterType;
+    int? width = int.tryParse(_controllers['width']!.text);
+    int? depth = int.tryParse(_controllers['depth']!.text);
+    int? height = int.tryParse(_controllers['height']!.text);
+    String setupAt = convertToIso8601String(_controllers['setupAt']!.text);
 
-  String name = await generateTankName(widget.user.uid, _nameController.text);
-  String? imageUrl;
-  String? waterType = _selectedWaterType;
-  int? width = int.tryParse(_widthController.text);
-  int? depth = int.tryParse(_depthController.text);
-  int? height = int.tryParse(_heightController.text);
-  String setupAt = convertToIso8601String(_setupAtController.text);
+    List<String> equipments = _equipmentControllers.map((c) => c.text).toList();
 
-  List<String> equipments = _equipmentControllers.map((c) => c.text).toList();
-
-  if (_image != null) {
-    imageUrl = await uploadImage(widget.user.uid, _image!, 'tank_images');
-  }
-
-  Tank tank = Tank(
-    widget.user.uid,
-    imageUrl,
-    name,
-    waterType,
-    width,
-    depth,
-    height,
-    setupAt,
-    equipments,
-  );
-
-  tank.setId(addTankToDatabase(tank));
-
-  _resetFields();
-
-  Navigator.pop(context);
-
-  displayMessageToUser('Tank added successfully!', context);
-}
-
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
+    if (_image != null) {
+      imageUrl = await uploadImage(widget.user.uid, _image!, 'tank_images');
     }
+
+    Tank tank = Tank(
+      widget.user.uid,
+      imageUrl,
+      name,
+      waterType,
+      width,
+      depth,
+      height,
+      setupAt,
+      equipments,
+    );
+
+    tank.setId(addTankToDatabase(tank));
+
+    _resetFields();
+
+    Navigator.pop(context);
+
+    displayMessageToUser('Tank added successfully!', context);
   }
 
-  void _removeImage() {
+  void _resetFields() {
+    _controllers['name']!.clear();
+    _controllers['width']!.clear();
+    _controllers['depth']!.clear();
+    _controllers['height']!.clear();
+    _selectedWaterType = null;
+    _image = null;
+    _volumeNotifier.value = 0;
+
+    for (var controller in _equipmentControllers) {
+      controller.dispose();
+    }
+    _equipmentControllers.clear();
+  }
+
+  void _onImagePicked(File? image) {
+    setState(() {
+      _image = image;
+    });
+  }
+
+  void _onImageRemoved() {
     setState(() {
       _image = null;
     });
   }
 
   void _calculateVolume() {
-    final width = int.tryParse(_widthController.text) ?? 0;
-    final depth = int.tryParse(_depthController.text) ?? 0;
-    final height = int.tryParse(_heightController.text) ?? 0;
-
-    final volume = width * depth * height;
-    _volumeNotifier.value = volume;
+    final width = int.tryParse(_controllers['width']!.text) ?? 0;
+    final depth = int.tryParse(_controllers['depth']!.text) ?? 0;
+    final height = int.tryParse(_controllers['height']!.text) ?? 0;
+    _volumeNotifier.value = width * depth * height;
   }
 
   void _addEquipmentField() {
@@ -133,7 +147,6 @@ class _AddTankPageState extends State<AddTankPage> {
 
   @override
   Widget build(BuildContext context) {
-    MyBoxShadows shadows = MyBoxShadows();
 
     return GestureDetector(
       onTap: () {
@@ -157,64 +170,19 @@ class _AddTankPageState extends State<AddTankPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: _pickImage,
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 200),
-                                padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.surface,
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: [
-                                    shadows.darkShadow(context),
-                                    shadows.lightShadow(context),
-                                  ],
-                                ),
-                                child: Center(
-                                  child: _image == null
-                                      ? const SizedBox(
-                                          width: 150,
-                                          height: 150,
-                                          child: Icon(
-                                            Icons.camera_alt,
-                                          ),
-                                        )
-                                      : ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          child: Image.file(
-                                            _image!,
-                                            height: 150,
-                                            width: 150,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                ),
-                              ),
-                            ),
-                          ],
+                        MyImagePicker(
+                          initialFile: _image,
+                          onImagePicked: _onImagePicked,
+                          onImageRemoved: _onImageRemoved,
                         ),
-                        if (_image != null)
-                          GestureDetector(
-                            onTap: _removeImage,
-                            child: const Padding(
-                              padding: EdgeInsets.all(12.0),
-                              child: Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                              ),
-                            ),
-                          )
-                        else
-                          const SizedBox(height: 15),
                         MyTextField(
-                            controller: _nameController,
-                            icon: const MyOverlayIcon(icon: Icons.call_to_action, svgFilepath: 'assets/fish.svg', padding: 3), labelText: 
-                            'Tank Name',
-                            ),
+                          controller: _controllers['name']!,
+                          icon: const MyOverlayIcon(
+                              icon: Icons.call_to_action,
+                              svgFilepath: 'assets/fish.svg',
+                              padding: 3),
+                          labelText: 'Tank Name',
+                        ),
                         const SizedBox(height: 15),
                         MyDropdown(
                           icon: const MyIcon(icon: Icons.water),
@@ -235,9 +203,9 @@ class _AddTankPageState extends State<AddTankPage> {
                         ValueListenableBuilder<int>(
                           valueListenable: _volumeNotifier,
                           builder: (context, volume, child) {
-                            final widthText = _widthController.text;
-                            final depthText = _depthController.text;
-                            final heightText = _heightController.text;
+                            final widthText = _controllers['width']!.text;
+                            final depthText = _controllers['depth']!.text;
+                            final heightText = _controllers['height']!.text;
 
                             String widthDisplay =
                                 widthText.isEmpty ? 'W' : widthText;
@@ -263,43 +231,42 @@ class _AddTankPageState extends State<AddTankPage> {
                           children: [
                             Expanded(
                                 child: MyTextField(
-                                    controller:_widthController, icon:
-                                    const MyIcon(icon: Icons.aspect_ratio),
+                                    controller: _controllers['width']!,
+                                    icon:
+                                        const MyIcon(icon: Icons.aspect_ratio),
                                     labelText: 'Width',
-                                    isNumeric: true
-                                  )
-                                ),
+                                    isNumeric: true)),
                             const SizedBox(width: 10),
                             Expanded(
                                 child: MyTextField(
-                                    controller: _depthController,
-                                    icon: const MyIcon(icon: Icons.aspect_ratio),
+                                    controller: _controllers['depth']!,
+                                    icon:
+                                        const MyIcon(icon: Icons.aspect_ratio),
                                     labelText: 'Depth',
-                                    isNumeric: true
-                                  )
-                                ),
+                                    isNumeric: true)),
                             const SizedBox(width: 10),
                             Expanded(
                                 child: MyTextField(
-                                    controller: _heightController,
-                                    icon: const MyIcon(icon: Icons.aspect_ratio),
+                                    controller: _controllers['height']!,
+                                    icon:
+                                        const MyIcon(icon: Icons.aspect_ratio),
                                     labelText: 'Height',
-                                    isNumeric: true
-                                  )
-                                ),
+                                    isNumeric: true)),
                           ],
                         ),
                         const SizedBox(height: 15),
                         MyDateField(
-                            controller: _setupAtController,
-                            icon: const MyIcon(icon: Icons.calendar_today)
+                            controller: _controllers['setupAt']!,
+                            icon: const MyIcon(icon: Icons.calendar_today),
+                            initialDate: DateTime.now(),
                             ),
                         const SizedBox(height: 15),
-                        const MyText( text: 'Equipment:',
+                        const MyText(
+                          text: 'Equipment:',
                           isBold: true,
                           letterSpacing: 1.0,
                           size: 14,
-                          ),
+                        ),
                         const SizedBox(height: 15),
                         Column(
                           children: List.generate(_equipmentControllers.length,
@@ -310,10 +277,10 @@ class _AddTankPageState extends State<AddTankPage> {
                                 children: [
                                   Expanded(
                                     child: MyTextField(
-                                        controller: _equipmentControllers[index],
-                                        icon: const MyIcon(icon: Icons.build),
-                                        labelText: 'Equipment Name',
-                                        ),
+                                      controller: _equipmentControllers[index],
+                                      icon: const MyIcon(icon: Icons.build),
+                                      labelText: 'Equipment Name',
+                                    ),
                                   ),
                                   GestureDetector(
                                     onTap: () => _removeEquipmentField(index),
@@ -334,9 +301,8 @@ class _AddTankPageState extends State<AddTankPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             MyButton(
-                              onPressed: _addEquipmentField,
-                              child: const MyIcon(icon: Icons.add)
-                            )
+                                onPressed: _addEquipmentField,
+                                child: const MyIcon(icon: Icons.add))
                           ],
                         ),
                         const SizedBox(height: 15),
@@ -352,5 +318,3 @@ class _AddTankPageState extends State<AddTankPage> {
     );
   }
 }
-
-

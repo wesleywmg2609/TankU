@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tankyou/components/my_button.dart';
-import 'package:tankyou/components/my_image.dart';
+import 'package:tankyou/components/my_image_loader.dart';
 import 'package:tankyou/components/my_text.dart';
 import 'package:tankyou/helper/functions.dart';
 import 'package:tankyou/models/tank.dart';
@@ -86,7 +86,7 @@ class _MyTankItemState extends State<MyTankItem> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => TankInfoPage(user: widget.user, tank: widget.tank),
+                  builder: (context) => TankInfoPage(user: widget.user, tankRef: widget.tank.id),
                 ),
               );
             },

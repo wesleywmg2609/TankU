@@ -4,9 +4,9 @@ import 'package:tankyou/components/my_overlay_icon.dart';
 
 // ignore: must_be_immutable
 class MyImageLoader extends StatelessWidget {
-  final double size;
   final File? file;
   final String? url;
+  final double size;
 
   const MyImageLoader({
     super.key,
@@ -24,7 +24,7 @@ class MyImageLoader extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         child: file != null
             ? Image.file(
-                file!, // Display the local image file if available
+                file!,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => const MyOverlayIcon(
                   icon: Icons.call_to_action,

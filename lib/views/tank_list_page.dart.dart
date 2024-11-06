@@ -8,7 +8,7 @@ import 'package:tankyou/models/tank.dart';
 class TankListPage extends StatefulWidget {
   final User user;
 
-  TankListPage({
+  const TankListPage({
     super.key,
     required this.user,
   });
