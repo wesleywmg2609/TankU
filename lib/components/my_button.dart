@@ -25,6 +25,7 @@ class MyButton extends StatefulWidget {
 
 class _MyButtonState extends State<MyButton> {
   void _onTap() async {
+    FocusScope.of(context).unfocus();
     setState(() {
       widget.isPressed = !widget.isPressed;
     });
@@ -35,7 +36,6 @@ class _MyButtonState extends State<MyButton> {
         widget.isPressed = !widget.isPressed;
       });
     }
-
     widget.onPressed.call();
   }
 

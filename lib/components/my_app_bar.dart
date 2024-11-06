@@ -48,7 +48,9 @@ class _MyAppBarState extends State<MyAppBar> {
             )
           else
             MyButton(
-              onPressed: () => Navigator.pop(context, true),
+              onPressed: () {
+  Navigator.pop(context, true);
+},
               child: const MyIcon(icon: Icons.arrow_back),
             ),
           Column(
