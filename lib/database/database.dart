@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:tankyou/helper/functions.dart';
 import 'package:tankyou/models/tank.dart';
 
 final _databaseReference = FirebaseDatabase.instance.ref();
@@ -17,12 +16,7 @@ void updateTankToDatabase(Tank tank, DatabaseReference id) {
 }
 
 Future<void> removeImageFromDatabase(DatabaseReference id) async {
-  try {
-    await id.update({'imageUrl': null});
-  } catch (e) {
-    logger("Error updating database: $e");
-    throw e;
-  }
+  await id.update({'imageUrl': null});
 }
 
 Future<List<Tank>> getAllTanks(String uid) async {
@@ -53,22 +47,13 @@ Future<Tank?> getTankById(DatabaseReference tankRef, String uid) async {
         if (tankData['uid'] == uid) {
           Tank tank = createTank(tankData);
           tank.setId(tankRef);
-          logger('succes');
           return tank;
-        } else {
-          logger('UID does not match: ${tankData['uid']} != $uid');
-        }
-      } else {
-        logger('UID field is missing in tank data.');
-      }
-    } else {
-      logger('Data is not a Map.');
+        } 
+      } 
     }
-  } else {
-    logger('No valid data found at the reference.');
   }
 
-  return null; // Return null if no matching tank is found
+  return null;
 }
 
 
