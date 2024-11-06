@@ -27,7 +27,7 @@ class _MyTankListState extends State<MyTankList> {
         itemBuilder: (context, index) {
           var tank = widget.listItems[index];
 
-          return MyTankItem(user: widget.user, tank: tank);
+          return MyTankItem(user: widget.user, tankRef: tank.id);
         });
   }
 }
