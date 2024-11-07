@@ -5,8 +5,8 @@ import 'package:tankyou/models/tank.dart';
 
 final _databaseReference = FirebaseDatabase.instance.ref();
 
-DatabaseReference addTankToDatabase(Tank tank) {
-  var id = _databaseReference.child('tanks/').push();
+DatabaseReference addTankToDatabase(String uid, Tank tank) {
+  var id = _databaseReference.child('tanks/$uid/').push();
   id.set(tank.toJson());
   return id;
 }
@@ -20,21 +20,22 @@ Future<void> removeImageFromDatabase(DatabaseReference id) async {
 }
 
 Future<List<Tank>> getAllTanks(String uid) async {
-  DatabaseEvent databaseEvent = await _databaseReference.child('tanks/').once();
+  DatabaseEvent databaseEvent = await _databaseReference.child('tanks/$uid/').once();
   DataSnapshot dataSnapshot = databaseEvent.snapshot;
 
   List<Tank> tanks = [];
 
   (dataSnapshot.value as Map?)?.forEach((key, value) {
-    if (value is Map && value['uid'] == uid) {
+    if (value is Map) {
       Tank tank = createTank(value.cast<String, dynamic>());
-      tank.setId(_databaseReference.child('tanks/$key'));
+      tank.setId(_databaseReference.child('tanks/$uid/$key/'));
       tanks.add(tank);
     }
   });
 
   return tanks;
 }
+
 
 Future<Tank?> getTankById(DatabaseReference tankRef, String uid) async {
   DatabaseEvent databaseEvent = await tankRef.once();
@@ -56,26 +57,25 @@ Future<Tank?> getTankById(DatabaseReference tankRef, String uid) async {
   return null;
 }
 
+DatabaseReference getTanksRef(String uid) {
+  return _databaseReference.child('tanks/$uid');
+}
 
-Future<String> generateTankName(String userId, String name) async {
+Future<String> generateTankName(String uid, String name) async {
   name = name.trim();
+  
   if (name.isEmpty) {
-    DatabaseEvent databaseEvent =
-        await _databaseReference.child('tanks/').once();
+    // Directly count tanks under `tanks/{uid}`
+    DatabaseEvent databaseEvent = await _databaseReference.child('tanks/$uid').once();
     DataSnapshot dataSnapshot = databaseEvent.snapshot;
 
-    int count = 0;
-    if (dataSnapshot.exists) {
-      for (var child in dataSnapshot.children) {
-        if (child.child('uid').value == userId) {
-          count++;
-        }
-      }
-    }
+    int count = dataSnapshot.children.length; // Count number of tanks for this user
     return 'Tank ${count + 1}';
   }
+  
   return name;
 }
+
 
 Future<String> uploadImage(String uid, File image, String folder) async {
   String fileName = '$folder/$uid/${DateTime.now().millisecondsSinceEpoch}.png';

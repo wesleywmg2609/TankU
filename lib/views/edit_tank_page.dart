@@ -40,6 +40,7 @@ class EditTankPageState extends State<EditTankPage> {
   };
   final List<TextEditingController> _equipmentControllers = [];
   final ValueNotifier<int> _volumeNotifier = ValueNotifier<int>(0);
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -49,15 +50,20 @@ class EditTankPageState extends State<EditTankPage> {
   }
 
   void updateTank() async {
-  getTankById(widget.tankRef, widget.user.uid).then((fetchedTank) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        tank = fetchedTank;
-        _initializeFields();
+    setState(() {
+      _isLoading = true;
+    });
+
+    getTankById(widget.tankRef, widget.user.uid).then((fetchedTank) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          tank = fetchedTank;
+          _initializeFields();
+          _isLoading = false;
+        });
       });
     });
-  });
-}
+  }
 
   void _initializeFields() {
     if (tank != null) {
@@ -135,9 +141,7 @@ class EditTankPageState extends State<EditTankPage> {
       equipments,
     );
 
-    updatedTank.setId(tank!.id);
-
-    updateTankToDatabase(updatedTank, updatedTank.id);
+    updateTankToDatabase(updatedTank, tank!.id);
 
     Navigator.pop(context);
 
@@ -183,9 +187,9 @@ class EditTankPageState extends State<EditTankPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (tank == null || _initialDate == null) {
-      return MyLoadingIndicator();
-    } 
+    if (_isLoading) {
+      return const MyLoadingIndicator();
+    }
 
     return GestureDetector(
       onTap: () {
@@ -245,7 +249,7 @@ class EditTankPageState extends State<EditTankPage> {
                           valueListenable: _volumeNotifier,
                           builder: (context, volume, child) {
                             final widthText = _controllers['width']!.text;
-                            final depthText = _controllers['height']!.text;
+                            final depthText = _controllers['depth']!.text;
                             final heightText = _controllers['height']!.text;
 
                             String widthDisplay =

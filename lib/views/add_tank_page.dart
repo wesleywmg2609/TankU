@@ -89,7 +89,7 @@ class _AddTankPageState extends State<AddTankPage> {
       equipments,
     );
 
-    tank.setId(addTankToDatabase(tank));
+    tank.setId(addTankToDatabase(widget.user.uid, tank));
 
     _resetFields();
 

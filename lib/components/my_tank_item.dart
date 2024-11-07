@@ -30,7 +30,16 @@ class _MyTankItemState extends State<MyTankItem> {
   @override
   void initState() {
     super.initState();
+    widget.tankRef.onValue.listen((event) {
+      updateTank();
+    });
     updateTank();
+  }
+
+  @override
+  void dispose() {
+    widget.tankRef.onValue.drain();
+    super.dispose();
   }
 
   void updateTank() async {
@@ -45,7 +54,8 @@ class _MyTankItemState extends State<MyTankItem> {
   Widget build(BuildContext context) {
     String tankInfo;
 
-    String? waterInfo = _tank?.waterType ?? 'Unknown';
+    String? waterInfo = _tank?.waterType?.isNotEmpty ?? false ? _tank!
+                                        .waterType! : null;
 
     String? volumeInfo = (_tank != null &&
             _tank!.width != null &&
@@ -57,12 +67,14 @@ class _MyTankItemState extends State<MyTankItem> {
         ? '${((_tank!.width! * _tank!.depth! * _tank!.height!) / 1000).toStringAsFixed(0)}L'
         : null;
 
-    if (volumeInfo != null) {
+    if (waterInfo != null && volumeInfo != null) {
       tankInfo = '$waterInfo, $volumeInfo';
-    } else if (volumeInfo != null) {
-      tankInfo = 'Unknown, $volumeInfo';
-    } else {
+    } else if (waterInfo != null) {
       tankInfo = waterInfo;
+    } else if (volumeInfo != null) {
+      tankInfo = volumeInfo;
+    } else {
+      tankInfo = '';
     }
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),

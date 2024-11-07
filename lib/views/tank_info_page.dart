@@ -34,10 +34,19 @@ class _TankInfoPageState extends State<TankInfoPage> {
   @override
   void initState() {
     super.initState();
+    widget.tankRef.onValue.listen((event) {
+      updateTank();
+    });
     updateTank();
   }
 
-  void updateTank() async {
+  @override
+  void dispose() {
+    widget.tankRef.onValue.drain();
+    super.dispose();
+  }
+
+  Future<void> updateTank() async {
     getTankById(widget.tankRef, widget.user.uid).then((fetchedTank) {
       setState(() {
         _tank = fetchedTank;
@@ -65,7 +74,7 @@ class _TankInfoPageState extends State<TankInfoPage> {
       return '${difference.inDays} day${difference.inDays != 1 ? 's' : ''}';
     }
 
-    return 'Invalid date';
+    return '? days';
   }
 
   @override
@@ -81,18 +90,14 @@ class _TankInfoPageState extends State<TankInfoPage> {
             title: 'Tank Info',
             subtitle: _tank?.name.toString(),
             trailing: const MyIcon(icon: Icons.edit),
-            onTrailingPressed: () async {
-              final bool tankUpdated = await Navigator.push(
+            onTrailingPressed: () {
+              Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => EditTankPage(
                             user: widget.user,
                             tankRef: widget.tankRef,
                           )));
-
-              if (tankUpdated == true) {
-                updateTank();
-              }
             },
           ),
           Padding(
@@ -120,11 +125,15 @@ class _TankInfoPageState extends State<TankInfoPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            MyText(
-                              text: _tank?.waterType ?? 'Unknown',
-                              letterSpacing: 2.0,
-                              size: 14,
-                            ),
+                            _tank?.waterType?.isNotEmpty ?? false
+                                ? MyText(
+                                    text: _tank!
+                                        .waterType!,
+                                    letterSpacing: 2.0,
+                                    size: 12,
+                                  )
+                                : const SizedBox
+                                    .shrink(),
                             MyText(
                               text: _tank?.setupAt != null
                                   ? _getDaysSinceSetup(_tank!.setupAt)
@@ -154,28 +163,49 @@ class _TankInfoPageState extends State<TankInfoPage> {
                             padding: const EdgeInsets.symmetric(vertical: 16.0),
                             child: Column(
                               children: [
+                                const MyText(
+                                  text: 'Volume',
+                                  letterSpacing: 2.0,
+                                  isBold: true,
+                                  size: 16,
+                                ),
+                                const SizedBox(height: 16),
                                 MyCube(
                                   width: _tank?.width ?? 0,
                                   depth: _tank?.depth ?? 0,
                                   height: _tank?.height ?? 0,
                                 ),
                                 const SizedBox(height: 16),
-                                MyText(
+                                const MyText(
                                   text:
                                       'More detailed information goes here. This content is shown when the box is expanded.',
                                   letterSpacing: 2.0,
-                                  size: 14,
+                                  size: 12,
+                                ),
+                                const SizedBox(height: 16),
+                                const MyText(
+                                  text: 'Equipment',
+                                  letterSpacing: 2.0,
+                                  isBold: true,
+                                  size: 16,
+                                ),
+                                const SizedBox(height: 16),
+                                const MyText(
+                                  text:
+                                      'More detailed information goes here. This content is shown when the box is expanded.',
+                                  letterSpacing: 2.0,
+                                  size: 12,
                                 ),
                               ],
                             ),
                           )
-                        : const SizedBox.shrink(),
+                        : const SizedBox(height: 16),
                   ),
                   GestureDetector(
                     onTap: _toggleExpand,
                     child: _isExpanded
-                        ? MyIcon(icon: Icons.keyboard_arrow_up)
-                        : MyIcon(icon: Icons.keyboard_arrow_down),
+                        ? const MyIcon(icon: Icons.keyboard_arrow_up)
+                        : const MyIcon(icon: Icons.keyboard_arrow_down),
                   )
                 ],
               )),
