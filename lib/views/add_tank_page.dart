@@ -103,9 +103,9 @@ class _AddTankPageState extends State<AddTankPage> {
     _controllers['width']!.clear();
     _controllers['depth']!.clear();
     _controllers['height']!.clear();
-    _selectedWaterType = null;
-    _image = null;
-    _volumeNotifier.value = 0;
+    setState(() {
+      _selectedWaterType = null;
+    });
 
     for (var controller in _equipmentControllers) {
       controller.dispose();

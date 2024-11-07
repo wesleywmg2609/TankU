@@ -53,17 +53,16 @@ class EditTankPageState extends State<EditTankPage> {
     setState(() {
       _isLoading = true;
     });
-
-    getTankById(widget.tankRef, widget.user.uid).then((fetchedTank) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {
-          tank = fetchedTank;
-          _initializeFields();
-          _isLoading = false;
-        });
+  getTankById(widget.tankRef, widget.user.uid).then((fetchedTank) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        tank = fetchedTank;
+        _initializeFields();
+        _isLoading = false;
       });
     });
-  }
+  });
+}
 
   void _initializeFields() {
     if (tank != null) {
@@ -155,10 +154,6 @@ class EditTankPageState extends State<EditTankPage> {
   }
 
   void _onImageRemoved() async {
-    if (tank!.imageUrl != null && tank!.imageUrl!.isNotEmpty) {
-      await removeImageFromDatabase(tank!.id);
-      displayMessageToUser('Photo updated successfully!', context);
-    }
     setState(() {
       _image = null;
       tank!.imageUrl = null;
