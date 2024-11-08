@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tankyou/components/my_app_bar.dart';
 import 'package:tankyou/components/my_box_shadow.dart';
 import 'package:tankyou/components/my_icon.dart';
@@ -34,6 +35,7 @@ class _TankInfoPageState extends State<TankInfoPage> {
   @override
   void initState() {
     super.initState();
+    fetchImages();
     widget.tankRef.onValue.listen((event) {
       updateTank();
     });
@@ -44,6 +46,10 @@ class _TankInfoPageState extends State<TankInfoPage> {
   void dispose() {
     widget.tankRef.onValue.drain();
     super.dispose();
+  }
+
+  Future<void> fetchImages() async {
+    await Provider.of<StorageService>(context, listen: false).fetchImages();
   }
 
   Future<void> updateTank() async {

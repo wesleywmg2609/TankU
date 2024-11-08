@@ -53,16 +53,17 @@ class EditTankPageState extends State<EditTankPage> {
     setState(() {
       _isLoading = true;
     });
-  getTankById(widget.tankRef, widget.user.uid).then((fetchedTank) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        tank = fetchedTank;
-        _initializeFields();
-        _isLoading = false;
+
+    getTankById(widget.tankRef, widget.user.uid).then((fetchedTank) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          tank = fetchedTank;
+          _initializeFields();
+          _isLoading = false;
+        });
       });
     });
-  });
-}
+  }
 
   void _initializeFields() {
     if (tank != null) {
@@ -100,7 +101,7 @@ class EditTankPageState extends State<EditTankPage> {
   }
 
   Future<void> _updateTank() async {
-    if (tank == null) {
+    if (_isLoading) {
       displayMessageToUser('Tank data is not loaded yet', context);
       return;
     }

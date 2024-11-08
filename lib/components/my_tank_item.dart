@@ -114,18 +114,14 @@ class _MyTankItemState extends State<MyTankItem> {
               )),
             ],
           ),
-          onPressed: () async {
-            final bool tankUpdated = await Navigator.push(
+          onPressed: () {
+            Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => TankInfoPage(
                           user: widget.user,
                           tankRef: widget.tankRef,
                         )));
-
-            if (tankUpdated == true) {
-              updateTank();
-            }
           },
         ));
   }
