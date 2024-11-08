@@ -30,16 +30,18 @@ class TankInfoPage extends StatefulWidget {
 
 class _TankInfoPageState extends State<TankInfoPage> {
   Tank? _tank;
+  late TankService _tankService;
   bool _isExpanded = false;
 
   @override
   void initState() {
     super.initState();
-    fetchImages();
+    _tankService = Provider.of<TankService>(context, listen: false);
+     _fetchTank();
+
     widget.tankRef.onValue.listen((event) {
-      updateTank();
+      _fetchTank();
     });
-    updateTank();
   }
 
   @override
@@ -48,16 +50,13 @@ class _TankInfoPageState extends State<TankInfoPage> {
     super.dispose();
   }
 
-  Future<void> fetchImages() async {
-    await Provider.of<StorageService>(context, listen: false).fetchImages();
-  }
-
-  Future<void> updateTank() async {
-    getTankById(widget.tankRef, widget.user.uid).then((fetchedTank) {
-      setState(() {
-        _tank = fetchedTank;
-      });
+  Future<void> _fetchTank() async {
+    final fetchedTank = await _tankService.getTankById(widget.tankRef);
+    if (mounted) {
+    setState(() {
+      _tank = fetchedTank;
     });
+  }
   }
 
   void _toggleExpand() {

@@ -88,14 +88,10 @@ class _MainPageState extends State<MainPage> {
       {
         'title': 'Tanks',
         'trailing': const MyIcon(icon: Icons.add),
-        'onTrailingPressed': () async {
-                        final bool tankAdded = await Navigator.push(
+        'onTrailingPressed': () {
+                        Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => AddTankPage(user: widget.user,)));
-
-                          if (tankAdded == true) {
-                            _tankListKey.currentState?.updateTanks();
-                          }
                       },
         'page': TankListPage(key: _tankListKey, user: widget.user),
       },

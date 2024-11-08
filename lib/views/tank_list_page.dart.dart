@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tankyou/components/my_loading_indicator.dart';
 import 'package:tankyou/components/my_tank_list.dart';
 import 'package:tankyou/database/database.dart';
@@ -19,27 +21,31 @@ class TankListPage extends StatefulWidget {
 }
 
 class TankListPageState extends State<TankListPage> {
-  List<Tank> tanks = [];
+  List<Tank> _tanks = [];
   bool _isLoading = true;
+  late TankService _tankService;
 
   @override
   void initState() {
     super.initState();
-    updateTanks();
+    _tankService = Provider.of<TankService>(context, listen: false);
+    _fetchTanks();
+
+    // FirebaseDatabase.instance.ref('tanks/${widget.user.uid}').onValue.listen((event) {
+    //   _fetchTanks();
+    // });
   }
 
-  void updateTanks() {
-    setState(() {
-      _isLoading = true;
-    });
-
-    getAllTanks(widget.user.uid).then((fetchedTanks) {
-      fetchedTanks.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  Future<void> _fetchTanks() async {
+    final fetchedTanks = await _tankService.getAllTanks();
+    fetchedTanks.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    if (mounted) {
       setState(() {
-        tanks = fetchedTanks;
-        _isLoading = false;
-      });
+      _tanks = fetchedTanks;
+      _isLoading = false;
     });
+    }
+    
   }
 
   @override
@@ -54,7 +60,7 @@ class TankListPageState extends State<TankListPage> {
           child: Column(
         children: [
             Expanded(
-              child: MyTankList(listItems: tanks, user: widget.user),
+              child: MyTankList(listItems: _tanks, user: widget.user),
             ),
         ],
       )),

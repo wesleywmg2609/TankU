@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tankyou/components/my_app_bar.dart';
 import 'package:tankyou/components/my_button.dart';
 import 'package:tankyou/components/my_date_field.dart';
@@ -38,10 +39,14 @@ class _AddTankPageState extends State<AddTankPage> {
   };
   final List<TextEditingController> _equipmentControllers = [];
   final ValueNotifier<int> _volumeNotifier = ValueNotifier<int>(0);
+  late TankService _tankService;
+  late StorageService _storageService;
 
   @override
   void initState() {
     super.initState();
+    _tankService = Provider.of<TankService>(context, listen: false);
+    _storageService = Provider.of<StorageService>(context, listen: false);
     _addVolumeListeners();
   }
 
@@ -63,7 +68,7 @@ class _AddTankPageState extends State<AddTankPage> {
     showLoadingDialog(context);
 
     String name =
-        await generateTankName(widget.user.uid, _controllers['name']!.text);
+        await _tankService.generateTankName(_controllers['name']!.text);
     String? imageUrl;
     String? waterType = _selectedWaterType;
     int? width = int.tryParse(_controllers['width']!.text);
@@ -74,7 +79,7 @@ class _AddTankPageState extends State<AddTankPage> {
     List<String> equipments = _equipmentControllers.map((c) => c.text).toList();
 
     if (_image != null) {
-      imageUrl = await uploadImage(widget.user.uid, _image!, 'tank_images');
+      imageUrl = await _storageService.uploadImage();
     }
 
     Tank tank = Tank(
@@ -89,7 +94,7 @@ class _AddTankPageState extends State<AddTankPage> {
       equipments,
     );
 
-    tank.setId(addTankToDatabase(widget.user.uid, tank));
+    tank.setId(_tankService.addTankToDatabase(tank));
 
     _resetFields();
 

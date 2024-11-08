@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tankyou/components/my_button.dart';
 import 'package:tankyou/components/my_image_loader.dart';
 import 'package:tankyou/components/my_text.dart';
@@ -26,14 +27,17 @@ class MyTankItem extends StatefulWidget {
 
 class _MyTankItemState extends State<MyTankItem> {
   Tank? _tank;
+  late TankService _tankService;
 
   @override
   void initState() {
     super.initState();
+    _tankService = Provider.of<TankService>(context, listen: false);
+    _fetchTank();
+
     widget.tankRef.onValue.listen((event) {
-      updateTank();
+      _fetchTank();
     });
-    updateTank();
   }
 
   @override
@@ -42,20 +46,21 @@ class _MyTankItemState extends State<MyTankItem> {
     super.dispose();
   }
 
-  void updateTank() async {
-    getTankById(widget.tankRef, widget.user.uid).then((fetchedTank) {
+  Future<void> _fetchTank() async {
+    final fetchedTank = await _tankService.getTankById(widget.tankRef);
+    if (mounted) {
       setState(() {
         _tank = fetchedTank;
       });
-    });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     String tankInfo;
 
-    String? waterInfo = _tank?.waterType?.isNotEmpty ?? false ? _tank!
-                                        .waterType! : null;
+    String? waterInfo =
+        _tank?.waterType?.isNotEmpty ?? false ? _tank!.waterType! : null;
 
     String? volumeInfo = (_tank != null &&
             _tank!.width != null &&

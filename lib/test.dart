@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
         
         return Scaffold(
           floatingActionButton: FloatingActionButton(
-            onPressed: () => storageService.uploadImage2(),
+            onPressed: () => storageService.uploadImage(),
             child: const Icon(Icons.add),
           ),
           body: ListView.builder(

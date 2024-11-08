@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tankyou/components/my_app_bar.dart';
 import 'package:tankyou/components/my_button.dart';
 import 'package:tankyou/components/my_date_field.dart';
@@ -27,7 +28,7 @@ class EditTankPage extends StatefulWidget {
 }
 
 class EditTankPageState extends State<EditTankPage> {
-  Tank? tank;
+  Tank? _tank;
   File? _image;
   String? _selectedWaterType;
   DateTime? _initialDate;
@@ -41,46 +42,43 @@ class EditTankPageState extends State<EditTankPage> {
   final List<TextEditingController> _equipmentControllers = [];
   final ValueNotifier<int> _volumeNotifier = ValueNotifier<int>(0);
   bool _isLoading = true;
+  late TankService _tankService;
+  late StorageService _storageService;
 
   @override
   void initState() {
     super.initState();
-    updateTank();
+    _tankService = Provider.of<TankService>(context, listen: false);
+    _storageService = Provider.of<StorageService>(context, listen: false);
+    _fetchTank();
     _addVolumeListeners();
   }
 
-  void updateTank() async {
+  Future<void> _fetchTank() async {
+    final fetchedTank = await _tankService.getTankById(widget.tankRef);
     setState(() {
-      _isLoading = true;
-    });
-
-    getTankById(widget.tankRef, widget.user.uid).then((fetchedTank) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {
-          tank = fetchedTank;
-          _initializeFields();
-          _isLoading = false;
-        });
-      });
+      _tank = fetchedTank;
+      _initializeFields();
+      _isLoading = false;
     });
   }
 
   void _initializeFields() {
-    if (tank != null) {
-      _controllers['name']?.text = tank?.name ?? '';
-      _selectedWaterType = tank!.waterType!.isNotEmpty ? tank!.waterType : null;
+    if (_tank != null) {
+      _controllers['name']?.text = _tank?.name ?? '';
+      _selectedWaterType = _tank!.waterType!.isNotEmpty ? _tank!.waterType : null;
       _controllers['width']?.text =
-          tank!.width != 0 ? tank!.width!.toString() : '';
+          _tank!.width != 0 ? _tank!.width!.toString() : '';
       _controllers['depth']?.text =
-          tank!.depth != 0 ? tank!.depth!.toString() : '';
+          _tank!.depth != 0 ? _tank!.depth!.toString() : '';
       _controllers['height']?.text =
-          tank!.height != 0 ? tank!.height!.toString() : '';
+          _tank!.height != 0 ? _tank!.height!.toString() : '';
       _volumeNotifier.value =
-          (tank!.width ?? 0) * (tank!.depth ?? 0) * (tank!.height ?? 0);
+          (_tank!.width ?? 0) * (_tank!.depth ?? 0) * (_tank!.height ?? 0);
 
-      _initialDate = DateTime.tryParse(tank!.setupAt) ?? DateTime.now();
+      _initialDate = DateTime.tryParse(_tank!.setupAt) ?? DateTime.now();
 
-      for (var equipment in tank!.equipments ?? []) {
+      for (var equipment in _tank!.equipments ?? []) {
         _equipmentControllers.add(TextEditingController(text: equipment));
       }
     }
@@ -110,16 +108,16 @@ class EditTankPageState extends State<EditTankPage> {
     String? imageUrl;
 
     String name =
-        await generateTankName(widget.user.uid, _controllers['name']!.text);
-    tank!.name = name;
+        await _tankService.generateTankName(_controllers['name']!.text);
+    _tank!.name = name;
 
     if (_image != null) {
-      if (tank!.imageUrl != null && tank!.imageUrl!.isNotEmpty) {
-        await removeImageFromDatabase(tank!.id);
+      if (_tank!.imageUrl != null && _tank!.imageUrl!.isNotEmpty) {
+        await _tankService.removeImageFromDatabase(_tank!.id);
       }
-      imageUrl = await uploadImage(widget.user.uid, _image!, 'tank_images');
+      imageUrl = await _storageService.uploadImage();
     } else {
-      imageUrl = tank!.imageUrl;
+      imageUrl = _tank!.imageUrl;
     }
     String? waterType = _selectedWaterType;
     int? width = int.tryParse(_controllers['width']!.text);
@@ -141,7 +139,7 @@ class EditTankPageState extends State<EditTankPage> {
       equipments,
     );
 
-    updateTankToDatabase(updatedTank, tank!.id);
+    _tankService.updateTankToDatabase(updatedTank, _tank!.id);
 
     Navigator.pop(context);
 
@@ -157,7 +155,7 @@ class EditTankPageState extends State<EditTankPage> {
   void _onImageRemoved() async {
     setState(() {
       _image = null;
-      tank!.imageUrl = null;
+      _tank!.imageUrl = null;
     });
   }
 
@@ -198,7 +196,7 @@ class EditTankPageState extends State<EditTankPage> {
             children: [
               MyAppBar(
                 title: 'Edit Tank',
-                subtitle: tank?.name.toString(),
+                subtitle: _tank?.name.toString(),
                 trailing: const MyIcon(icon: Icons.check),
                 onTrailingPressed: _updateTank,
               ),
@@ -211,7 +209,7 @@ class EditTankPageState extends State<EditTankPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         MyImagePicker(
-                          initialImageUrl: tank?.imageUrl,
+                          initialImageUrl: _tank?.imageUrl,
                           initialFile: _image,
                           onImagePicked: _onImagePicked,
                           onImageRemoved: _onImageRemoved,

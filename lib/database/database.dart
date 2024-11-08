@@ -1,94 +1,95 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tankyou/models/tank.dart';
 
-final _databaseReference = FirebaseDatabase.instance.ref();
+class TankService with ChangeNotifier {
+  late final User user;
+  late final DatabaseReference databaseRef;
 
-DatabaseReference addTankToDatabase(String uid, Tank tank) {
-  var id = _databaseReference.child('tanks/$uid/').push();
-  id.set(tank.toJson());
-  return id;
-}
+  TankService() {
+    user = FirebaseAuth.instance.currentUser!;
+    databaseRef = FirebaseDatabase.instance.ref().child('tanks/${user.uid}');
+  }
 
-void updateTankToDatabase(Tank tank, DatabaseReference id) {
-  id.update(tank.toJson());
-}
+  DatabaseReference addTankToDatabase(Tank tank) {
+    var id = databaseRef.push();
+    id.set(tank.toJson());
+    return id;
+  }
 
-Future<void> removeImageFromDatabase(DatabaseReference id) async {
-  await id.update({'imageUrl': null});
-}
+  void updateTankToDatabase(Tank tank, DatabaseReference id) {
+    id.update(tank.toJson());
+  }
 
-Future<List<Tank>> getAllTanks(String uid) async {
-  DatabaseEvent databaseEvent =
-      await _databaseReference.child('tanks/$uid/').once();
-  DataSnapshot dataSnapshot = databaseEvent.snapshot;
+  Future<List<Tank>> getAllTanks() async {
+    try {
+      DatabaseEvent databaseEvent = await databaseRef.once();
+      DataSnapshot dataSnapshot = databaseEvent.snapshot;
 
-  List<Tank> tanks = [];
+      List<Tank> tanks = [];
+      (dataSnapshot.value as Map?)?.forEach((key, value) {
+        if (value is Map) {
+          Tank tank = createTank(Map<String, dynamic>.from(value));
+          tank.setId(databaseRef.child(key));
+          tanks.add(tank);
+        }
+      });
 
-  (dataSnapshot.value as Map?)?.forEach((key, value) {
-    if (value is Map) {
-      Tank tank = createTank(value.cast<String, dynamic>());
-      tank.setId(_databaseReference.child('tanks/$uid/$key/'));
-      tanks.add(tank);
+      return tanks;
+    } catch (e) {
+      print('Error fetching all tanks: $e');
+      return [];
     }
-  });
+  }
 
-  return tanks;
-}
+  Future<Tank?> getTankById(DatabaseReference tankRef) async {
+    try {
+      DatabaseEvent databaseEvent = await tankRef.once();
+      DataSnapshot dataSnapshot = databaseEvent.snapshot;
 
-Future<Tank?> getTankById(DatabaseReference tankRef, String uid) async {
-  DatabaseEvent databaseEvent = await tankRef.once();
-  DataSnapshot dataSnapshot = databaseEvent.snapshot;
-
-  if (dataSnapshot.exists) {
-    if (dataSnapshot.value is Map) {
-      Map<String, dynamic> tankData =
-          Map<String, dynamic>.from(dataSnapshot.value as Map);
-      if (tankData.containsKey('uid')) {
-        if (tankData['uid'] == uid) {
-          Tank tank = createTank(tankData);
-          tank.setId(tankRef);
-          return tank;
+      if (dataSnapshot.exists) {
+        if (dataSnapshot.value is Map) {
+          Map<String, dynamic> tankData =
+              Map<String, dynamic>.from(dataSnapshot.value as Map);
+          if (tankData['uid'] == user.uid) {
+            Tank tank = createTank(tankData);
+            tank.setId(tankRef);
+            return tank;
+          }
         }
       }
+    } catch (e) {
+      print('Error fetching tank data: $e');
     }
+    return null;
   }
 
-  return null;
-}
+  Future<String> generateTankName(String name) async {
+    name = name.trim();
 
-DatabaseReference getTanksRef(String uid) {
-  return _databaseReference.child('tanks/$uid');
-}
+    if (name.isEmpty) {
+      try {
+        DatabaseEvent databaseEvent = await databaseRef.once();
+        DataSnapshot dataSnapshot = databaseEvent.snapshot;
 
-Future<String> generateTankName(String uid, String name) async {
-  name = name.trim();
+        int count = dataSnapshot.children.length;
+        return 'Tank ${count + 1}';
+      } catch (e) {
+        print('Error generating tank name: $e');
+        return 'Tank 1';
+      }
+    }
 
-  if (name.isEmpty) {
-    // Directly count tanks under `tanks/{uid}`
-    DatabaseEvent databaseEvent =
-        await _databaseReference.child('tanks/$uid').once();
-    DataSnapshot dataSnapshot = databaseEvent.snapshot;
-
-    int count =
-        dataSnapshot.children.length; // Count number of tanks for this user
-    return 'Tank ${count + 1}';
+    return name;
   }
 
-  return name;
-}
-
-Future<String> uploadImage(String uid, File image, String folder) async {
-  String fileName = '$folder/$uid/${DateTime.now().millisecondsSinceEpoch}.png';
-
-  final ref = FirebaseStorage.instance.ref().child(fileName);
-
-  await ref.putFile(image);
-
-  return ref.getDownloadURL();
+  Future<void> removeImageFromDatabase(DatabaseReference id) async {
+    await id.update({'imageUrl': null});
+  }
 }
 
 class StorageService with ChangeNotifier {
@@ -115,7 +116,7 @@ class StorageService with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteImages(String imageUrl) async {
+  Future<void> deleteImage(String imageUrl) async {
     try {
       _imageUrls.remove(imageUrl);
 
@@ -136,19 +137,24 @@ class StorageService with ChangeNotifier {
     return Uri.decodeComponent(encodedPath);
   }
 
-  Future<void> uploadImage2() async {
+  Future<String?> uploadImage() async {
     _isUploading = true;
     notifyListeners();
 
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
-    if (image == null) return;
+    if (image == null) {
+      _isUploading = false;
+      notifyListeners();
+      return null;
+    }
 
     File file = File(image.path);
 
     try {
-      String filePath = 'uploaded_images/${DateTime.now()}.png';
+      String fileName = '${DateTime.now().millisecondsSinceEpoch}.png';
+      String filePath = 'uploaded_images/$fileName';
 
       await FirebaseStorage.instance.ref(filePath).putFile(file);
 
@@ -156,12 +162,18 @@ class StorageService with ChangeNotifier {
           await FirebaseStorage.instance.ref(filePath).getDownloadURL();
 
       _imageUrls.add(downloadUrl);
+
       notifyListeners();
+
+      return downloadUrl;
     } catch (e) {
       print("Error uploading image: $e");
+      return null;
+
     } finally {
       _isUploading = false;
       notifyListeners();
+
     }
   }
 
