@@ -37,26 +37,22 @@ class _TankInfoPageState extends State<TankInfoPage> {
   void initState() {
     super.initState();
     _tankService = Provider.of<TankService>(context, listen: false);
-     _fetchTank();
+    _tankService.listenToTankUpdates(widget.tankRef);
 
-    widget.tankRef.onValue.listen((event) {
-      _fetchTank();
+    _tankService.addListener(() {
+      if (mounted) {
+        setState(() {
+          _tank = _tankService.tank;
+        });
+      }
     });
+
   }
 
   @override
   void dispose() {
     widget.tankRef.onValue.drain();
     super.dispose();
-  }
-
-  Future<void> _fetchTank() async {
-    final fetchedTank = await _tankService.getTankById(widget.tankRef);
-    if (mounted) {
-    setState(() {
-      _tank = fetchedTank;
-    });
-  }
   }
 
   void _toggleExpand() {
@@ -132,13 +128,11 @@ class _TankInfoPageState extends State<TankInfoPage> {
                           children: [
                             _tank?.waterType?.isNotEmpty ?? false
                                 ? MyText(
-                                    text: _tank!
-                                        .waterType!,
+                                    text: _tank!.waterType!,
                                     letterSpacing: 2.0,
                                     size: 12,
                                   )
-                                : const SizedBox
-                                    .shrink(),
+                                : const SizedBox.shrink(),
                             MyText(
                               text: _tank?.setupAt != null
                                   ? _getDaysSinceSetup(_tank!.setupAt)

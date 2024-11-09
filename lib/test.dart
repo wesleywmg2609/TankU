@@ -8,7 +8,7 @@ void main() async {
   await Firebase.initializeApp();
   runApp(
     ChangeNotifierProvider(
-      create: (context) => StorageService(),
+      create: (context) => ImageService(),
       child: const MyApp(),
     )
   );
@@ -47,18 +47,18 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> fetchImages() async {
-    await Provider.of<StorageService>(context, listen: false).fetchImages();
+    await Provider.of<ImageService>(context, listen: false).fetchImages();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<StorageService>(
-      builder: (context, storageService, child) {
-        final List<String> imageUrls = storageService.imageUrls;
+    return Consumer<ImageService>(
+      builder: (context, ImageService, child) {
+        final List<String> imageUrls = ImageService.imageUrls;
         
         return Scaffold(
           floatingActionButton: FloatingActionButton(
-            onPressed: () => storageService.uploadImage(),
+            onPressed: () => ImageService.uploadImage(),
             child: const Icon(Icons.add),
           ),
           body: ListView.builder(

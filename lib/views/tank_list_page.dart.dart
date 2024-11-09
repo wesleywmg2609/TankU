@@ -50,9 +50,9 @@ class TankListPageState extends State<TankListPage> {
 
   @override
   Widget build(BuildContext context) {
-      if (_isLoading) {
-        return const MyLoadingIndicator();
-      }
+      // if (_isLoading) {
+      //   return const MyLoadingIndicator();
+      // }
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,

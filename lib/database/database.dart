@@ -9,11 +9,28 @@ import 'package:tankyou/models/tank.dart';
 class TankService with ChangeNotifier {
   late final User user;
   late final DatabaseReference databaseRef;
+  Tank? _tank;
+
+  Tank? get tank => _tank;
 
   TankService() {
     user = FirebaseAuth.instance.currentUser!;
     databaseRef = FirebaseDatabase.instance.ref().child('tanks/${user.uid}');
   }
+
+  void listenToTankUpdates(DatabaseReference tankRef) {
+  tankRef.onValue.listen((event) {
+    if (event.snapshot.exists && event.snapshot.value is Map) {
+      Map<String, dynamic> tankData = Map<String, dynamic>.from(event.snapshot.value as Map);
+      if (tankData['uid'] == user.uid) {
+            Tank tank = createTank(tankData);
+            tank.setId(tankRef);
+            _tank = tank;
+            notifyListeners();
+          }
+    }
+  });
+}
 
   DatabaseReference addTankToDatabase(Tank tank) {
     var id = databaseRef.push();
@@ -92,7 +109,7 @@ class TankService with ChangeNotifier {
   }
 }
 
-class StorageService with ChangeNotifier {
+class ImageService with ChangeNotifier {
   List<String> _imageUrls = [];
   bool _isLoading = false;
   bool _isUploading = false;

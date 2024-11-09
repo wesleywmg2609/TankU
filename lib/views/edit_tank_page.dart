@@ -43,13 +43,13 @@ class EditTankPageState extends State<EditTankPage> {
   final ValueNotifier<int> _volumeNotifier = ValueNotifier<int>(0);
   bool _isLoading = true;
   late TankService _tankService;
-  late StorageService _storageService;
+  late ImageService _ImageService;
 
   @override
   void initState() {
     super.initState();
     _tankService = Provider.of<TankService>(context, listen: false);
-    _storageService = Provider.of<StorageService>(context, listen: false);
+    _ImageService = Provider.of<ImageService>(context, listen: false);
     _fetchTank();
     _addVolumeListeners();
   }
@@ -115,7 +115,7 @@ class EditTankPageState extends State<EditTankPage> {
       if (_tank!.imageUrl != null && _tank!.imageUrl!.isNotEmpty) {
         await _tankService.removeImageFromDatabase(_tank!.id);
       }
-      imageUrl = await _storageService.uploadImage();
+      imageUrl = await _ImageService.uploadImage();
     } else {
       imageUrl = _tank!.imageUrl;
     }

@@ -40,13 +40,13 @@ class _AddTankPageState extends State<AddTankPage> {
   final List<TextEditingController> _equipmentControllers = [];
   final ValueNotifier<int> _volumeNotifier = ValueNotifier<int>(0);
   late TankService _tankService;
-  late StorageService _storageService;
+  late ImageService _ImageService;
 
   @override
   void initState() {
     super.initState();
     _tankService = Provider.of<TankService>(context, listen: false);
-    _storageService = Provider.of<StorageService>(context, listen: false);
+    _ImageService = Provider.of<ImageService>(context, listen: false);
     _addVolumeListeners();
   }
 
@@ -79,7 +79,7 @@ class _AddTankPageState extends State<AddTankPage> {
     List<String> equipments = _equipmentControllers.map((c) => c.text).toList();
 
     if (_image != null) {
-      imageUrl = await _storageService.uploadImage();
+      imageUrl = await _ImageService.uploadImage();
     }
 
     Tank tank = Tank(

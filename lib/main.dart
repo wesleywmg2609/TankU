@@ -13,7 +13,7 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => StorageService()),
+        ChangeNotifierProvider(create: (context) => ImageService()),
         ChangeNotifierProvider(create: (context) => TankService()),
       ],
       child: const MyApp(),
