@@ -1,4 +1,3 @@
-import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
@@ -84,15 +83,4 @@ void displayMessageToUser(String message, BuildContext context) {
       );
     },
   );
-}
-
-void toggleConfetti(ConfettiController confettiController,
-    ValueNotifier<bool> isConfettiPlaying) {
-  if (isConfettiPlaying.value) {
-    confettiController.stop();
-    isConfettiPlaying.value = false;
-  } else {
-    confettiController.play();
-    isConfettiPlaying.value = true;
-  }
 }

@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   final _confettiController = ConfettiController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final ValueNotifier<bool> _isConfettiPlaying = ValueNotifier<bool>(false);
+  bool _isConfettiPlaying = false;
 
   @override
   void initState() {
@@ -92,6 +92,18 @@ Future<void> _login() async {
   }
   }
 
+  void toggleConfetti() {
+  setState(() {
+    if (_isConfettiPlaying) {
+      _confettiController.stop();
+      _isConfettiPlaying = false;
+    } else {
+      _confettiController.play();
+      _isConfettiPlaying = true;
+    }
+  });
+}
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -118,8 +130,9 @@ Future<void> _login() async {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               MyButton(  
-                                onPressed: () => toggleConfetti( _confettiController, _isConfettiPlaying),
+                                onPressed: toggleConfetti,
                                 resetAfterPress: false,
+                                isPressed: _isConfettiPlaying,
                                 child: const MySvgIcon(filepath: 'assets/tanku_logo.svg', size: 150)
                               ),
                             ],

@@ -26,7 +26,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPwController = TextEditingController();
-  final ValueNotifier<bool> _isConfettiPlaying = ValueNotifier<bool>(false);
+  bool _isConfettiPlaying = false;
 
   @override
   void dispose() {
@@ -72,6 +72,19 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
+  void toggleConfetti() {
+  setState(() {
+    if (_isConfettiPlaying) {
+      _confettiController.stop();
+      _isConfettiPlaying = false;
+    } else {
+      _confettiController.play();
+      _isConfettiPlaying = true;
+    }
+  });
+}
+
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -98,8 +111,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               MyButton(
-                                onPressed: () => toggleConfetti(_confettiController, _isConfettiPlaying),
+                                onPressed: toggleConfetti,
                                 resetAfterPress: false,
+                                isPressed: _isConfettiPlaying,
                                 child: const MySvgIcon(filepath: 'assets/tanku_logo.svg', size: 150)
                               ),
                             ],
