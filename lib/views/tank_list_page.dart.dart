@@ -30,10 +30,6 @@ class TankListPageState extends State<TankListPage> {
     super.initState();
     _tankService = Provider.of<TankService>(context, listen: false);
     _fetchTanks();
-
-    // FirebaseDatabase.instance.ref('tanks/${widget.user.uid}').onValue.listen((event) {
-    //   _fetchTanks();
-    // });
   }
 
   Future<void> _fetchTanks() async {
@@ -50,9 +46,9 @@ class TankListPageState extends State<TankListPage> {
 
   @override
   Widget build(BuildContext context) {
-      // if (_isLoading) {
-      //   return const MyLoadingIndicator();
-      // }
+      if (_isLoading) {
+        return const MyLoadingIndicator();
+      }
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,

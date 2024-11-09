@@ -33,26 +33,21 @@ class _MyTankItemState extends State<MyTankItem> {
   void initState() {
     super.initState();
     _tankService = Provider.of<TankService>(context, listen: false);
-    _fetchTank();
+    _tankService.listenToTankUpdates(widget.tankRef);
 
-    widget.tankRef.onValue.listen((event) {
-      _fetchTank();
+    _tankService.addListener(() {
+      if (mounted) {
+        setState(() {
+          _tank = _tankService.tank;
+        });
+      }
     });
   }
 
   @override
   void dispose() {
-    widget.tankRef.onValue.drain();
+    _tankService.removeListener(() {});
     super.dispose();
-  }
-
-  Future<void> _fetchTank() async {
-    final fetchedTank = await _tankService.getTankById(widget.tankRef);
-    if (mounted) {
-      setState(() {
-        _tank = fetchedTank;
-      });
-    }
   }
 
   @override

@@ -9,6 +9,7 @@ import 'package:tankyou/models/tank.dart';
 class TankService with ChangeNotifier {
   late final User user;
   late final DatabaseReference databaseRef;
+  final List<VoidCallback> _listeners = [];
   Tank? _tank;
 
   Tank? get tank => _tank;
@@ -16,6 +17,22 @@ class TankService with ChangeNotifier {
   TankService() {
     user = FirebaseAuth.instance.currentUser!;
     databaseRef = FirebaseDatabase.instance.ref().child('tanks/${user.uid}');
+  }
+
+  @override
+  void addListener(VoidCallback listener) {
+    _listeners.add(listener);
+  }
+
+  @override
+  void removeListener(VoidCallback listener) {
+    _listeners.remove(listener);
+  }
+
+  void _notifyListeners() {
+    for (var listener in _listeners) {
+      listener();
+    }
   }
 
   void listenToTankUpdates(DatabaseReference tankRef) {
@@ -26,7 +43,7 @@ class TankService with ChangeNotifier {
             Tank tank = createTank(tankData);
             tank.setId(tankRef);
             _tank = tank;
-            notifyListeners();
+            _notifyListeners();
           }
     }
   });
@@ -38,8 +55,8 @@ class TankService with ChangeNotifier {
     return id;
   }
 
-  void updateTankToDatabase(Tank tank, DatabaseReference id) {
-    id.update(tank.toJson());
+  void updateTankToDatabase(Tank tank, DatabaseReference tankRef) {
+    tankRef.update(tank.toJson());
   }
 
   Future<List<Tank>> getAllTanks() async {
@@ -104,8 +121,8 @@ class TankService with ChangeNotifier {
     return name;
   }
 
-  Future<void> removeImageFromDatabase(DatabaseReference id) async {
-    await id.update({'imageUrl': null});
+  Future<void> removeImageFromDatabase(DatabaseReference tankRef) async {
+    await tankRef.update({'imageUrl': null});
   }
 }
 
@@ -113,6 +130,7 @@ class ImageService with ChangeNotifier {
   List<String> _imageUrls = [];
   bool _isLoading = false;
   bool _isUploading = false;
+  
   List<String> get imageUrls => _imageUrls;
   bool get isLoading => _isLoading;
   bool get isUploading => _isUploading;
@@ -193,6 +211,4 @@ class ImageService with ChangeNotifier {
 
     }
   }
-
-  void notifyListeners() {}
 }

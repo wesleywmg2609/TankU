@@ -51,7 +51,7 @@ class _TankInfoPageState extends State<TankInfoPage> {
 
   @override
   void dispose() {
-    widget.tankRef.onValue.drain();
+   _tankService.removeListener(() {});
     super.dispose();
   }
 
