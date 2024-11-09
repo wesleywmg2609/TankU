@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tankyou/components/my_icon.dart';
-import 'package:tankyou/components/my_svg_icon.dart';
+import 'package:tanku/components/my_icon.dart';
+import 'package:tanku/components/my_svg_icon.dart';
 
 class MyOverlayIcon extends StatelessWidget {
   final IconData icon;

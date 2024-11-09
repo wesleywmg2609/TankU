@@ -1,16 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tankyou/components/my_app_bar.dart';
-import 'package:tankyou/components/my_box_shadow.dart';
-import 'package:tankyou/components/my_drawer.dart';
-import 'package:tankyou/components/my_icon.dart';
-import 'package:tankyou/components/my_nav_bar.dart';
-import 'package:tankyou/views/2_page.dart';
-import 'package:tankyou/views/3_page.dart';
-import 'package:tankyou/views/4_page.dart';
-import 'package:tankyou/views/add_tank_page.dart';
-import 'package:tankyou/views/home_page.dart';
-import 'package:tankyou/views/tank_list_page.dart.dart';
+import 'package:tanku/components/my_app_bar.dart';
+import 'package:tanku/components/my_box_shadow.dart';
+import 'package:tanku/components/my_drawer.dart';
+import 'package:tanku/components/my_icon.dart';
+import 'package:tanku/components/my_nav_bar.dart';
+import 'package:tanku/views/2_page.dart';
+import 'package:tanku/views/3_page.dart';
+import 'package:tanku/views/4_page.dart';
+import 'package:tanku/views/add_tank_page.dart';
+import 'package:tanku/views/home_page.dart';
+import 'package:tanku/views/tank_list_page.dart.dart';
 
 class MainPage extends StatefulWidget {
   final User user;

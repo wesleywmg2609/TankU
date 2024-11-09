@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tankyou/components/my_box_shadow.dart';
-import 'package:tankyou/components/my_icon.dart';
-import 'package:tankyou/components/my_image_loader.dart';
+import 'package:tanku/components/my_box_shadow.dart';
+import 'package:tanku/components/my_icon.dart';
+import 'package:tanku/components/my_image_loader.dart';
 
 class MyImagePicker extends StatefulWidget {
   final String? initialImageUrl;

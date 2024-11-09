@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:intl/intl.dart';
-import 'package:tankyou/components/my_box_shadow.dart';
-import 'package:tankyou/components/my_theme.dart';
+import 'package:tanku/components/my_box_shadow.dart';
+import 'package:tanku/components/my_theme.dart';
 
 class MyDateField extends StatefulWidget {
   final TextEditingController controller;

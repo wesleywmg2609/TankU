@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tankyou/auth/auth.dart';
-import 'package:tankyou/components/my_icon.dart';
-import 'package:tankyou/components/my_overlay_icon.dart';
+import 'package:tanku/auth/auth.dart';
+import 'package:tanku/components/my_icon.dart';
+import 'package:tanku/components/my_overlay_icon.dart';
 
 class MyDrawer extends StatefulWidget {
   final int selectedIndex;

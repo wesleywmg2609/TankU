@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tankyou/components/my_button.dart';
-import 'package:tankyou/components/my_icon.dart';
-import 'package:tankyou/components/my_overlay_icon.dart';
+import 'package:tanku/components/my_button.dart';
+import 'package:tanku/components/my_icon.dart';
+import 'package:tanku/components/my_overlay_icon.dart';
 
 class MyNavBar extends StatefulWidget {
   final int selectedIndex;

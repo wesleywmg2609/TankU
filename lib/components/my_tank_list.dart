@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:tankyou/components/my_loading_indicator.dart';
-import 'package:tankyou/components/my_tank_item.dart';
-import 'package:tankyou/models/tank.dart';
-import 'package:tankyou/services/tank_service.dart';
+import 'package:tanku/components/my_loading_indicator.dart';
+import 'package:tanku/components/my_tank_item.dart';
+import 'package:tanku/models/tank.dart';
+import 'package:tanku/services/tank_service.dart';
 
 class MyTankList extends StatefulWidget {
   final User user;

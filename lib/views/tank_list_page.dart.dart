@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tankyou/components/my_tank_list.dart';
+import 'package:tanku/components/my_tank_list.dart';
 
 // ignore: must_be_immutable
 class TankListPage extends StatefulWidget {

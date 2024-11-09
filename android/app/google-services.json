@@ -1,42 +1,42 @@
 {
   "project_info": {
-    "project_number": "947941160893",
-    "firebase_url": "https://tankyou-bda5b-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "tankyou-bda5b",
-    "storage_bucket": "tankyou-bda5b.appspot.com"
+    "project_number": "231996966742",
+    "firebase_url": "https://tanku-72677-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "tanku-72677",
+    "storage_bucket": "tanku-72677.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:947941160893:android:4ec7cc44ae3f95cc3784d4",
+        "mobilesdk_app_id": "1:231996966742:android:43c9e69b793e0f353178f7",
         "android_client_info": {
-          "package_name": "com.example.tankyou"
+          "package_name": "com.example.tanku"
         }
       },
       "oauth_client": [
         {
-          "client_id": "947941160893-gvha0h44254dpc3po16q6tsqc96m2dqu.apps.googleusercontent.com",
+          "client_id": "231996966742-c140puaolm7f32tph1kc2m5p2chkmm7g.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.tankyou",
+            "package_name": "com.example.tanku",
             "certificate_hash": "dcd467eff0050f854c053d256abc4454b8c2eeb8"
           }
         },
         {
-          "client_id": "947941160893-gmnhi2lvogn7tipjhqtrb9jihung39sj.apps.googleusercontent.com",
+          "client_id": "231996966742-co9b1lcglu7s7rsp5u2o5brufc6g7f0b.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAW_eYhE5atLexZnVakK-9GfzKGJ05RnYs"
+          "current_key": "AIzaSyA19jCZUiLziHlntrzn6t2KWsDInD3X5lQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "947941160893-gmnhi2lvogn7tipjhqtrb9jihung39sj.apps.googleusercontent.com",
+              "client_id": "231996966742-co9b1lcglu7s7rsp5u2o5brufc6g7f0b.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

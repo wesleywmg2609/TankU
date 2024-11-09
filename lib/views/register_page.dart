@@ -1,16 +1,16 @@
 import 'package:confetti/confetti.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tankyou/auth/auth.dart';
-import 'package:tankyou/components/my_button.dart';
-import 'package:tankyou/components/my_confetti.dart';
-import 'package:tankyou/components/my_hyperlink.dart';
-import 'package:tankyou/components/my_icon.dart';
-import 'package:tankyou/components/my_svg_icon.dart';
-import 'package:tankyou/components/my_text.dart';
-import 'package:tankyou/components/my_text_field.dart';
-import 'package:tankyou/helper/functions.dart';
-import 'package:tankyou/views/main_page.dart';
+import 'package:tanku/auth/auth.dart';
+import 'package:tanku/components/my_button.dart';
+import 'package:tanku/components/my_confetti.dart';
+import 'package:tanku/components/my_hyperlink.dart';
+import 'package:tanku/components/my_icon.dart';
+import 'package:tanku/components/my_svg_icon.dart';
+import 'package:tanku/components/my_text.dart';
+import 'package:tanku/components/my_text_field.dart';
+import 'package:tanku/helper/functions.dart';
+import 'package:tanku/views/main_page.dart';
 
 class RegisterPage extends StatefulWidget {
   final void Function()? onTap;
@@ -100,7 +100,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               MyButton(
                                 onPressed: () => toggleConfetti(_confettiController, _isConfettiPlaying),
                                 resetAfterPress: false,
-                                child: const MySvgIcon(filepath: 'assets/tankyou_logo.svg', size: 150)
+                                child: const MySvgIcon(filepath: 'assets/tanku_logo.svg', size: 150)
                               ),
                             ],
                           ),

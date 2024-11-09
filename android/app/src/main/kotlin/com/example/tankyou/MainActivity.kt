@@ -1,4 +1,4 @@
-package com.example.tankyou
+package com.example.tanku
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tankyou/components/my_button.dart';
-import 'package:tankyou/components/my_image_loader.dart';
-import 'package:tankyou/components/my_text.dart';
-import 'package:tankyou/helper/functions.dart';
-import 'package:tankyou/models/tank.dart';
-import 'package:tankyou/views/tank_info_page.dart';
+import 'package:tanku/components/my_button.dart';
+import 'package:tanku/components/my_image_loader.dart';
+import 'package:tanku/components/my_text.dart';
+import 'package:tanku/helper/functions.dart';
+import 'package:tanku/models/tank.dart';
+import 'package:tanku/views/tank_info_page.dart';
 
 // ignore: must_be_immutable
 class MyTankItem extends StatefulWidget {
