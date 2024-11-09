@@ -13,9 +13,10 @@ import 'package:tankyou/components/my_loading_indicator.dart';
 import 'package:tankyou/components/my_overlay_icon.dart';
 import 'package:tankyou/components/my_text.dart';
 import 'package:tankyou/components/my_text_field.dart';
-import 'package:tankyou/database/database.dart';
+import 'package:tankyou/services/tank_service.dart';
 import 'package:tankyou/helper/functions.dart';
 import 'package:tankyou/models/tank.dart';
+import 'package:tankyou/services/image_service.dart';
 
 class EditTankPage extends StatefulWidget {
   final User user;

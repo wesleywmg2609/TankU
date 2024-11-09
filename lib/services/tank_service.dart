@@ -1,18 +1,19 @@
-import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:tankyou/models/tank.dart';
 
 class TankService with ChangeNotifier {
   late final User user;
   late final DatabaseReference databaseRef;
   final List<VoidCallback> _listeners = [];
+  List<Tank?> _tanks = [];
   Tank? _tank;
+  bool _isLoading = true;
 
   Tank? get tank => _tank;
+  List<Tank?> get tanks => _tanks;
+  bool get isLoading => _isLoading;
 
   TankService() {
     user = FirebaseAuth.instance.currentUser!;
@@ -34,6 +35,42 @@ class TankService with ChangeNotifier {
       listener();
     }
   }
+
+  void listenToAllTanksUpdates() {
+  databaseRef.onValue.listen((event) {
+    if (event.snapshot.exists && event.snapshot.value is Map) {
+      Map data = event.snapshot.value as Map;
+
+      // If there is data, process it and set isLoading to false
+      if (data.isNotEmpty) {
+        List<Tank> loadedTanks = [];
+        data.forEach((key, value) {
+          if (value is Map) {
+            Tank tank = createTank(Map<String, dynamic>.from(value));
+            tank.setId(databaseRef.child(key));
+            loadedTanks.add(tank);
+          }
+        });
+
+        // Update the tanks and loading state
+        loadedTanks.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        _tanks = loadedTanks;
+        _isLoading = false;
+      } else {
+        // If no data, still set isLoading to false
+        _isLoading = false;
+      }
+
+      // Notify listeners to update UI
+      _notifyListeners();
+    } else {
+      // In case of no data or incorrect format
+      _isLoading = false;
+      _notifyListeners();
+    }
+  });
+}
+
 
   void listenToTankUpdates(DatabaseReference tankRef) {
   tankRef.onValue.listen((event) {
@@ -123,92 +160,5 @@ class TankService with ChangeNotifier {
 
   Future<void> removeImageFromDatabase(DatabaseReference tankRef) async {
     await tankRef.update({'imageUrl': null});
-  }
-}
-
-class ImageService with ChangeNotifier {
-  List<String> _imageUrls = [];
-  bool _isLoading = false;
-  bool _isUploading = false;
-  
-  List<String> get imageUrls => _imageUrls;
-  bool get isLoading => _isLoading;
-  bool get isUploading => _isUploading;
-
-  Future<void> fetchImages() async {
-    _isLoading = true;
-
-    final ListResult result =
-        await FirebaseStorage.instance.ref('uploaded_images/').listAll();
-
-    final urls =
-        await Future.wait(result.items.map(((ref) => ref.getDownloadURL())));
-
-    _imageUrls = urls;
-
-    _isLoading = false;
-
-    notifyListeners();
-  }
-
-  Future<void> deleteImage(String imageUrl) async {
-    try {
-      _imageUrls.remove(imageUrl);
-
-      final String path = extractPathFromUrl(imageUrl);
-      await FirebaseStorage.instance.ref(path).delete();
-    } catch (e) {
-      print('Error deleting image: $e');
-    }
-
-    notifyListeners();
-  }
-
-  String extractPathFromUrl(String url) {
-    Uri uri = Uri.parse(url);
-
-    String encodedPath = uri.pathSegments.last;
-
-    return Uri.decodeComponent(encodedPath);
-  }
-
-  Future<String?> uploadImage() async {
-    _isUploading = true;
-    notifyListeners();
-
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-
-    if (image == null) {
-      _isUploading = false;
-      notifyListeners();
-      return null;
-    }
-
-    File file = File(image.path);
-
-    try {
-      String fileName = '${DateTime.now().millisecondsSinceEpoch}.png';
-      String filePath = 'uploaded_images/$fileName';
-
-      await FirebaseStorage.instance.ref(filePath).putFile(file);
-
-      String downloadUrl =
-          await FirebaseStorage.instance.ref(filePath).getDownloadURL();
-
-      _imageUrls.add(downloadUrl);
-
-      notifyListeners();
-
-      return downloadUrl;
-    } catch (e) {
-      print("Error uploading image: $e");
-      return null;
-
-    } finally {
-      _isUploading = false;
-      notifyListeners();
-
-    }
   }
 }

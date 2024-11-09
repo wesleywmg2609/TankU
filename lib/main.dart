@@ -4,7 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:tankyou/auth/auth.dart';
 import 'package:tankyou/components/my_theme.dart';
-import 'package:tankyou/database/database.dart';
+import 'package:tankyou/services/tank_service.dart';
+import 'package:tankyou/services/image_service.dart';
 import 'package:tankyou/views/splash_page.dart';
 
 Future<void> main() async {

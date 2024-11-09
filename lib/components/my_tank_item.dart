@@ -1,11 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tankyou/components/my_button.dart';
 import 'package:tankyou/components/my_image_loader.dart';
 import 'package:tankyou/components/my_text.dart';
-import 'package:tankyou/database/database.dart';
 import 'package:tankyou/helper/functions.dart';
 import 'package:tankyou/models/tank.dart';
 import 'package:tankyou/views/tank_info_page.dart';
@@ -13,12 +10,12 @@ import 'package:tankyou/views/tank_info_page.dart';
 // ignore: must_be_immutable
 class MyTankItem extends StatefulWidget {
   final User user;
-  final DatabaseReference tankRef;
+  final Tank? tank;
 
   const MyTankItem({
     super.key,
     required this.user,
-    required this.tankRef,
+    required this.tank,
   });
 
   @override
@@ -26,45 +23,26 @@ class MyTankItem extends StatefulWidget {
 }
 
 class _MyTankItemState extends State<MyTankItem> {
-  Tank? _tank;
-  late TankService _tankService;
-
-  @override
-  void initState() {
-    super.initState();
-    _tankService = Provider.of<TankService>(context, listen: false);
-    _tankService.listenToTankUpdates(widget.tankRef);
-
-    _tankService.addListener(() {
-      if (mounted) {
-        setState(() {
-          _tank = _tankService.tank;
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _tankService.removeListener(() {});
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
+    // If widget.tank is still null, show a loading indicator or some placeholder UI
+    if (widget.tank == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
     String tankInfo;
 
     String? waterInfo =
-        _tank?.waterType?.isNotEmpty ?? false ? _tank!.waterType! : null;
+        widget.tank?.waterType?.isNotEmpty ?? false ? widget.tank!.waterType! : null;
 
-    String? volumeInfo = (_tank != null &&
-            _tank!.width != null &&
-            _tank!.depth != null &&
-            _tank!.height != null &&
-            _tank!.width! != 0 &&
-            _tank!.depth! != 0 &&
-            _tank!.height! != 0)
-        ? '${((_tank!.width! * _tank!.depth! * _tank!.height!) / 1000).toStringAsFixed(0)}L'
+    String? volumeInfo = (widget.tank != null &&
+            widget.tank!.width != null &&
+            widget.tank!.depth != null &&
+            widget.tank!.height != null &&
+            widget.tank!.width! != 0 &&
+            widget.tank!.depth! != 0 &&
+            widget.tank!.height! != 0)
+        ? '${((widget.tank!.width! * widget.tank!.depth! * widget.tank!.height!) / 1000).toStringAsFixed(0)}L'
         : null;
 
     if (waterInfo != null && volumeInfo != null) {
@@ -81,7 +59,7 @@ class _MyTankItemState extends State<MyTankItem> {
         child: MyButton(
           child: Row(
             children: [
-              MyImageLoader(url: _tank?.imageUrl, size: 100),
+              MyImageLoader(url: widget.tank?.imageUrl, size: 100),
               Expanded(
                   child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -90,8 +68,8 @@ class _MyTankItemState extends State<MyTankItem> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     MyText(
-                      text: _tank?.name.toString() ??
-                          '???', // Provide a fallback value if _tank is null
+                      text: widget.tank?.name.toString() ??
+                          '???', // Provide a fallback value if widget.tank is null
                       isBold: true,
                       letterSpacing: 2.0,
                       size: 16,
@@ -103,8 +81,8 @@ class _MyTankItemState extends State<MyTankItem> {
                         size: 12,
                       ),
                     MyText(
-                      text: _tank?.setupAt != null
-                          ? convertFromIso8601String(_tank!.setupAt.toString())
+                      text: widget.tank?.setupAt != null
+                          ? convertFromIso8601String(widget.tank!.setupAt.toString())
                           : '???', // Provide a fallback text if `setupAt` is null
                       letterSpacing: 2.0,
                       size: 12,
@@ -120,7 +98,7 @@ class _MyTankItemState extends State<MyTankItem> {
                 MaterialPageRoute(
                     builder: (context) => TankInfoPage(
                           user: widget.user,
-                          tankRef: widget.tankRef,
+                          tankRef: widget.tank!.id,
                         )));
           },
         ));

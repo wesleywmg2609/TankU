@@ -5,7 +5,7 @@ import 'package:tankyou/components/my_box_shadow.dart';
 import 'package:tankyou/components/my_icon.dart';
 import 'package:tankyou/components/my_image_loader.dart';
 import 'package:tankyou/components/my_text.dart';
-import 'package:tankyou/database/database.dart';
+import 'package:tankyou/services/tank_service.dart';
 import 'package:tankyou/helper/functions.dart';
 import 'package:tankyou/models/tank.dart';
 import 'package:tankyou/views/edit_tank_page.dart';
