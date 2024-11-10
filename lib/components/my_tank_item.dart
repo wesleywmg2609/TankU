@@ -82,7 +82,7 @@ class _MyTankItemState extends State<MyTankItem> {
                     MyText(
                       text: widget.tank?.setupAt != null
                           ? convertFromIso8601String(widget.tank!.setupAt.toString())
-                          : '???', // Provide a fallback text if `setupAt` is null
+                          : '???',
                       letterSpacing: 2.0,
                       size: 12,
                     )

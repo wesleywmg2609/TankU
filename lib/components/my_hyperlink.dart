@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tanku/components/my_text.dart';
 
 // ignore: must_be_immutable
 class MyHyperlink extends StatelessWidget {
@@ -15,15 +16,9 @@ class MyHyperlink extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Text(
-        text,
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.onSurface,
-          letterSpacing: 1.0,
-          fontFamily: 'SFPro',
-          fontWeight: FontWeight.normal,
-          fontSize: 12,
-        ),
+      child: MyText(
+        text: text,
+        letterSpacing: 2.0,
       ),
     );
   }
