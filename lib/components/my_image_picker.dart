@@ -1,22 +1,21 @@
-import 'dart:io';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:tanku/components/my_box_shadow.dart';
 import 'package:tanku/components/my_icon.dart';
 import 'package:tanku/components/my_image_loader.dart';
+import 'package:tanku/services/image_service.dart';
+import 'package:tanku/services/tank_service.dart';
 
+// ignore: must_be_immutable
 class MyImagePicker extends StatefulWidget {
-  final String? initialImageUrl;
-  final File? initialFile;
-  final Function(File?) onImagePicked;
-  final VoidCallback onImageRemoved;
+  String? imageUrl;
+  DatabaseReference? tankRef;
 
-  const MyImagePicker({
+  MyImagePicker({
     super.key,
-    this.initialImageUrl,
-    this.initialFile,
-    required this.onImagePicked,
-    required this.onImageRemoved,
+    this.imageUrl,
+    this.tankRef,
   });
 
   @override
@@ -24,32 +23,50 @@ class MyImagePicker extends StatefulWidget {
 }
 
 class _MyImagePickerState extends State<MyImagePicker> {
-  File? _selectedImage;
+  late TankService _tankService;
+  late ImageService _imageService;
+  String? _imageUrl;
 
   @override
   void initState() {
+    _tankService = Provider.of<TankService>(context, listen: false);
+    _imageService = Provider.of<ImageService>(context, listen: false);
+
+    if (widget.imageUrl != null) {
+      _imageService.imageUrl = widget.imageUrl;
+      _imageUrl = widget.imageUrl;
+    }
+
     super.initState();
-    _selectedImage = widget.initialFile;
+
+    _imageService.addListener(() {
+      if (mounted) {
+        setState(() {
+          _imageUrl = _imageService.imageUrl;
+        });
+      }
+    });
   }
 
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      _removeImage();
+  @override
+  void dispose() {
+    _imageService.removeListener(() {});
+    super.dispose();
+  }
+
+  Future<void> _pickAndUploadImage() async {
+    final String? newImageUrl = await _imageService.uploadImage();
+    if (newImageUrl != null) {
+      if (_imageUrl != null) {
+        await _tankService.removeImageFromDatabase(widget.tankRef!);
+        await _imageService.deleteImage(_imageUrl!);
+      }
       setState(() {
-        _selectedImage = File(pickedFile.path);
+        _imageUrl = newImageUrl;
       });
-      widget.onImagePicked(_selectedImage);
     }
   }
 
-   void _removeImage() {
-    setState(() {
-      _selectedImage = null;
-    });
-    widget.onImageRemoved();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +79,7 @@ class _MyImagePickerState extends State<MyImagePicker> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             GestureDetector(
-              onTap: _pickImage,
+              onTap: _pickAndUploadImage,
               child: Container(
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
@@ -74,11 +91,9 @@ class _MyImagePickerState extends State<MyImagePicker> {
                   ],
                 ),
                 child: Center(
-                  child: widget.initialImageUrl != null && widget.initialImageUrl!.isNotEmpty
-                      ? MyImageLoader(url: widget.initialImageUrl, size: 150)
-                      : _selectedImage != null
-                          ? MyImageLoader(file: _selectedImage!, size: 150)
-                          : const SizedBox(
+                  child: _imageUrl != null && _imageUrl!.isNotEmpty
+                      ? MyImageLoader(url: _imageUrl, size: 150)
+                      : const SizedBox(
                               width: 150,
                               height: 150,
                               child: MyIcon(
@@ -90,9 +105,17 @@ class _MyImagePickerState extends State<MyImagePicker> {
             ),
           ],
         ),
-        if (_selectedImage != null || (widget.initialImageUrl != null && widget.initialImageUrl!.isNotEmpty))
+        if (_imageUrl != null && _imageUrl!.isNotEmpty)
           GestureDetector(
-            onTap: _removeImage,
+            onTap: () async {
+              if (_imageUrl != null) {
+                await _tankService.removeImageFromDatabase(widget.tankRef!);
+                await _imageService.deleteImage(_imageUrl!);
+                setState(() {
+                  _imageUrl = null;
+                });
+              }
+            },
             child: const Padding(
               padding: EdgeInsets.all(12.0),
               child: Icon(

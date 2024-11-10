@@ -4,52 +4,37 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageService with ChangeNotifier {
-  List<String> _imageUrls = [];
-  bool _isLoading = false;
+  String? _imageUrl;
   bool _isUploading = false;
-  
-  List<String> get imageUrls => _imageUrls;
-  bool get isLoading => _isLoading;
+  final List<VoidCallback> _listeners = [];
+
+  String? get imageUrl => _imageUrl;
   bool get isUploading => _isUploading;
 
-  Future<void> fetchImages() async {
-    _isLoading = true;
-
-    final ListResult result =
-        await FirebaseStorage.instance.ref('uploaded_images/').listAll();
-
-    final urls =
-        await Future.wait(result.items.map(((ref) => ref.getDownloadURL())));
-
-    _imageUrls = urls;
-
-    _isLoading = false;
-
+  set imageUrl(String? url) {
+    _imageUrl = url;
     notifyListeners();
   }
 
-  Future<void> deleteImage(String imageUrl) async {
-    try {
-      _imageUrls.remove(imageUrl);
+  @override
+  void addListener(VoidCallback listener) {
+    _listeners.add(listener);
+  }
 
-      final String path = extractPathFromUrl(imageUrl);
-      await FirebaseStorage.instance.ref(path).delete();
-    } catch (e) {
-      print('Error deleting image: $e');
+  @override
+  void removeListener(VoidCallback listener) {
+    _listeners.remove(listener);
+  }
+
+  void _notifyListeners() {
+    for (var listener in _listeners) {
+      listener();
     }
-
-    notifyListeners();
-  }
-
-  String extractPathFromUrl(String url) {
-    Uri uri = Uri.parse(url);
-
-    String encodedPath = uri.pathSegments.last;
-
-    return Uri.decodeComponent(encodedPath);
   }
 
   Future<String?> uploadImage() async {
+    if (_isUploading) return null;
+
     _isUploading = true;
     notifyListeners();
 
@@ -70,22 +55,39 @@ class ImageService with ChangeNotifier {
 
       await FirebaseStorage.instance.ref(filePath).putFile(file);
 
-      String downloadUrl =
-          await FirebaseStorage.instance.ref(filePath).getDownloadURL();
-
-      _imageUrls.add(downloadUrl);
+      _imageUrl = await FirebaseStorage.instance.ref(filePath).getDownloadURL();
 
       notifyListeners();
 
-      return downloadUrl;
+      return _imageUrl;
     } catch (e) {
       print("Error uploading image: $e");
+      _isUploading = false;
+      notifyListeners();
       return null;
 
     } finally {
       _isUploading = false;
       notifyListeners();
-
     }
+  }
+
+  Future<void> deleteImage(String imageUrl) async {
+    try {
+      final String path = extractPathFromUrl(imageUrl);
+      await FirebaseStorage.instance.ref(path).delete();
+    } catch (e) {
+      print('Error deleting image: $e');
+    }
+
+    notifyListeners();
+  }
+
+  String extractPathFromUrl(String url) {
+    Uri uri = Uri.parse(url);
+
+    String encodedPath = uri.pathSegments.last;
+
+    return Uri.decodeComponent(encodedPath);
   }
 }

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +28,8 @@ class AddTankPage extends StatefulWidget {
 }
 
 class _AddTankPageState extends State<AddTankPage> {
-  File? _image;
+  late TankService _tankService;
+  late ImageService _imageService;
   String? _selectedWaterType;
   final _controllers = {
     'name': TextEditingController(),
@@ -40,21 +40,13 @@ class _AddTankPageState extends State<AddTankPage> {
   };
   final List<TextEditingController> _equipmentControllers = [];
   final ValueNotifier<int> _volumeNotifier = ValueNotifier<int>(0);
-  late TankService _tankService;
-  late ImageService _ImageService;
 
   @override
   void initState() {
     super.initState();
     _tankService = Provider.of<TankService>(context, listen: false);
-    _ImageService = Provider.of<ImageService>(context, listen: false);
+    _imageService = Provider.of<ImageService>(context, listen: false);
     _addVolumeListeners();
-  }
-
-  void _addVolumeListeners() {
-    _controllers['width']?.addListener(_calculateVolume);
-    _controllers['depth']?.addListener(_calculateVolume);
-    _controllers['height']?.addListener(_calculateVolume);
   }
 
   @override
@@ -65,12 +57,18 @@ class _AddTankPageState extends State<AddTankPage> {
     super.dispose();
   }
 
+  void _addVolumeListeners() {
+    _controllers['width']?.addListener(_calculateVolume);
+    _controllers['depth']?.addListener(_calculateVolume);
+    _controllers['height']?.addListener(_calculateVolume);
+  }
+
   Future<void> _addTank() async {
     showLoadingDialog(context);
 
     String name =
         await _tankService.generateTankName(_controllers['name']!.text);
-    String? imageUrl;
+    String? imageUrl = _imageService.imageUrl;
     String? waterType = _selectedWaterType;
     int? width = int.tryParse(_controllers['width']!.text);
     int? depth = int.tryParse(_controllers['depth']!.text);
@@ -78,10 +76,6 @@ class _AddTankPageState extends State<AddTankPage> {
     String setupAt = convertToIso8601String(_controllers['setupAt']!.text);
 
     List<String> equipments = _equipmentControllers.map((c) => c.text).toList();
-
-    if (_image != null) {
-      imageUrl = await _ImageService.uploadImage();
-    }
 
     Tank tank = Tank(
       widget.user.uid,
@@ -119,18 +113,6 @@ class _AddTankPageState extends State<AddTankPage> {
     _equipmentControllers.clear();
   }
 
-  void _onImagePicked(File? image) {
-    setState(() {
-      _image = image;
-    });
-  }
-
-  void _onImageRemoved() {
-    setState(() {
-      _image = null;
-    });
-  }
-
   void _calculateVolume() {
     final width = int.tryParse(_controllers['width']!.text) ?? 0;
     final depth = int.tryParse(_controllers['depth']!.text) ?? 0;
@@ -153,7 +135,6 @@ class _AddTankPageState extends State<AddTankPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -176,11 +157,7 @@ class _AddTankPageState extends State<AddTankPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        MyImagePicker(
-                          initialFile: _image,
-                          onImagePicked: _onImagePicked,
-                          onImageRemoved: _onImageRemoved,
-                        ),
+                        MyImagePicker(),
                         MyTextField(
                           controller: _controllers['name']!,
                           icon: const MyOverlayIcon(
@@ -262,10 +239,10 @@ class _AddTankPageState extends State<AddTankPage> {
                         ),
                         const SizedBox(height: 15),
                         MyDateField(
-                            controller: _controllers['setupAt']!,
-                            icon: const MyIcon(icon: Icons.calendar_today),
-                            initialDate: DateTime.now(),
-                            ),
+                          controller: _controllers['setupAt']!,
+                          icon: const MyIcon(icon: Icons.calendar_today),
+                          initialDate: DateTime.now(),
+                        ),
                         const SizedBox(height: 15),
                         const MyText(
                           text: 'Equipment:',

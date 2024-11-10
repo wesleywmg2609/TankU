@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -29,8 +28,9 @@ class EditTankPage extends StatefulWidget {
 }
 
 class EditTankPageState extends State<EditTankPage> {
+  late TankService _tankService;
+  late ImageService _imageService;
   Tank? _tank;
-  File? _image;
   String? _selectedWaterType;
   DateTime? _initialDate;
   final _controllers = {
@@ -43,31 +43,40 @@ class EditTankPageState extends State<EditTankPage> {
   final List<TextEditingController> _equipmentControllers = [];
   final ValueNotifier<int> _volumeNotifier = ValueNotifier<int>(0);
   bool _isLoading = true;
-  late TankService _tankService;
-  late ImageService _ImageService;
 
   @override
   void initState() {
     super.initState();
     _tankService = Provider.of<TankService>(context, listen: false);
-    _ImageService = Provider.of<ImageService>(context, listen: false);
-    _fetchTank();
+    _imageService = Provider.of<ImageService>(context, listen: false);
+    _tankService.listenToTankUpdates(widget.tankRef);
+
+    _tankService.addListener(() {
+      if (mounted) {
+        setState(() {
+          _tank = _tankService.tank;
+          _initializeFields();
+          _isLoading = _tankService.isLoading;
+        });
+      }
+    });
     _addVolumeListeners();
   }
 
-  Future<void> _fetchTank() async {
-    final fetchedTank = await _tankService.getTankById(widget.tankRef);
-    setState(() {
-      _tank = fetchedTank;
-      _initializeFields();
-      _isLoading = false;
-    });
+  @override
+  void dispose() {
+    _tankService.removeListener(() {});
+    _controllers.values.forEach((controller) => controller.dispose());
+    _equipmentControllers.forEach((controller) => controller.dispose());
+    _volumeNotifier.dispose();
+    super.dispose();
   }
 
   void _initializeFields() {
     if (_tank != null) {
       _controllers['name']?.text = _tank?.name ?? '';
-      _selectedWaterType = _tank!.waterType!.isNotEmpty ? _tank!.waterType : null;
+      _selectedWaterType =
+          _tank!.waterType!.isNotEmpty ? _tank!.waterType : null;
       _controllers['width']?.text =
           _tank!.width != 0 ? _tank!.width!.toString() : '';
       _controllers['depth']?.text =
@@ -91,14 +100,6 @@ class EditTankPageState extends State<EditTankPage> {
     _controllers['height']?.addListener(_calculateVolume);
   }
 
-  @override
-  void dispose() {
-    _controllers.values.forEach((controller) => controller.dispose());
-    _equipmentControllers.forEach((controller) => controller.dispose());
-    _volumeNotifier.dispose();
-    super.dispose();
-  }
-
   Future<void> _updateTank() async {
     if (_isLoading) {
       displayMessageToUser('Tank data is not loaded yet', context);
@@ -106,20 +107,12 @@ class EditTankPageState extends State<EditTankPage> {
     }
 
     showLoadingDialog(context);
-    String? imageUrl;
 
     String name =
         await _tankService.generateTankName(_controllers['name']!.text);
     _tank!.name = name;
 
-    if (_image != null) {
-      if (_tank!.imageUrl != null && _tank!.imageUrl!.isNotEmpty) {
-        await _tankService.removeImageFromDatabase(_tank!.id);
-      }
-      imageUrl = await _ImageService.uploadImage();
-    } else {
-      imageUrl = _tank!.imageUrl;
-    }
+    String? imageUrl = _imageService.imageUrl;
     String? waterType = _selectedWaterType;
     int? width = int.tryParse(_controllers['width']!.text);
     int? depth = int.tryParse(_controllers['depth']!.text);
@@ -145,19 +138,6 @@ class EditTankPageState extends State<EditTankPage> {
     Navigator.pop(context);
 
     displayMessageToUser('Tank updated successfully!', context);
-  }
-
-  void _onImagePicked(File? image) {
-    setState(() {
-      _image = image;
-    });
-  }
-
-  void _onImageRemoved() async {
-    setState(() {
-      _image = null;
-      _tank!.imageUrl = null;
-    });
   }
 
   void _calculateVolume() {
@@ -210,11 +190,7 @@ class EditTankPageState extends State<EditTankPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         MyImagePicker(
-                          initialImageUrl: _tank?.imageUrl,
-                          initialFile: _image,
-                          onImagePicked: _onImagePicked,
-                          onImageRemoved: _onImageRemoved,
-                        ),
+                            imageUrl: _tank!.imageUrl!, tankRef: _tank!.id),
                         MyTextField(
                           controller: _controllers['name']!,
                           icon: const MyOverlayIcon(
