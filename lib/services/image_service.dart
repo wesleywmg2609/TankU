@@ -34,39 +34,28 @@ class ImageService with ChangeNotifier {
     });
   }
 
-  Future<String?> uploadImage() async {
-  if (_isUploading || _imageUrl != null) return _imageUrl;
-
+  Future<void> uploadImage() async {
+  if (_isUploading || _imageUrl != null) return;
   _isUploading = true;
-  _notifyListeners();
-
   final ImagePicker picker = ImagePicker();
   final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
   if (image == null) {
     _isUploading = false;
-    _notifyListeners();
-    return null;
+    return;
   }
-
   File file = File(image.path);
 
   try {
     String fileName = '${DateTime.now().millisecondsSinceEpoch}.png';
     String filePath = 'uploaded_images/$fileName';
-
     await FirebaseStorage.instance.ref(filePath).putFile(file);
-
     _imageUrl = await FirebaseStorage.instance.ref(filePath).getDownloadURL();
-
-    _notifyListeners();
-
-    return _imageUrl;
+    return;
   } catch (e) {
     print("Error uploading image: $e");
     _isUploading = false;
-    _notifyListeners();
-    return null;
+    return;
   } finally {
     _isUploading = false;
     _notifyListeners();
@@ -82,7 +71,6 @@ class ImageService with ChangeNotifier {
     } catch (e) {
       print('Error deleting image: $e');
     }
-
     _notifyListeners();
   }
 
