@@ -53,16 +53,6 @@ class _MyImagePickerState extends State<MyImagePicker> {
     super.dispose();
   }
 
-  Future<void> _pickAndUploadImage() async {
-    if (_imageUrl != null) {
-      if (widget.tankRef != null) {
-                  await _tankService.removeImageFromDatabase(widget.tankRef!);
-                }
-      await _imageService.deleteImage(_imageUrl!);
-    }
-    await _imageService.uploadImage();
-  }
-
   @override
   Widget build(BuildContext context) {
     MyBoxShadows shadows = MyBoxShadows();
@@ -74,7 +64,7 @@ class _MyImagePickerState extends State<MyImagePicker> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             GestureDetector(
-              onTap: _pickAndUploadImage,
+              onTap: () async => await _imageService.uploadImage(),
               child: Container(
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(

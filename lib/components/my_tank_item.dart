@@ -26,7 +26,6 @@ class _MyTankItemState extends State<MyTankItem> {
 
   @override
   Widget build(BuildContext context) {
-    // If widget.tank is still null, show a loading indicator or some placeholder UI
     if (widget.tank == null) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -69,7 +68,7 @@ class _MyTankItemState extends State<MyTankItem> {
                   children: [
                     MyText(
                       text: widget.tank?.name.toString() ??
-                          '???', // Provide a fallback value if widget.tank is null
+                          '???',
                       isBold: true,
                       letterSpacing: 2.0,
                       size: 16,
