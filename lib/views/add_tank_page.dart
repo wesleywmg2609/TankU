@@ -30,6 +30,7 @@ class AddTankPage extends StatefulWidget {
 class _AddTankPageState extends State<AddTankPage> {
   late TankService _tankService;
   late ImageService _imageService;
+  String? _imageUrl;
   String? _selectedWaterType;
   final _controllers = {
     'name': TextEditingController(),
@@ -47,10 +48,19 @@ class _AddTankPageState extends State<AddTankPage> {
     _tankService = Provider.of<TankService>(context, listen: false);
     _imageService = Provider.of<ImageService>(context, listen: false);
     _addVolumeListeners();
+
+    _imageService.addListener(() {
+      if (mounted) {
+        setState(() {
+          _imageUrl = _imageService.imageUrl;
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
+    _imageService.removeListener(() {});
     _controllers.values.forEach((controller) => controller.dispose());
     _equipmentControllers.forEach((controller) => controller.dispose());
     _volumeNotifier.dispose();
@@ -68,7 +78,7 @@ class _AddTankPageState extends State<AddTankPage> {
 
     String name =
         await _tankService.generateTankName(_controllers['name']!.text);
-    String? imageUrl = _imageService.imageUrl;
+    String? imageUrl = _imageUrl;
     String? waterType = _selectedWaterType;
     int? width = int.tryParse(_controllers['width']!.text);
     int? depth = int.tryParse(_controllers['depth']!.text);
@@ -105,6 +115,7 @@ class _AddTankPageState extends State<AddTankPage> {
     _controllers['height']!.clear();
     setState(() {
       _selectedWaterType = null;
+      _imageService.imageUrl = null;
     });
 
     for (var controller in _equipmentControllers) {

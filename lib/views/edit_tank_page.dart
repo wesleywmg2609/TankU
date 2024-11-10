@@ -31,6 +31,7 @@ class EditTankPageState extends State<EditTankPage> {
   late TankService _tankService;
   late ImageService _imageService;
   Tank? _tank;
+  String? _imageUrl;
   String? _selectedWaterType;
   DateTime? _initialDate;
   final _controllers = {
@@ -50,6 +51,7 @@ class EditTankPageState extends State<EditTankPage> {
     _tankService = Provider.of<TankService>(context, listen: false);
     _imageService = Provider.of<ImageService>(context, listen: false);
     _tankService.listenToTankUpdates(widget.tankRef);
+    _addVolumeListeners();
 
     _tankService.addListener(() {
       if (mounted) {
@@ -60,12 +62,20 @@ class EditTankPageState extends State<EditTankPage> {
         });
       }
     });
-    _addVolumeListeners();
+
+    _imageService.addListener(() {
+      if (mounted) {
+        setState(() {
+          _imageUrl = _imageService.imageUrl;
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
     _tankService.removeListener(() {});
+    _imageService.removeListener(() {});
     _controllers.values.forEach((controller) => controller.dispose());
     _equipmentControllers.forEach((controller) => controller.dispose());
     _volumeNotifier.dispose();
@@ -112,7 +122,7 @@ class EditTankPageState extends State<EditTankPage> {
         await _tankService.generateTankName(_controllers['name']!.text);
     _tank!.name = name;
 
-    String? imageUrl = _imageService.imageUrl;
+    String? imageUrl = _imageUrl;
     String? waterType = _selectedWaterType;
     int? width = int.tryParse(_controllers['width']!.text);
     int? depth = int.tryParse(_controllers['depth']!.text);

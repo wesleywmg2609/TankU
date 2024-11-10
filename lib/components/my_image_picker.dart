@@ -34,7 +34,6 @@ class _MyImagePickerState extends State<MyImagePicker> {
 
     if (widget.imageUrl != null) {
       _imageService.imageUrl = widget.imageUrl;
-      _imageUrl = widget.imageUrl;
     }
 
     super.initState();
@@ -55,23 +54,19 @@ class _MyImagePickerState extends State<MyImagePicker> {
   }
 
   Future<void> _pickAndUploadImage() async {
-    final String? newImageUrl = await _imageService.uploadImage();
-    if (newImageUrl != null) {
-      if (_imageUrl != null) {
-        await _tankService.removeImageFromDatabase(widget.tankRef!);
-        await _imageService.deleteImage(_imageUrl!);
-      }
-      setState(() {
-        _imageUrl = newImageUrl;
-      });
+    if (_imageUrl != null) {
+      if (widget.tankRef != null) {
+                  await _tankService.removeImageFromDatabase(widget.tankRef!);
+                }
+      await _imageService.deleteImage(_imageUrl!);
     }
+    await _imageService.uploadImage();
   }
-
 
   @override
   Widget build(BuildContext context) {
     MyBoxShadows shadows = MyBoxShadows();
-    
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -87,19 +82,19 @@ class _MyImagePickerState extends State<MyImagePicker> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     shadows.darkShadow(context),
-                      shadows.lightShadow(context),
+                    shadows.lightShadow(context),
                   ],
                 ),
                 child: Center(
                   child: _imageUrl != null && _imageUrl!.isNotEmpty
                       ? MyImageLoader(url: _imageUrl, size: 150)
                       : const SizedBox(
-                              width: 150,
-                              height: 150,
-                              child: MyIcon(
-                                icon: Icons.camera_alt,
-                              ),
-                            ),
+                          width: 150,
+                          height: 150,
+                          child: MyIcon(
+                            icon: Icons.camera_alt,
+                          ),
+                        ),
                 ),
               ),
             ),
@@ -109,11 +104,10 @@ class _MyImagePickerState extends State<MyImagePicker> {
           GestureDetector(
             onTap: () async {
               if (_imageUrl != null) {
-                await _tankService.removeImageFromDatabase(widget.tankRef!);
+                if (widget.tankRef != null) {
+                  await _tankService.removeImageFromDatabase(widget.tankRef!);
+                }
                 await _imageService.deleteImage(_imageUrl!);
-                setState(() {
-                  _imageUrl = null;
-                });
               }
             },
             child: const Padding(
@@ -125,7 +119,7 @@ class _MyImagePickerState extends State<MyImagePicker> {
             ),
           )
         else
-                          const SizedBox(height: 15),
+          const SizedBox(height: 15),
       ],
     );
   }

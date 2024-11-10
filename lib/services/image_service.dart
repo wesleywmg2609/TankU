@@ -13,7 +13,7 @@ class ImageService with ChangeNotifier {
 
   set imageUrl(String? url) {
     _imageUrl = url;
-    notifyListeners();
+    _notifyListeners();
   }
 
   @override
@@ -27,23 +27,25 @@ class ImageService with ChangeNotifier {
   }
 
   void _notifyListeners() {
-    for (var listener in _listeners) {
-      listener();
-    }
+    Future.delayed(Duration.zero, () {
+      for (var listener in _listeners) {
+        listener();
+      }
+    });
   }
 
   Future<String?> uploadImage() async {
     if (_isUploading) return null;
 
     _isUploading = true;
-    notifyListeners();
+    _notifyListeners();
 
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
     if (image == null) {
       _isUploading = false;
-      notifyListeners();
+      _notifyListeners();
       return null;
     }
 
@@ -57,18 +59,17 @@ class ImageService with ChangeNotifier {
 
       _imageUrl = await FirebaseStorage.instance.ref(filePath).getDownloadURL();
 
-      notifyListeners();
+      _notifyListeners();
 
       return _imageUrl;
     } catch (e) {
       print("Error uploading image: $e");
       _isUploading = false;
-      notifyListeners();
+      _notifyListeners();
       return null;
-
     } finally {
       _isUploading = false;
-      notifyListeners();
+      _notifyListeners();
     }
   }
 
@@ -76,11 +77,12 @@ class ImageService with ChangeNotifier {
     try {
       final String path = extractPathFromUrl(imageUrl);
       await FirebaseStorage.instance.ref(path).delete();
+      _imageUrl = null;
     } catch (e) {
       print('Error deleting image: $e');
     }
 
-    notifyListeners();
+    _notifyListeners();
   }
 
   String extractPathFromUrl(String url) {
