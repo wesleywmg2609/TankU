@@ -35,7 +35,8 @@ class ImageService with ChangeNotifier {
   }
 
   Future<void> uploadImage() async {
-  if (_isUploading || _imageUrl != null) return;
+  if (_isUploading || (_imageUrl != null && _imageUrl!.isNotEmpty)) return;
+  
   _isUploading = true;
   final ImagePicker picker = ImagePicker();
   final XFile? image = await picker.pickImage(source: ImageSource.gallery);
