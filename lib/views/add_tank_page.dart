@@ -157,6 +157,13 @@ class _AddTankPageState extends State<AddTankPage> {
             children: [
               MyAppBar(
                 title: 'Add Tank',
+                leading: const MyIcon(icon: Icons.arrow_back),
+                onLeadingPressed: () {
+                  if (_imageUrl != null && _imageUrl!.isNotEmpty) {
+                    _imageService.deleteImage(_imageUrl!);
+                  }
+                  Navigator.pop(context);
+                },
                 trailing: const MyIcon(icon: Icons.check),
                 onTrailingPressed: _addTank,
               ),

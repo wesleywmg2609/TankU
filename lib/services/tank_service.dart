@@ -37,54 +37,54 @@ class TankService with ChangeNotifier {
   }
 
   void listenToAllTanksUpdates() {
-  databaseRef.onValue.listen((event) {
-    if (event.snapshot.exists && event.snapshot.value is Map) {
-      Map data = event.snapshot.value as Map;
+    databaseRef.onValue.listen((event) {
+      if (event.snapshot.exists && event.snapshot.value is Map) {
+        Map data = event.snapshot.value as Map;
 
-      // If there is data, process it and set isLoading to false
-      if (data.isNotEmpty) {
-        List<Tank> loadedTanks = [];
-        data.forEach((key, value) {
-          if (value is Map) {
-            Tank tank = createTank(Map<String, dynamic>.from(value));
-            tank.setId(databaseRef.child(key));
-            loadedTanks.add(tank);
-          }
-        });
+        // If there is data, process it and set isLoading to false
+        if (data.isNotEmpty) {
+          List<Tank> loadedTanks = [];
+          data.forEach((key, value) {
+            if (value is Map) {
+              Tank tank = createTank(Map<String, dynamic>.from(value));
+              tank.setId(databaseRef.child(key));
+              loadedTanks.add(tank);
+            }
+          });
 
-        // Update the tanks and loading state
-        loadedTanks.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-        _tanks = loadedTanks;
-        _isLoading = false;
+          // Update the tanks and loading state
+          loadedTanks.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+          _tanks = loadedTanks;
+          _isLoading = false;
+        } else {
+          // If no data, still set isLoading to false
+          _isLoading = false;
+        }
+
+        // Notify listeners to update UI
+        _notifyListeners();
       } else {
-        // If no data, still set isLoading to false
+        // In case of no data or incorrect format
         _isLoading = false;
+        _notifyListeners();
       }
-
-      // Notify listeners to update UI
-      _notifyListeners();
-    } else {
-      // In case of no data or incorrect format
-      _isLoading = false;
-      _notifyListeners();
-    }
-  });
-}
-
+    });
+  }
 
   void listenToTankUpdates(DatabaseReference tankRef) {
-  tankRef.onValue.listen((event) {
-    if (event.snapshot.exists && event.snapshot.value is Map) {
-      Map<String, dynamic> tankData = Map<String, dynamic>.from(event.snapshot.value as Map);
-      if (tankData['uid'] == user.uid) {
-            Tank tank = createTank(tankData);
-            tank.setId(tankRef);
-            _tank = tank;
-            _notifyListeners();
-          }
-    }
-  });
-}
+    tankRef.onValue.listen((event) {
+      if (event.snapshot.exists && event.snapshot.value is Map) {
+        Map<String, dynamic> tankData =
+            Map<String, dynamic>.from(event.snapshot.value as Map);
+        if (tankData['uid'] == user.uid) {
+          Tank tank = createTank(tankData);
+          tank.setId(tankRef);
+          _tank = tank;
+          _notifyListeners();
+        }
+      }
+    });
+  }
 
   DatabaseReference addTankToDatabase(Tank tank) {
     var id = databaseRef.push();
@@ -139,6 +139,17 @@ class TankService with ChangeNotifier {
     return null;
   }
 
+  Future<void> removeImageFromDatabase(DatabaseReference tankRef) async {
+    await tankRef.update({'imageUrl': null});
+  }
+
+  Future<void> updateImageUrlInTankRef(
+      DatabaseReference tankRef, String imageUrl) async {
+    await tankRef.update({
+      'imageUrl': imageUrl,
+    });
+  }
+
   Future<String> generateTankName(String name) async {
     name = name.trim();
 
@@ -156,9 +167,5 @@ class TankService with ChangeNotifier {
     }
 
     return name;
-  }
-
-  Future<void> removeImageFromDatabase(DatabaseReference tankRef) async {
-    await tankRef.update({'imageUrl': null});
   }
 }

@@ -69,6 +69,9 @@ class EditTankPageState extends State<EditTankPage> {
           _imageUrl = _imageService.imageUrl;
         });
       }
+      if (_imageUrl != null) {
+        _tankService.updateImageUrlInTankRef(widget.tankRef, _imageUrl!);
+      }
     });
   }
 

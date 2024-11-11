@@ -39,18 +39,26 @@ class _MyAppBarState extends State<MyAppBar> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if (widget.leading != null)
+          if (widget.leading != null &&
+              widget.onLeadingPressed != null &&
+              widget.isLeadingPressed != null)
             MyButton(
               onPressed: widget.onLeadingPressed!,
               resetAfterPress: false,
               isPressed: widget.isLeadingPressed!,
               child: widget.leading!,
             )
+          else if (widget.leading != null && widget.onLeadingPressed != null)
+            MyButton(
+              onPressed: widget.onLeadingPressed!,
+              resetAfterPress: true,
+              child: widget.leading!,
+            )
           else
             MyButton(
               onPressed: () {
-  Navigator.pop(context, true);
-},
+                Navigator.pop(context);
+              },
               child: const MyIcon(icon: Icons.arrow_back),
             ),
           Column(

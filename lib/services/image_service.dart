@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -60,6 +61,15 @@ class ImageService with ChangeNotifier {
   } finally {
     _isUploading = false;
     _notifyListeners();
+  }
+}
+
+void _updateImageUrlInTankRef(DatabaseReference tankRef) async {
+  if (_imageUrl != null) {
+    await tankRef.update({
+      'imageUrl': _imageUrl,
+    });
+    //displayMessageToUser('Image updated successfully!', context);
   }
 }
 
