@@ -96,6 +96,15 @@ class TankService with ChangeNotifier {
     tankRef.update(tank.toJson());
   }
 
+  void deleteTank(DatabaseReference tankRef) async {
+  try {
+    await tankRef.remove();
+    _tanks.removeWhere((tank) => tank?.id == tankRef);
+  } catch (e) {
+    print('Error deleting tank: $e');
+  }
+}
+
   Future<List<Tank>> getAllTanks() async {
     try {
       DatabaseEvent databaseEvent = await databaseRef.once();
