@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "231996966742-fbpeci5upvckakd8f9f5ijtjm5k04kuh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tanku",
+            "certificate_hash": "7435f29d5813da072d04483f670dac3ad6095536"
+          }
+        },
+        {
           "client_id": "231996966742-co9b1lcglu7s7rsp5u2o5brufc6g7f0b.apps.googleusercontent.com",
           "client_type": 3
         }
