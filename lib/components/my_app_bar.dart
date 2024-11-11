@@ -39,53 +39,29 @@ class _MyAppBarState extends State<MyAppBar> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if (widget.leading != null &&
-              widget.onLeadingPressed != null &&
-              widget.isLeadingPressed != null)
-            MyButton(
-              onPressed: widget.onLeadingPressed!,
-              resetAfterPress: false,
-              isPressed: widget.isLeadingPressed!,
-              child: widget.leading!,
-            )
-          else if (widget.leading != null && widget.onLeadingPressed != null)
-            MyButton(
-              onPressed: widget.onLeadingPressed!,
-              resetAfterPress: true,
-              child: widget.leading!,
-            )
-          else
-            MyButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const MyIcon(icon: Icons.arrow_back),
-            ),
+          MyButton(
+            onPressed: widget.onLeadingPressed ?? () => Navigator.pop(context),
+            resetAfterPress: widget.isLeadingPressed != null ? false : true,
+            isPressed: widget.isLeadingPressed ?? false,
+            child: widget.leading ?? const MyIcon(icon: Icons.arrow_back),
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              if (widget.subtitle != null) ...[
-                MyText(
-                  text: widget.title,
-                  isBold: true,
-                  letterSpacing: 2.0,
-                  size: 12,
-                ),
+              MyText(
+                text: widget.title,
+                isBold: true,
+                letterSpacing: 2.0,
+                size: widget.subtitle != null ? 12 : 20,
+              ),
+              if (widget.subtitle != null)
                 MyText(
                   text: widget.subtitle!,
                   isBold: true,
                   letterSpacing: 2.0,
                   size: 20,
                 ),
-              ] else ...[
-                MyText(
-                  text: widget.title,
-                  isBold: true,
-                  letterSpacing: 2.0,
-                  size: 20,
-                ),
-              ],
             ],
           ),
           if (widget.trailing != null)

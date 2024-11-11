@@ -41,7 +41,6 @@ class TankService with ChangeNotifier {
       if (event.snapshot.exists && event.snapshot.value is Map) {
         Map data = event.snapshot.value as Map;
 
-        // If there is data, process it and set isLoading to false
         if (data.isNotEmpty) {
           List<Tank> loadedTanks = [];
           data.forEach((key, value) {
@@ -52,19 +51,15 @@ class TankService with ChangeNotifier {
             }
           });
 
-          // Update the tanks and loading state
           loadedTanks.sort((a, b) => b.createdAt.compareTo(a.createdAt));
           _tanks = loadedTanks;
           _isLoading = false;
         } else {
-          // If no data, still set isLoading to false
           _isLoading = false;
         }
 
-        // Notify listeners to update UI
         _notifyListeners();
       } else {
-        // In case of no data or incorrect format
         _isLoading = false;
         _notifyListeners();
       }
@@ -97,13 +92,13 @@ class TankService with ChangeNotifier {
   }
 
   void deleteTank(DatabaseReference tankRef) async {
-  try {
-    await tankRef.remove();
-    _tanks.removeWhere((tank) => tank?.id == tankRef);
-  } catch (e) {
-    print('Error deleting tank: $e');
+    try {
+      await tankRef.remove();
+      _tanks.removeWhere((tank) => tank?.id == tankRef);
+    } catch (e) {
+      print('Error deleting tank: $e');
+    }
   }
-}
 
   Future<List<Tank>> getAllTanks() async {
     try {
@@ -148,15 +143,12 @@ class TankService with ChangeNotifier {
     return null;
   }
 
-  Future<void> removeImageFromDatabase(DatabaseReference tankRef) async {
-    await tankRef.update({'imageUrl': null});
-  }
-
-  Future<void> updateImageUrlInTankRef(
-      DatabaseReference tankRef, String imageUrl) async {
-    await tankRef.update({
-      'imageUrl': imageUrl,
-    });
+  Future<void> updateImageUrlInTankRef(DatabaseReference tankRef, {String? imageUrl}) async {
+    if (imageUrl != null) {
+      await tankRef.update({'imageUrl': imageUrl});
+    } else {
+      await tankRef.update({'imageUrl': null});
+    }
   }
 
   Future<String> generateTankName(String name) async {

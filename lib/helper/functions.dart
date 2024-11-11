@@ -32,6 +32,23 @@ void showLoadingDialog(BuildContext context) {
   );
 }
 
+String getDaysSinceSetup(String setupAtIso8601) {
+    final setupAt = DateTime.parse(setupAtIso8601);
+
+    final currentDate = DateTime.now();
+    final currentDateWithoutTime =
+        DateTime(currentDate.year, currentDate.month, currentDate.day);
+
+    final difference = currentDateWithoutTime
+        .difference(DateTime(setupAt.year, setupAt.month, setupAt.day));
+
+    if (difference.inDays >= 0) {
+      return '${difference.inDays} day${difference.inDays != 1 ? 's' : ''}';
+    }
+
+    return '? days';
+  }
+
 void displayMessageToUser(String message, BuildContext context) {
   showGeneralDialog(
     context: context,

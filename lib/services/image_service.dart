@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -36,43 +35,33 @@ class ImageService with ChangeNotifier {
   }
 
   Future<void> uploadImage() async {
-  if (_isUploading || (_imageUrl != null && _imageUrl!.isNotEmpty)) return;
-  
-  _isUploading = true;
-  final ImagePicker picker = ImagePicker();
-  final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (_isUploading || (_imageUrl != null && _imageUrl!.isNotEmpty)) return;
 
-  if (image == null) {
-    _isUploading = false;
-    return;
+    _isUploading = true;
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image == null) {
+      _isUploading = false;
+      return;
+    }
+    File file = File(image.path);
+
+    try {
+      String fileName = '${DateTime.now().millisecondsSinceEpoch}.png';
+      String filePath = 'uploaded_images/$fileName';
+      await FirebaseStorage.instance.ref(filePath).putFile(file);
+      _imageUrl = await FirebaseStorage.instance.ref(filePath).getDownloadURL();
+      return;
+    } catch (e) {
+      print("Error uploading image: $e");
+      _isUploading = false;
+      return;
+    } finally {
+      _isUploading = false;
+      _notifyListeners();
+    }
   }
-  File file = File(image.path);
-
-  try {
-    String fileName = '${DateTime.now().millisecondsSinceEpoch}.png';
-    String filePath = 'uploaded_images/$fileName';
-    await FirebaseStorage.instance.ref(filePath).putFile(file);
-    _imageUrl = await FirebaseStorage.instance.ref(filePath).getDownloadURL();
-    return;
-  } catch (e) {
-    print("Error uploading image: $e");
-    _isUploading = false;
-    return;
-  } finally {
-    _isUploading = false;
-    _notifyListeners();
-  }
-}
-
-void _updateImageUrlInTankRef(DatabaseReference tankRef) async {
-  if (_imageUrl != null) {
-    await tankRef.update({
-      'imageUrl': _imageUrl,
-    });
-    //displayMessageToUser('Image updated successfully!', context);
-  }
-}
-
 
   Future<void> deleteImage(String imageUrl) async {
     try {

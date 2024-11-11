@@ -23,20 +23,22 @@ class MyImagePicker extends StatefulWidget {
 }
 
 class _MyImagePickerState extends State<MyImagePicker> {
+  MyBoxShadows shadows = MyBoxShadows();
   late TankService _tankService;
   late ImageService _imageService;
   String? _imageUrl;
 
   @override
   void initState() {
+    super.initState();
     _tankService = Provider.of<TankService>(context, listen: false);
     _imageService = Provider.of<ImageService>(context, listen: false);
 
-    if (widget.imageUrl != null) {
+    if (widget.imageUrl != null && widget.imageUrl!.isNotEmpty) {
       _imageService.imageUrl = widget.imageUrl;
+    } else {
+      _imageService.imageUrl = null;
     }
-
-    super.initState();
 
     _imageService.addListener(() {
       if (mounted) {
@@ -53,61 +55,64 @@ class _MyImagePickerState extends State<MyImagePicker> {
     super.dispose();
   }
 
+  _buildImagePicker() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        GestureDetector(
+          onTap: () async => await _imageService.uploadImage(),
+          child: Container(
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                shadows.darkShadow(context),
+                shadows.lightShadow(context),
+              ],
+            ),
+            child: Center(
+              child: _imageUrl != null && _imageUrl!.isNotEmpty
+                  ? MyImageLoader(url: _imageUrl, size: 150)
+                  : const SizedBox(
+                      width: 150,
+                      height: 150,
+                      child: MyIcon(icon: Icons.camera_alt)),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  _buildDeleteButton() {
+    return GestureDetector(
+      onTap: () async {
+        if (_imageUrl != null) {
+          if (widget.tankRef != null) {
+            await _tankService.updateImageUrlInTankRef(widget.tankRef!);
+          }
+          await _imageService.deleteImage(_imageUrl!);
+        }
+      },
+      child: const Padding(
+        padding: EdgeInsets.all(12.0),
+        child: MyIcon(
+          icon: Icons.delete,
+          color: Colors.red,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    MyBoxShadows shadows = MyBoxShadows();
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            GestureDetector(
-              onTap: () async => await _imageService.uploadImage(),
-              child: Container(
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    shadows.darkShadow(context),
-                    shadows.lightShadow(context),
-                  ],
-                ),
-                child: Center(
-                  child: _imageUrl != null && _imageUrl!.isNotEmpty
-                      ? MyImageLoader(url: _imageUrl, size: 150)
-                      : const SizedBox(
-                          width: 150,
-                          height: 150,
-                          child: MyIcon(
-                            icon: Icons.camera_alt,
-                          ),
-                        ),
-                ),
-              ),
-            ),
-          ],
-        ),
+        _buildImagePicker(),
         if (_imageUrl != null && _imageUrl!.isNotEmpty)
-          GestureDetector(
-            onTap: () async {
-              if (_imageUrl != null) {
-                if (widget.tankRef != null) {
-                  await _tankService.removeImageFromDatabase(widget.tankRef!);
-                }
-                await _imageService.deleteImage(_imageUrl!);
-              }
-            },
-            child: const Padding(
-              padding: EdgeInsets.all(12.0),
-              child: Icon(
-                Icons.delete,
-                color: Colors.red,
-              ),
-            ),
-          )
+          _buildDeleteButton()
         else
           const SizedBox(height: 15),
       ],

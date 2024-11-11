@@ -70,7 +70,7 @@ class EditTankPageState extends State<EditTankPage> {
         });
       }
       if (_imageUrl != null) {
-        _tankService.updateImageUrlInTankRef(widget.tankRef, _imageUrl!);
+        _tankService.updateImageUrlInTankRef(widget.tankRef, imageUrl: _imageUrl!);
       }
     });
   }
