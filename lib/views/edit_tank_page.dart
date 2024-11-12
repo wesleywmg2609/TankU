@@ -191,6 +191,10 @@ class EditTankPageState extends State<EditTankPage> {
               MyAppBar(
                 title: 'Edit Tank',
                 subtitle: _tank?.name.toString(),
+                onLeadingPressed: () {
+                  _imageService.imageUrl = null;
+                  Navigator.pop(context);
+                },
                 trailing: const MyIcon(icon: Icons.check),
                 onTrailingPressed: _updateTank,
               ),

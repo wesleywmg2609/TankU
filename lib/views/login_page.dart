@@ -26,6 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isConfettiPlaying = false;
+  bool _isGooglePressed = false;
 
   @override
   void initState() {
@@ -76,6 +77,9 @@ Future<void> _login() async {
 
   Future<void> _googleSignIn() async {
     try {
+      setState(() {
+        _isGooglePressed = true;
+      });
     User? user = await signInWithGoogle();
     logCurrentUser();
 
@@ -89,6 +93,10 @@ Future<void> _login() async {
     }
   } catch (e) {
     displayMessageToUser('An error occurred. Please try again.', context);
+  } finally {
+    setState(() {
+      _isGooglePressed = false;
+    });
   }
   }
 
@@ -219,6 +227,8 @@ Future<void> _login() async {
                             children: [
                               MyButton(
                                 onPressed: _googleSignIn,
+                                resetAfterPress: false,
+                                isPressed: _isGooglePressed,
                                 child: const MySvgIcon(filepath: 'assets/google_logo.svg')
                               )
                             ],

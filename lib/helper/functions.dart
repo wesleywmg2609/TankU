@@ -14,8 +14,13 @@ String convertToIso8601String(String datetime) {
 }
 
 String convertFromIso8601String(String isoString) {
-  DateTime dateTime = DateTime.parse(isoString);
-  return DateFormat('MMM d, yyyy').format(dateTime);
+  try {
+    DateTime dateTime = DateTime.parse(isoString);
+    return DateFormat('MMM d, yyyy').format(dateTime);
+  } catch (e) {
+    print('Error parsing date: $e');
+    return 'Invalid Date Format';
+  }
 }
 
 void showLoadingDialog(BuildContext context) {

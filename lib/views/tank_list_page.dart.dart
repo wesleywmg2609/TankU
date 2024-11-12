@@ -167,7 +167,7 @@ class TankListPageState extends State<TankListPage> {
             if (tank.imageUrl != null && tank.imageUrl!.isNotEmpty) {
               _imageService.deleteImage(tank.imageUrl!);
             }
-            _tankService.deleteTank(tank.id);
+           _tankService.deleteTank(tank.id);
           }
         }
       );

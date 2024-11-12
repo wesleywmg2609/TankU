@@ -97,7 +97,6 @@ class TankService with ChangeNotifier {
   void deleteTank(DatabaseReference tankRef) async {
     try {
       await tankRef.remove();
-      _tanks.removeWhere((tank) => tank?.id == tankRef);
     } catch (e) {
       print('Error deleting tank: $e');
     }
