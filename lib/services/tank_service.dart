@@ -37,34 +37,37 @@ class TankService with ChangeNotifier {
   }
 
   void listenToAllTanksUpdates() {
-    databaseRef.onValue.listen((event) {
-      if (event.snapshot.exists && event.snapshot.value is Map) {
-        Map data = event.snapshot.value as Map;
+  databaseRef.onValue.listen((event) {
+    if (event.snapshot.exists && event.snapshot.value is Map) {
+      Map data = event.snapshot.value as Map;
 
-        if (data.isNotEmpty) {
-          List<Tank> loadedTanks = [];
-          data.forEach((key, value) {
-            if (value is Map) {
-              Tank tank = createTank(Map<String, dynamic>.from(value));
-              tank.setId(databaseRef.child(key));
-              loadedTanks.add(tank);
-            }
-          });
+      if (data.isNotEmpty) {
+        List<Tank> loadedTanks = [];
+        data.forEach((key, value) {
+          if (value is Map) {
+            Tank tank = createTank(Map<String, dynamic>.from(value));
+            tank.setId(databaseRef.child(key));
+            loadedTanks.add(tank);
+          }
+        });
 
-          loadedTanks.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-          _tanks = loadedTanks;
-          _isLoading = false;
-        } else {
-          _isLoading = false;
-        }
-
-        _notifyListeners();
+        loadedTanks.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        _tanks = loadedTanks;
       } else {
-        _isLoading = false;
-        _notifyListeners();
+        // Clear _tanks if data is empty to reflect deletion
+        _tanks = [];
       }
-    });
-  }
+      _isLoading = false;
+      _notifyListeners();
+    } else {
+      // Handle the case where no data exists at all
+      _tanks = [];
+      _isLoading = false;
+      _notifyListeners();
+    }
+  });
+}
+
 
   void listenToTankUpdates(DatabaseReference tankRef) {
     tankRef.onValue.listen((event) {

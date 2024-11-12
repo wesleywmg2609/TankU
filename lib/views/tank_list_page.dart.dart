@@ -62,29 +62,28 @@ class TankListPageState extends State<TankListPage> {
   }
 
   _buildTankList() {
-    return Expanded(
-      child: SlidableAutoCloseBehavior(
-        child: ListView.builder(
-          itemCount: _tanks.length,
-          itemBuilder: (context, index) {
-            var tank = _tanks[index];
-            return Slidable(
-                key: ValueKey(tank?.id),
-                endActionPane:
-                    ActionPane(
-                      motion: const ScrollMotion(), 
-                      children: [
-                        Expanded(
-                          child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 8, 16, 8),
-                          child: _buildDeleteButton(tank),
-                        )
+    return SlidableAutoCloseBehavior(
+      child: ListView.builder(
+        itemCount: _tanks.length,
+        itemBuilder: (context, index) {
+          var tank = _tanks[index];
+          return Slidable(
+              key: ValueKey(tank?.id),
+              endActionPane:
+                  ActionPane(
+                    motion: const ScrollMotion(), 
+                    children: [
+                      SizedBox(
+                       width: 125,
+                        child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 8, 16, 8),
+                        child: _buildDeleteButton(tank),
                       )
-                    ]
-                  ),
-                child: _buildTankItem(tank));
-          },
-        ),
+                    )
+                  ]
+                ),
+              child: _buildTankItem(tank));
+        },
       ),
     );
   }
