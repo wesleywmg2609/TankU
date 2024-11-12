@@ -72,14 +72,14 @@ class TankListPageState extends State<TankListPage> {
               endActionPane:
                   ActionPane(
                     motion: const ScrollMotion(), 
+                    extentRatio: 0.25,
                     children: [
-                      SizedBox(
-                       width: 125,
+                      Expanded(
                         child: Padding(
                         padding: const EdgeInsets.fromLTRB(0, 8, 16, 8),
                         child: _buildDeleteButton(tank),
+                                              ),
                       )
-                    )
                   ]
                 ),
               child: _buildTankItem(tank));
