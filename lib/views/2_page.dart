@@ -42,7 +42,7 @@ class _Page2State extends State<Page2> {
                   selectedDateStyle: TextStyle(
                     fontFamily: 'SFPro',
                     color: Theme.of(context).colorScheme.onSurface,
-                    fontWeight: FontWeight.bold,
+                    //fontWeight: FontWeight.bold,
                     letterSpacing: 2.0,
                     fontSize: 14,
                   ),
@@ -82,7 +82,7 @@ class _Page2State extends State<Page2> {
                             text: EasyDateFormatter.shortMonthName(date, "en_US")
                                 .toUpperCase(),
                             letterSpacing: 2.0,
-                            size: 14,
+                            size: 12,
                           ),
                           const SizedBox(height: 5),
                           MyText(
@@ -96,7 +96,7 @@ class _Page2State extends State<Page2> {
                             text: EasyDateFormatter.shortDayName(date, "en_US")
                                 .toUpperCase(),
                             letterSpacing: 2.0,
-                            size: 14,
+                            size: 12,
                           )
                         ],
                       ),
