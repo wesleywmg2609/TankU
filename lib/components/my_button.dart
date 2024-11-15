@@ -8,7 +8,7 @@ class MyButton extends StatefulWidget {
   final dynamic Function() onPressed;
   final bool resetAfterPress;
   bool isPressed;
-  final double padding;
+  final EdgeInsets padding;
 
   MyButton({
     super.key,
@@ -16,7 +16,7 @@ class MyButton extends StatefulWidget {
     required this.onPressed,
     this.resetAfterPress = true,
     this.isPressed = false,
-    this.padding = 15.0,
+    this.padding = const EdgeInsets.all(15),
   });
 
   @override
@@ -47,7 +47,7 @@ class _MyButtonState extends State<MyButton> {
       onTap: _onTap,
       child: AnimatedContainer(
         duration: widget.isPressed ? const Duration(milliseconds: 100) : const Duration(milliseconds: 200),
-        padding: EdgeInsets.all(widget.padding),
+        padding: widget.padding,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12),

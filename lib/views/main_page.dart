@@ -5,7 +5,7 @@ import 'package:tanku/components/my_box_shadow.dart';
 import 'package:tanku/components/my_drawer.dart';
 import 'package:tanku/components/my_icon.dart';
 import 'package:tanku/components/my_nav_bar.dart';
-import 'package:tanku/views/2_page.dart';
+import 'package:tanku/views/calendar_page.dart';
 import 'package:tanku/views/3_page.dart';
 import 'package:tanku/views/4_page.dart';
 import 'package:tanku/views/add_tank_page.dart';
@@ -99,7 +99,7 @@ class _MainPageState extends State<MainPage> {
         'title': 'Calendar',
         'trailing': null,
         'onTrailingPressed': null,
-        'page': Page2(user: widget.user),
+        'page': CalendarPage(user: widget.user),
       },
       {
         'title': 'Page 3',
