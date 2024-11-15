@@ -20,7 +20,11 @@ class Page2 extends StatefulWidget {
 
 class _Page2State extends State<Page2> {
   MyBoxShadows shadows = MyBoxShadows();
+  final EasyInfiniteDateTimelineController _controller =
+      EasyInfiniteDateTimelineController();
   DateTime _focusDate = DateTime.now();
+  DateTime get _firstDate => DateTime(DateTime.now().year);
+  DateTime get _lastDate => DateTime(DateTime.now().year, 12, 31);
 
   @override
   Widget build(BuildContext context) {
@@ -29,48 +33,34 @@ class _Page2State extends State<Page2> {
         body: SafeArea(
             child: Column(
           children: [
-            EasyDateTimeLine(
-              initialDate: _focusDate,
-              onDateChange: (selectedDate) {
-                setState(() {
-                  _focusDate = selectedDate;
-                });
-              },
-              headerProps: EasyHeaderProps(
-                  monthPickerType: MonthPickerType.switcher,
-                  dateFormatter: const DateFormatter.fullDateMonthAsStrDY(),
-                  selectedDateStyle: TextStyle(
-                    fontFamily: 'SFPro',
-                    color: Theme.of(context).colorScheme.onSurface,
-                    //fontWeight: FontWeight.bold,
-                    letterSpacing: 2.0,
-                    fontSize: 14,
-                  ),
-                  monthStyle: TextStyle(
-                    fontFamily: 'SFPro',
-                    color: Theme.of(context).colorScheme.onSurface,
-                    letterSpacing: 2.0,
-                    fontSize: 14,
-                  ),
-                  padding: const EdgeInsets.only(left: 16)
+            Container(
+              child: EasyInfiniteDateTimeLine(
+                controller: _controller,
+                firstDate: _firstDate,
+                focusDate: _focusDate,
+                lastDate: _lastDate,
+                onDateChange: (selectedDate) {
+                  setState(() {
+                    _focusDate = selectedDate;
+                  });
+                },
+                showTimelineHeader: false,
+                timeLineProps: const EasyTimeLineProps(
+                  hPadding: 0,
+                  separatorPadding: 0,
                 ),
-              timeLineProps:
-                  const EasyTimeLineProps(
-                    separatorPadding: 10
-                  ),
-              dayProps: const EasyDayProps(
-                height: 128,
-              ),
-              itemBuilder: (
-                BuildContext context,
-                DateTime date,
-                bool isSelected,
-                VoidCallback onTap,
-              ) {
-                return SizedBox(
+                dayProps: const EasyDayProps(
                   width: 96,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  height: 128,
+                ),
+                itemBuilder: (
+                  BuildContext context,
+                  DateTime date,
+                  bool isSelected,
+                  VoidCallback onTap,
+                ) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                     child: MyButton(
                       onPressed: onTap,
                       resetAfterPress: false,
@@ -101,9 +91,9 @@ class _Page2State extends State<Page2> {
                         ],
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ],
         )));

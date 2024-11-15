@@ -96,7 +96,7 @@ class _MainPageState extends State<MainPage> {
         'page': TankListPage(key: _tankListKey, user: widget.user),
       },
       {
-        'title': 'Page 2',
+        'title': 'Calendar',
         'trailing': null,
         'onTrailingPressed': null,
         'page': Page2(user: widget.user),
