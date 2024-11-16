@@ -1,6 +1,7 @@
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tanku/components/my_box_shadow.dart';
 import 'package:tanku/components/my_button.dart';
 import 'package:tanku/components/my_date_field.dart';
@@ -24,12 +25,32 @@ class _CalendarPageState extends State<CalendarPage> {
   MyBoxShadows shadows = MyBoxShadows();
   final EasyInfiniteDateTimelineController _timelineController =
       EasyInfiniteDateTimelineController();
-  TextEditingController _dateController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
   DateTime _focusDate = DateTime.now();
+  bool _isToday = true;
+
+  DateTime get today {
+    final now = DateTime.now();
+    return DateTime(now.year, now.month, now.day);
+  }
 
   @override
   void initState() {
     super.initState();
+    _dateController.text = DateFormat('dd/MM/yyyy').format(today);
+  }
+
+  void _updateDateField() {
+    _dateController.text = DateFormat('dd/MM/yyyy').format(_focusDate);
+    _isToday = _focusDate == DateTime(today.year, today.month, today.day);
+  }
+
+  void _onDateChange(DateTime selectedDate) {
+    setState(() {
+      _focusDate = selectedDate;
+      _updateDateField();
+      _timelineController.animateToDate(_focusDate);
+    });
   }
 
   @override
@@ -44,11 +65,7 @@ class _CalendarPageState extends State<CalendarPage> {
               firstDate: DateTime(_focusDate.year),
               focusDate: _focusDate,
               lastDate: DateTime(_focusDate.year, 12, 31),
-              onDateChange: (selectedDate) {
-                setState(() {
-                  _focusDate = selectedDate;
-                });
-              },
+              onDateChange: _onDateChange,
               showTimelineHeader: false,
               timeLineProps: const EasyTimeLineProps(
                 hPadding: 0,
@@ -106,13 +123,18 @@ class _CalendarPageState extends State<CalendarPage> {
                 children: [
                   Expanded(
                     child: MyDateField(
-                        controller: _dateController,
-                        icon: const MyIcon(icon: Icons.calendar_month),
-                        initialDate: _focusDate),
+                      controller: _dateController,
+                      icon: const MyIcon(icon: Icons.calendar_month),
+                      initialDate: _focusDate,
+                      onDateSelected: _onDateChange,
+                    ),
                   ),
                   const SizedBox(width: 10),
                   MyButton(
-                    onPressed: () {},
+                    onPressed: () =>
+                        _onDateChange(today),
+                    resetAfterPress: false,
+                    isPressed: !_isToday,
                     padding: const EdgeInsets.symmetric(
                         vertical: 15, horizontal: 30),
                     child: const MyText(
@@ -120,7 +142,6 @@ class _CalendarPageState extends State<CalendarPage> {
                       letterSpacing: 2.0,
                       isBold: true,
                     ),
-                    isPressed: true,
                   ),
                 ],
               ),
@@ -147,12 +168,12 @@ class _CalendarPageState extends State<CalendarPage> {
                       onPressed: () {},
                       padding: const EdgeInsets.symmetric(
                           vertical: 15, horizontal: 30),
+                      isPressed: true,
                       child: const MyText(
                         text: 'Today',
                         letterSpacing: 2.0,
                         isBold: true,
                       ),
-                      isPressed: true,
                     ),
                   ),
                 ],

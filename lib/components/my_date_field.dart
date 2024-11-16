@@ -8,11 +8,14 @@ class MyDateField extends StatefulWidget {
   final TextEditingController controller;
   final Widget icon;
   final DateTime initialDate;
+  final Function(DateTime)? onDateSelected;
+
   const MyDateField({
     super.key,
     required this.controller,
     required this.icon,
     required this.initialDate,
+    this.onDateSelected,
   });
 
   @override
@@ -26,7 +29,7 @@ class _MyDateFieldState extends State<MyDateField> {
   void initState() {
     super.initState();
     _selectedDate = widget.initialDate;
-    widget.controller.text = DateFormat.yMd().format(_selectedDate); 
+    widget.controller.text = DateFormat('dd/MM/yyyy').format(_selectedDate);
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -48,10 +51,12 @@ class _MyDateFieldState extends State<MyDateField> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
-        widget.controller.text = DateFormat.yMd().format(_selectedDate);
+        widget.controller.text =
+            DateFormat('dd/MM/yyyy').format(_selectedDate);
+        if (widget.onDateSelected != null) {
+          widget.onDateSelected!(_selectedDate);
+        }
       });
-    } else {
-      widget.controller.text = DateFormat.yMd().format(_selectedDate);
     }
   }
 
