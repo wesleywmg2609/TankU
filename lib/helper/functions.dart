@@ -9,7 +9,7 @@ void logger(String message) {
 }
 
 String convertToIso8601String(String datetime) {
-  DateTime convertedDatetime = DateFormat("MM/dd/yyyy").parse(datetime);
+  DateTime convertedDatetime = DateFormat("dd/MM/yyyy").parse(datetime);
   return convertedDatetime.toIso8601String();
 }
 

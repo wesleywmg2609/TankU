@@ -8,7 +8,6 @@ import 'package:tanku/components/my_date_field.dart';
 import 'package:tanku/components/my_icon.dart';
 import 'package:tanku/components/my_text.dart';
 
-// ignore: must_be_immutable
 class CalendarPage extends StatefulWidget {
   final User user;
 
@@ -37,6 +36,7 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   void initState() {
     super.initState();
+    _focusDate = today;
     _dateController.text = DateFormat('dd/MM/yyyy').format(today);
   }
 
@@ -49,8 +49,21 @@ class _CalendarPageState extends State<CalendarPage> {
     setState(() {
       _focusDate = selectedDate;
       _updateDateField();
-      _timelineController.animateToDate(_focusDate);
+      _timelineController.animateToDate(selectedDate);
     });
+  }
+
+  Widget _buildActionButton(String label, VoidCallback onPressed, {bool isPressed = false}) {
+    return MyButton(
+      onPressed: onPressed,
+      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+      isPressed: isPressed,
+      child: MyText(
+        text: label,
+        letterSpacing: 2.0,
+        isBold: true,
+      ),
+    );
   }
 
   @override
@@ -82,8 +95,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 VoidCallback onTap,
               ) {
                 return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
                   child: MyButton(
                     onPressed: onTap,
                     resetAfterPress: false,
@@ -127,22 +139,12 @@ class _CalendarPageState extends State<CalendarPage> {
                       icon: const MyIcon(icon: Icons.calendar_month),
                       initialDate: _focusDate,
                       onDateSelected: _onDateChange,
+                      firstDate: DateTime(_focusDate.year),
+                      lastDate: DateTime(_focusDate.year, 12, 31),
                     ),
                   ),
                   const SizedBox(width: 10),
-                  MyButton(
-                    onPressed: () =>
-                        _onDateChange(today),
-                    resetAfterPress: false,
-                    isPressed: !_isToday,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15, horizontal: 30),
-                    child: const MyText(
-                      text: 'Today',
-                      letterSpacing: 2.0,
-                      isBold: true,
-                    ),
-                  ),
+                  _buildActionButton('Today', () => _onDateChange(today), isPressed: !_isToday),
                 ],
               ),
             ),
@@ -150,35 +152,12 @@ class _CalendarPageState extends State<CalendarPage> {
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: Row(
                 children: [
-                  Expanded(
-                    child: MyButton(
-                      onPressed: () {},
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 30),
-                      child: const MyText(
-                        text: 'Today',
-                        letterSpacing: 2.0,
-                        isBold: true,
-                      ),
-                    ),
-                  ),
+                  Expanded(child: _buildActionButton('Today', () {}, isPressed: false)),
                   const SizedBox(width: 10),
-                  Expanded(
-                    child: MyButton(
-                      onPressed: () {},
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 30),
-                      isPressed: true,
-                      child: const MyText(
-                        text: 'Today',
-                        letterSpacing: 2.0,
-                        isBold: true,
-                      ),
-                    ),
-                  ),
+                  Expanded(child: _buildActionButton('Today', () {}, isPressed: true)),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

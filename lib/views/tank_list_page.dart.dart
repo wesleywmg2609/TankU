@@ -61,7 +61,7 @@ class TankListPageState extends State<TankListPage> {
     }
   }
 
-  _buildTankList() {
+  Widget _buildTankList() {
     return SlidableAutoCloseBehavior(
       child: ListView.builder(
         itemCount: _tanks.length,
@@ -69,26 +69,24 @@ class TankListPageState extends State<TankListPage> {
           var tank = _tanks[index];
           return Slidable(
               key: ValueKey(tank?.id),
-              endActionPane:
-                  ActionPane(
-                    motion: const ScrollMotion(), 
-                    extentRatio: 0.25,
-                    children: [
-                      Expanded(
-                        child: Padding(
+              endActionPane: ActionPane(
+                  motion: const ScrollMotion(),
+                  extentRatio: 0.25,
+                  children: [
+                    Expanded(
+                      child: Padding(
                         padding: const EdgeInsets.fromLTRB(0, 8, 16, 8),
                         child: _buildDeleteButton(tank),
-                                              ),
-                      )
-                  ]
-                ),
+                      ),
+                    )
+                  ]),
               child: _buildTankItem(tank));
         },
       ),
     );
   }
 
-  _buildTankItem(tank) {
+  Widget _buildTankItem(tank) {
     final waterInfo =
         tank.waterType?.isNotEmpty == true ? tank.waterType : null;
     final volumeInfo = (tank.width != null &&
@@ -156,7 +154,7 @@ class TankListPageState extends State<TankListPage> {
     );
   }
 
-  _buildDeleteButton(tank) {
+  Widget _buildDeleteButton(tank) {
     return MyButton(
         child: const MyIcon(
           icon: Icons.delete,
@@ -167,15 +165,13 @@ class TankListPageState extends State<TankListPage> {
             if (tank.imageUrl != null && tank.imageUrl!.isNotEmpty) {
               _imageService.deleteImage(tank.imageUrl!);
             }
-           _tankService.deleteTank(tank.id);
+            _tankService.deleteTank(tank.id);
           }
-        }
-      );
+        });
   }
 
   @override
   Widget build(BuildContext context) {
-
     _buildLoadingIndicator();
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,

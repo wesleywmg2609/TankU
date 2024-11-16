@@ -8,6 +8,8 @@ class MyDateField extends StatefulWidget {
   final TextEditingController controller;
   final Widget icon;
   final DateTime initialDate;
+  final DateTime firstDate;
+  final DateTime lastDate;
   final Function(DateTime)? onDateSelected;
 
   const MyDateField({
@@ -15,6 +17,8 @@ class MyDateField extends StatefulWidget {
     required this.controller,
     required this.icon,
     required this.initialDate,
+    required this.firstDate,
+    required this.lastDate,
     this.onDateSelected,
   });
 
@@ -36,8 +40,8 @@ class _MyDateFieldState extends State<MyDateField> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      firstDate: widget.firstDate,
+      lastDate:  widget.lastDate,
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: Theme.of(context).brightness == Brightness.light

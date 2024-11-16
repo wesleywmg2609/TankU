@@ -70,7 +70,8 @@ class EditTankPageState extends State<EditTankPage> {
         });
       }
       if (_imageUrl != null) {
-        _tankService.updateImageUrlInTankRef(widget.tankRef, imageUrl: _imageUrl!);
+        _tankService.updateImageUrlInTankRef(widget.tankRef,
+            imageUrl: _imageUrl!);
       }
     });
   }
@@ -101,6 +102,7 @@ class EditTankPageState extends State<EditTankPage> {
 
       _initialDate = DateTime.tryParse(_tank!.setupAt) ?? DateTime.now();
 
+      _equipmentControllers.clear();
       for (var equipment in _tank!.equipments ?? []) {
         _equipmentControllers.add(TextEditingController(text: equipment));
       }
@@ -173,6 +175,70 @@ class EditTankPageState extends State<EditTankPage> {
     });
   }
 
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required Widget icon,
+    required String labelText,
+    bool isNumeric = false,
+  }) {
+    return MyTextField(
+      controller: controller,
+      icon: icon,
+      labelText: labelText,
+      isNumeric: isNumeric,
+    );
+  }
+
+  Widget _buildVolumeDisplay() {
+    return ValueListenableBuilder<int>(
+      valueListenable: _volumeNotifier,
+      builder: (context, volume, child) {
+        final widthText = _controllers['width']!.text;
+        final depthText = _controllers['depth']!.text;
+        final heightText = _controllers['height']!.text;
+
+        String widthDisplay = widthText.isEmpty ? 'W' : widthText;
+        String depthDisplay = depthText.isEmpty ? 'D' : depthText;
+        String heightDisplay = heightText.isEmpty ? 'H' : heightText;
+
+        return MyText(
+          text:
+              'Volume: $widthDisplay x $depthDisplay x $heightDisplay = ${volume}cm³',
+          letterSpacing: 2.0,
+          isBold: true,
+          size: 14,
+        );
+      },
+    );
+  }
+
+  Widget _buildEquipmentField(int index) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: Row(
+        children: [
+          Expanded(
+            child: MyTextField(
+              controller: _equipmentControllers[index],
+              icon: const MyIcon(icon: Icons.build),
+              labelText: 'Equipment Name',
+            ),
+          ),
+          GestureDetector(
+            onTap: () => _removeEquipmentField(index),
+            child: const Padding(
+              padding: EdgeInsets.all(12.0),
+              child: MyIcon(
+                icon: Icons.delete,
+                color: Colors.red,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -208,12 +274,13 @@ class EditTankPageState extends State<EditTankPage> {
                       children: [
                         MyImagePicker(
                             imageUrl: _tank!.imageUrl!, tankRef: _tank!.id),
-                        MyTextField(
+                        _buildTextField(
                           controller: _controllers['name']!,
                           icon: const MyOverlayIcon(
-                              icon: Icons.call_to_action,
-                              svgFilepath: 'assets/fish.svg',
-                              padding: 3),
+                            icon: Icons.call_to_action,
+                            svgFilepath: 'assets/fish.svg',
+                            padding: 3,
+                          ),
                           labelText: 'Tank Name',
                         ),
                         const SizedBox(height: 15),
@@ -233,58 +300,35 @@ class EditTankPageState extends State<EditTankPage> {
                           },
                         ),
                         const SizedBox(height: 15),
-                        ValueListenableBuilder<int>(
-                          valueListenable: _volumeNotifier,
-                          builder: (context, volume, child) {
-                            final widthText = _controllers['width']!.text;
-                            final depthText = _controllers['depth']!.text;
-                            final heightText = _controllers['height']!.text;
-
-                            String widthDisplay =
-                                widthText.isEmpty ? 'W' : widthText;
-                            String depthDisplay =
-                                depthText.isEmpty ? 'D' : depthText;
-                            String heightDisplay =
-                                heightText.isEmpty ? 'H' : heightText;
-
-                            return Text(
-                              'Volume: $widthDisplay x $depthDisplay x $heightDisplay = ${volume}cm³',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.onSurface,
-                                fontSize: 14,
-                                letterSpacing: 1.0,
-                                fontFamily: 'SFPro',
-                                fontWeight: FontWeight.bold,
-                              ),
-                            );
-                          },
-                        ),
+                        _buildVolumeDisplay(),
                         const SizedBox(height: 15),
                         Row(
                           children: [
                             Expanded(
-                                child: MyTextField(
-                                    controller: _controllers['width']!,
-                                    icon:
-                                        const MyIcon(icon: Icons.aspect_ratio),
-                                    labelText: 'Width',
-                                    isNumeric: true)),
+                                child: _buildTextField(
+                              controller: _controllers['width']!,
+                              icon: const MyIcon(icon: Icons.aspect_ratio),
+                              labelText: 'Width',
+                              isNumeric: true,
+                            )),
                             const SizedBox(width: 10),
                             Expanded(
-                                child: MyTextField(
-                                    controller: _controllers['depth']!,
-                                    icon:
-                                        const MyIcon(icon: Icons.aspect_ratio),
-                                    labelText: 'Depth',
-                                    isNumeric: true)),
+                              child: _buildTextField(
+                                controller: _controllers['depth']!,
+                                icon: const MyIcon(icon: Icons.aspect_ratio),
+                                labelText: 'Depth',
+                                isNumeric: true,
+                              ),
+                            ),
                             const SizedBox(width: 10),
                             Expanded(
-                                child: MyTextField(
-                                    controller: _controllers['height']!,
-                                    icon:
-                                        const MyIcon(icon: Icons.aspect_ratio),
-                                    labelText: 'Height',
-                                    isNumeric: true)),
+                              child: _buildTextField(
+                                controller: _controllers['height']!,
+                                icon: const MyIcon(icon: Icons.aspect_ratio),
+                                labelText: 'Height',
+                                isNumeric: true,
+                              ),
+                            ),
                           ],
                         ),
                         const SizedBox(height: 15),
@@ -292,6 +336,8 @@ class EditTankPageState extends State<EditTankPage> {
                           controller: _controllers['setupAt']!,
                           icon: const MyIcon(icon: Icons.calendar_today),
                           initialDate: _initialDate!,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime.now(),
                         ),
                         const SizedBox(height: 15),
                         const MyText(
@@ -301,35 +347,8 @@ class EditTankPageState extends State<EditTankPage> {
                           size: 14,
                         ),
                         const SizedBox(height: 15),
-                        Column(
-                          children: List.generate(_equipmentControllers.length,
-                              (index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 15),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: MyTextField(
-                                      controller: _equipmentControllers[index],
-                                      icon: const MyIcon(icon: Icons.build),
-                                      labelText: 'Equipment Name',
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () => _removeEquipmentField(index),
-                                    child: const Padding(
-                                      padding: EdgeInsets.all(12.0),
-                                      child: Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            );
-                          }),
-                        ),
+                        ...List.generate(_equipmentControllers.length,
+                            (index) => _buildEquipmentField(index)),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

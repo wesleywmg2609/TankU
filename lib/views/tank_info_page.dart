@@ -61,7 +61,7 @@ class _TankInfoPageState extends State<TankInfoPage> {
     });
   }
 
-  _buildAppBar() {
+  Widget _buildAppBar() {
     return MyAppBar(
       title: 'Tank Info',
       subtitle: _tank?.name.toString(),
@@ -78,7 +78,7 @@ class _TankInfoPageState extends State<TankInfoPage> {
     );
   }
 
-  _buildUpperPart() {
+  Widget _buildUpperPart() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Container(
@@ -144,59 +144,58 @@ class _TankInfoPageState extends State<TankInfoPage> {
   }
 
   Widget _buildHiddenPart() {
-  return AnimatedSize(
-    duration: const Duration(milliseconds: 500),
-    curve: Curves.fastEaseInToSlowEaseOut,
-    alignment: Alignment.topCenter,
-    child: _isExpanded
-        ? Column(
-          children: [
-            const SizedBox(height: 16),
-            _buildSectionTitle('Volume'),
-            MyCube(
-              width: _tank?.width ?? 0,
-              depth: _tank?.depth ?? 0,
-              height: _tank?.height ?? 0,
-            ),
-            const SizedBox(height: 16),
-            _buildSectionDescription(
-                'More detailed information goes here. This content is shown when the box is expanded.'),
-            _buildSectionTitle('Equipment'),
-            _buildSectionDescription(
-                'More detailed information goes here. This content is shown when the box is expanded.'),
-          ],
-        )
-        : const SizedBox(height: 16),
-  );
-}
+    return AnimatedSize(
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.fastEaseInToSlowEaseOut,
+      alignment: Alignment.topCenter,
+      child: _isExpanded
+          ? Column(
+              children: [
+                const SizedBox(height: 16),
+                _buildSectionTitle('Volume'),
+                MyCube(
+                  width: _tank?.width ?? 0,
+                  depth: _tank?.depth ?? 0,
+                  height: _tank?.height ?? 0,
+                ),
+                const SizedBox(height: 16),
+                _buildSectionDescription(
+                    'More detailed information goes here. This content is shown when the box is expanded.'),
+                _buildSectionTitle('Equipment'),
+                _buildSectionDescription(
+                    'More detailed information goes here. This content is shown when the box is expanded.'),
+              ],
+            )
+          : const SizedBox(height: 16),
+    );
+  }
 
-_buildSectionTitle(String title) {
-  return Column(
-    children: [
-      MyText(
-        text: title,
-        letterSpacing: 2.0,
-        isBold: true,
-        size: 16,
-      ),
-      const SizedBox(height: 16),
-    ],
-  );
-}
+  Widget _buildSectionTitle(String title) {
+    return Column(
+      children: [
+        MyText(
+          text: title,
+          letterSpacing: 2.0,
+          isBold: true,
+          size: 16,
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
 
-_buildSectionDescription(String description) {
-  return Column(
-    children: [
-      MyText(
-        text: description,
-        letterSpacing: 2.0,
-        size: 12,
-      ),
-      const SizedBox(height: 16),
-    ],
-  );
-}
-
+  Widget _buildSectionDescription(String description) {
+    return Column(
+      children: [
+        MyText(
+          text: description,
+          letterSpacing: 2.0,
+          size: 12,
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
