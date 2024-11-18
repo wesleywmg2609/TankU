@@ -13,9 +13,9 @@ import 'package:tanku/components/my_overlay_icon.dart';
 import 'package:tanku/components/my_text.dart';
 import 'package:tanku/components/my_text_field.dart';
 import 'package:tanku/services/tank_service.dart';
+import 'package:tanku/services/image_service.dart';
 import 'package:tanku/helper/functions.dart';
 import 'package:tanku/models/tank.dart';
-import 'package:tanku/services/image_service.dart';
 
 class EditTankPage extends StatefulWidget {
   final User user;
@@ -267,7 +267,7 @@ class EditTankPageState extends State<EditTankPage> {
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -357,7 +357,6 @@ class EditTankPageState extends State<EditTankPage> {
                                 child: const MyIcon(icon: Icons.add))
                           ],
                         ),
-                        const SizedBox(height: 15),
                       ],
                     ),
                   ),

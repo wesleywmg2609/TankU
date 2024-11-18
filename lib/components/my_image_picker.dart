@@ -114,7 +114,7 @@ class _MyImagePickerState extends State<MyImagePicker> {
         if (_imageUrl != null && _imageUrl!.isNotEmpty)
           _buildDeleteButton()
         else
-          const SizedBox(height: 15),
+          const SizedBox(height: 16),
       ],
     );
   }

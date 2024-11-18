@@ -27,6 +27,7 @@ class _CalendarPageState extends State<CalendarPage> {
   final TextEditingController _dateController = TextEditingController();
   DateTime _focusDate = DateTime.now();
   bool _isToday = true;
+  bool _isPlanning = true;
 
   DateTime get today {
     final now = DateTime.now();
@@ -56,8 +57,9 @@ class _CalendarPageState extends State<CalendarPage> {
   Widget _buildActionButton(String label, VoidCallback onPressed, {bool isPressed = false}) {
     return MyButton(
       onPressed: onPressed,
-      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+      resetAfterPress: false,
       isPressed: isPressed,
+      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
       child: MyText(
         text: label,
         letterSpacing: 2.0,
@@ -148,16 +150,45 @@ class _CalendarPageState extends State<CalendarPage> {
                 ],
               ),
             ),
+            if (_isToday)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: Row(
                 children: [
-                  Expanded(child: _buildActionButton('Today', () {}, isPressed: false)),
+                  Expanded(child: _buildActionButton('Plan', () {
+                    setState(() {
+                      if (!_isPlanning) {
+                        _isPlanning = !_isPlanning;
+                      }  
+                    });
+                  }, isPressed: _isPlanning)),
                   const SizedBox(width: 10),
-                  Expanded(child: _buildActionButton('Today', () {}, isPressed: true)),
+                  Expanded(child: _buildActionButton('Schedule', () {
+                    setState(() {
+                      if (_isPlanning) {
+                        _isPlanning = !_isPlanning;
+                      }  
+                    });
+                  }, isPressed: !_isPlanning)),
                 ],
               ),
-            ),
+            ) else if (_focusDate.isAfter(today))
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Row(
+                children: [
+                  const SizedBox(width: 10),
+                  Expanded(child: _buildActionButton('Schedule', () {
+                    setState(() {
+                      if (_isPlanning) {
+                        _isPlanning = !_isPlanning;
+                      }  
+                    });
+                  }, isPressed: !_isPlanning)),
+                ],
+              ),
+            )
+            ,
           ],
         ),
       ),

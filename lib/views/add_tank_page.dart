@@ -14,6 +14,7 @@ import 'package:tanku/services/tank_service.dart';
 import 'package:tanku/helper/functions.dart';
 import 'package:tanku/models/tank.dart';
 import 'package:tanku/services/image_service.dart';
+import 'package:tanku/views/quick_task_page.dart';
 
 class AddTankPage extends StatefulWidget {
   final User user;
@@ -74,51 +75,52 @@ class _AddTankPageState extends State<AddTankPage> {
   Future<void> _addTank() async {
     showLoadingDialog(context);
 
-    String name =
-        await _tankService.generateTankName(_controllers['name']!.text);
-    String? imageUrl = _imageUrl;
-    String? waterType = _selectedWaterType;
-    int? width = int.tryParse(_controllers['width']!.text);
-    int? depth = int.tryParse(_controllers['depth']!.text);
-    int? height = int.tryParse(_controllers['height']!.text);
-    String setupAt = convertToIso8601String(_controllers['setupAt']!.text);
-
-    List<String> equipments = _equipmentControllers.map((c) => c.text).toList();
-
-    Tank tank = Tank(
-      widget.user.uid,
-      imageUrl,
-      name,
-      waterType,
-      width,
-      depth,
-      height,
-      setupAt,
-      equipments,
+    List<String>? selectedTasks = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => QuickTaskSelectionPage(
+          onSelectionComplete: (tasks) {
+            Navigator.pop(context, tasks);
+          },
+        ),
+      ),
     );
 
-    tank.setId(_tankService.addTankToDatabase(tank));
+    if (selectedTasks == null) {
+      Navigator.pop(context);
+    } else {
+      logger(selectedTasks.toString()); 
+      String name =
+          await _tankService.generateTankName(_controllers['name']!.text);
+      String? imageUrl = _imageUrl;
+      String? waterType = _selectedWaterType;
+      int? width = int.tryParse(_controllers['width']!.text);
+      int? depth = int.tryParse(_controllers['depth']!.text);
+      int? height = int.tryParse(_controllers['height']!.text);
+      String setupAt = convertToIso8601String(_controllers['setupAt']!.text);
 
-    Navigator.pop(context);
+      List<String> equipments =
+          _equipmentControllers.map((c) => c.text).toList();
 
-    displayMessageToUser('Tank added successfully!', context);
+      Tank tank = Tank(
+        widget.user.uid,
+        imageUrl,
+        name,
+        waterType,
+        width,
+        depth,
+        height,
+        setupAt,
+        equipments,
+      );
 
-    Future.delayed(const Duration(milliseconds: 150), () {
-      _resetFields();
-    });
-  }
+      tank.setId(_tankService.addTankToDatabase(tank));
 
-  void _resetFields() {
-    _controllers['name']!.clear();
-    _controllers['width']!.clear();
-    _controllers['depth']!.clear();
-    _controllers['height']!.clear();
-    setState(() {
-      _selectedWaterType = null;
-      _imageService.imageUrl = null;
-    });
-    _equipmentControllers.forEach((controller) => controller.dispose());
-    _equipmentControllers.clear();
+      Navigator.pop(context);
+
+      displayMessageToUser('Tank added successfully!', context);
+    }
+    return;
   }
 
   void _calculateVolume() {
@@ -228,7 +230,8 @@ class _AddTankPageState extends State<AddTankPage> {
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -317,7 +320,6 @@ class _AddTankPageState extends State<AddTankPage> {
                             )
                           ],
                         ),
-                        const SizedBox(height: 15),
                       ],
                     ),
                   ),

@@ -37,40 +37,46 @@ class TankService with ChangeNotifier {
   }
 
   void listenToAllTanksUpdates() {
-  databaseRef.onValue.listen((event) {
-    if (event.snapshot.exists && event.snapshot.value is Map) {
-      Map data = event.snapshot.value as Map;
+    databaseRef.onValue.listen((event) async {
+      if (event.snapshot.exists && event.snapshot.value is Map) {
+        Map data = event.snapshot.value as Map;
 
-      if (data.isNotEmpty) {
-        List<Tank> loadedTanks = [];
-        data.forEach((key, value) {
-          if (value is Map) {
-            Tank tank = createTank(Map<String, dynamic>.from(value));
-            tank.setId(databaseRef.child(key));
-            loadedTanks.add(tank);
+        if (data.isNotEmpty) {
+          List<Tank> loadedTanks = [];
+          for (var key in data.keys) {
+            if (data[key] is Map) {
+
+              var tankDetailsRef = databaseRef.child(key).child('details');
+              DatabaseEvent tankDetailsEvent = await tankDetailsRef.once();
+              DataSnapshot tankDetailsSnapshot = tankDetailsEvent.snapshot;
+
+              if (tankDetailsSnapshot.exists) {
+                Map<String, dynamic> tankData =
+                    Map<String, dynamic>.from(tankDetailsSnapshot.value as Map);
+                Tank tank = createTank(tankData);
+                tank.setId(databaseRef.child(key));
+                loadedTanks.add(tank);
+              }
+            }
           }
-        });
 
-        loadedTanks.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-        _tanks = loadedTanks;
+          loadedTanks.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+          _tanks = loadedTanks;
+        } else {
+          _tanks = [];
+        }
+        _isLoading = false;
+        _notifyListeners();
       } else {
-        // Clear _tanks if data is empty to reflect deletion
         _tanks = [];
+        _isLoading = false;
+        _notifyListeners();
       }
-      _isLoading = false;
-      _notifyListeners();
-    } else {
-      // Handle the case where no data exists at all
-      _tanks = [];
-      _isLoading = false;
-      _notifyListeners();
-    }
-  });
-}
-
+    });
+  }
 
   void listenToTankUpdates(DatabaseReference tankRef) {
-    tankRef.onValue.listen((event) {
+    tankRef.child('details').onValue.listen((event) {
       if (event.snapshot.exists && event.snapshot.value is Map) {
         Map<String, dynamic> tankData =
             Map<String, dynamic>.from(event.snapshot.value as Map);
@@ -85,13 +91,15 @@ class TankService with ChangeNotifier {
   }
 
   DatabaseReference addTankToDatabase(Tank tank) {
-    var id = databaseRef.push();
+    var id = databaseRef.push().child('details');
     id.set(tank.toJson());
     return id;
   }
 
   void updateTankToDatabase(Tank tank, DatabaseReference tankRef) {
-    tankRef.update(tank.toJson());
+    var tankDetailsRef = tankRef.child('details');
+
+    tankDetailsRef.update(tank.toJson());
   }
 
   void deleteTank(DatabaseReference tankRef) async {
@@ -108,13 +116,23 @@ class TankService with ChangeNotifier {
       DataSnapshot dataSnapshot = databaseEvent.snapshot;
 
       List<Tank> tanks = [];
-      (dataSnapshot.value as Map?)?.forEach((key, value) {
-        if (value is Map) {
-          Tank tank = createTank(Map<String, dynamic>.from(value));
-          tank.setId(databaseRef.child(key));
-          tanks.add(tank);
+      if (dataSnapshot.exists && dataSnapshot.value is Map) {
+        Map data = dataSnapshot.value as Map;
+
+        for (var tankId in data.keys) {
+          var tankDetailsRef = databaseRef.child(tankId).child('details');
+          DatabaseEvent tankDetailsEvent = await tankDetailsRef.once();
+          DataSnapshot tankDetailsSnapshot = tankDetailsEvent.snapshot;
+
+          if (tankDetailsSnapshot.exists) {
+            Map<String, dynamic> tankDetails =
+                Map<String, dynamic>.from(tankDetailsSnapshot.value as Map);
+            Tank tank = createTank(tankDetails);
+            tank.setId(databaseRef.child(tankId));
+            tanks.add(tank);
+          }
         }
-      });
+      }
 
       return tanks;
     } catch (e) {
@@ -125,7 +143,8 @@ class TankService with ChangeNotifier {
 
   Future<Tank?> getTankById(DatabaseReference tankRef) async {
     try {
-      DatabaseEvent databaseEvent = await tankRef.once();
+      var tankDetailsRef = tankRef.child('details');
+      DatabaseEvent databaseEvent = await tankDetailsRef.once();
       DataSnapshot dataSnapshot = databaseEvent.snapshot;
 
       if (dataSnapshot.exists) {
@@ -145,11 +164,14 @@ class TankService with ChangeNotifier {
     return null;
   }
 
-  Future<void> updateImageUrlInTankRef(DatabaseReference tankRef, {String? imageUrl}) async {
+  Future<void> updateImageUrlInTankRef(DatabaseReference tankRef,
+      {String? imageUrl}) async {
+    var tankDetailsRef = tankRef.child('details');
+
     if (imageUrl != null) {
-      await tankRef.update({'imageUrl': imageUrl});
+      await tankDetailsRef.update({'imageUrl': imageUrl});
     } else {
-      await tankRef.update({'imageUrl': null});
+      await tankDetailsRef.update({'imageUrl': null});
     }
   }
 
