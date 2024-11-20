@@ -2,15 +2,15 @@ import 'package:confetti/confetti.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tanku/auth/auth.dart';
-import 'package:tanku/components/my_button.dart';
-import 'package:tanku/components/my_confetti.dart';
-import 'package:tanku/components/my_hyperlink.dart';
-import 'package:tanku/components/my_icon.dart';
-import 'package:tanku/components/my_svg_icon.dart';
-import 'package:tanku/components/my_text.dart';
-import 'package:tanku/components/my_text_field.dart';
+import 'package:tanku/widgets/my_button.dart';
+import 'package:tanku/widgets/my_confetti.dart';
+import 'package:tanku/widgets/my_hyperlink.dart';
+import 'package:tanku/widgets/my_icon.dart';
+import 'package:tanku/widgets/my_svg_icon.dart';
+import 'package:tanku/widgets/my_text.dart';
+import 'package:tanku/widgets/my_text_field.dart';
 import 'package:tanku/helper/functions.dart';
-import 'package:tanku/views/main_page.dart';
+import 'package:tanku/screens/main_page.dart';
 
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tanku/components/my_app_bar.dart';
-import 'package:tanku/components/my_box_shadow.dart';
-import 'package:tanku/components/my_icon.dart';
-import 'package:tanku/components/my_image_loader.dart';
-import 'package:tanku/components/my_text.dart';
+import 'package:tanku/widgets/my_app_bar.dart';
+import 'package:tanku/widgets/my_box_shadow.dart';
+import 'package:tanku/widgets/my_icon.dart';
+import 'package:tanku/widgets/my_image_loader.dart';
+import 'package:tanku/widgets/my_text.dart';
 import 'package:tanku/services/tank_service.dart';
 import 'package:tanku/helper/functions.dart';
 import 'package:tanku/models/tank.dart';
-import 'package:tanku/views/edit_tank_page.dart';
+import 'package:tanku/screens/edit_tank_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:tanku/components/my_cube.dart';
+import 'package:tanku/widgets/my_cube.dart';
 
 // ignore: must_be_immutable
 class TankInfoPage extends StatefulWidget {

@@ -3,10 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:tanku/auth/auth.dart';
-import 'package:tanku/components/my_theme.dart';
+import 'package:tanku/services/task_service.dart';
+import 'package:tanku/widgets/my_theme.dart';
 import 'package:tanku/services/tank_service.dart';
 import 'package:tanku/services/image_service.dart';
-import 'package:tanku/views/splash_page.dart';
+import 'package:tanku/screens/splash_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +17,7 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => ImageService()),
         ChangeNotifierProvider(create: (context) => TankService()),
+        ChangeNotifierProvider(create: (context) => TaskService()),
       ],
       child: const MyApp(),
     ),

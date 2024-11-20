@@ -2,11 +2,11 @@ import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tanku/components/my_box_shadow.dart';
-import 'package:tanku/components/my_button.dart';
-import 'package:tanku/components/my_date_field.dart';
-import 'package:tanku/components/my_icon.dart';
-import 'package:tanku/components/my_text.dart';
+import 'package:tanku/widgets/my_box_shadow.dart';
+import 'package:tanku/widgets/my_button.dart';
+import 'package:tanku/widgets/my_date_field.dart';
+import 'package:tanku/widgets/my_icon.dart';
+import 'package:tanku/widgets/my_text.dart';
 
 class CalendarPage extends StatefulWidget {
   final User user;

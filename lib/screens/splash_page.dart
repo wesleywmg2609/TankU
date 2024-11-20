@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tanku/auth/auth.dart';
 import 'package:tanku/auth/login_or_register.dart';
-import 'package:tanku/views/main_page.dart';
+import 'package:tanku/screens/main_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});

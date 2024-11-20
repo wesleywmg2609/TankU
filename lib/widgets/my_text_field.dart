@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
-import 'package:tanku/components/my_box_shadow.dart';
+import 'package:tanku/helper/functions.dart';
 
 class MyTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -45,23 +44,10 @@ class _MyTextFieldState extends State<MyTextField> {
 
   @override
   Widget build(BuildContext context) {
-    MyBoxShadows shadows = MyBoxShadows();
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: _isFocused
-            ? [
-                shadows.darkShadowPressed(context),
-                shadows.lightShadowPressed(context),
-              ]
-            : [
-                shadows.darkShadow(context),
-                shadows.lightShadow(context),
-              ],
-      ),
+      decoration: reusableBoxDecoration(context: context, isPressed: _isFocused),
       child: TextSelectionTheme(
         data: TextSelectionThemeData(
           cursorColor: Theme.of(context).colorScheme.onSurface,

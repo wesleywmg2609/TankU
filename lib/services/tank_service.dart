@@ -46,7 +46,7 @@ class TankService with ChangeNotifier {
           for (var key in data.keys) {
             if (data[key] is Map) {
 
-              var tankDetailsRef = databaseRef.child(key).child('details');
+              var tankDetailsRef = databaseRef.child(key);
               DatabaseEvent tankDetailsEvent = await tankDetailsRef.once();
               DataSnapshot tankDetailsSnapshot = tankDetailsEvent.snapshot;
 
@@ -76,7 +76,7 @@ class TankService with ChangeNotifier {
   }
 
   void listenToTankUpdates(DatabaseReference tankRef) {
-    tankRef.child('details').onValue.listen((event) {
+    tankRef.onValue.listen((event) {
       if (event.snapshot.exists && event.snapshot.value is Map) {
         Map<String, dynamic> tankData =
             Map<String, dynamic>.from(event.snapshot.value as Map);
@@ -91,13 +91,13 @@ class TankService with ChangeNotifier {
   }
 
   DatabaseReference addTankToDatabase(Tank tank) {
-    var id = databaseRef.push().child('details');
+    var id = databaseRef.push();
     id.set(tank.toJson());
     return id;
   }
 
   void updateTankToDatabase(Tank tank, DatabaseReference tankRef) {
-    var tankDetailsRef = tankRef.child('details');
+    var tankDetailsRef = tankRef;
 
     tankDetailsRef.update(tank.toJson());
   }
@@ -120,7 +120,7 @@ class TankService with ChangeNotifier {
         Map data = dataSnapshot.value as Map;
 
         for (var tankId in data.keys) {
-          var tankDetailsRef = databaseRef.child(tankId).child('details');
+          var tankDetailsRef = databaseRef.child(tankId);
           DatabaseEvent tankDetailsEvent = await tankDetailsRef.once();
           DataSnapshot tankDetailsSnapshot = tankDetailsEvent.snapshot;
 
@@ -143,7 +143,7 @@ class TankService with ChangeNotifier {
 
   Future<Tank?> getTankById(DatabaseReference tankRef) async {
     try {
-      var tankDetailsRef = tankRef.child('details');
+      var tankDetailsRef = tankRef;
       DatabaseEvent databaseEvent = await tankDetailsRef.once();
       DataSnapshot dataSnapshot = databaseEvent.snapshot;
 
@@ -166,7 +166,7 @@ class TankService with ChangeNotifier {
 
   Future<void> updateImageUrlInTankRef(DatabaseReference tankRef,
       {String? imageUrl}) async {
-    var tankDetailsRef = tankRef.child('details');
+    var tankDetailsRef = tankRef;
 
     if (imageUrl != null) {
       await tankDetailsRef.update({'imageUrl': imageUrl});

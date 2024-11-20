@@ -1,9 +1,9 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tanku/components/my_box_shadow.dart';
-import 'package:tanku/components/my_icon.dart';
-import 'package:tanku/components/my_image_loader.dart';
+import 'package:tanku/helper/functions.dart';
+import 'package:tanku/widgets/my_icon.dart';
+import 'package:tanku/widgets/my_image_loader.dart';
 import 'package:tanku/services/image_service.dart';
 import 'package:tanku/services/tank_service.dart';
 
@@ -23,7 +23,6 @@ class MyImagePicker extends StatefulWidget {
 }
 
 class _MyImagePickerState extends State<MyImagePicker> {
-  MyBoxShadows shadows = MyBoxShadows();
   late TankService _tankService;
   late ImageService _imageService;
   String? _imageUrl;
@@ -63,14 +62,7 @@ class _MyImagePickerState extends State<MyImagePicker> {
           onTap: () async => await _imageService.uploadImage(),
           child: Container(
             padding: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                shadows.darkShadow(context),
-                shadows.lightShadow(context),
-              ],
-            ),
+            decoration: reusableBoxDecoration(context: context),
             child: Center(
               child: _imageUrl != null && _imageUrl!.isNotEmpty
                   ? MyImageLoader(url: _imageUrl, size: 150)

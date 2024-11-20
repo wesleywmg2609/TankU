@@ -1,16 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tanku/components/my_app_bar.dart';
-import 'package:tanku/components/my_box_shadow.dart';
-import 'package:tanku/components/my_drawer.dart';
-import 'package:tanku/components/my_icon.dart';
-import 'package:tanku/components/my_nav_bar.dart';
-import 'package:tanku/views/calendar_page.dart';
-import 'package:tanku/views/3_page.dart';
-import 'package:tanku/views/4_page.dart';
-import 'package:tanku/views/add_tank_page.dart';
-import 'package:tanku/views/home_page.dart';
-import 'package:tanku/views/tank_list_page.dart.dart';
+import 'package:tanku/widgets/my_app_bar.dart';
+import 'package:tanku/widgets/my_box_shadow.dart';
+import 'package:tanku/widgets/my_drawer.dart';
+import 'package:tanku/widgets/my_icon.dart';
+import 'package:tanku/widgets/my_nav_bar.dart';
+import 'package:tanku/screens/calendar_page.dart';
+import 'package:tanku/screens/3_page.dart';
+import 'package:tanku/screens/4_page.dart';
+import 'package:tanku/screens/add_tank_page.dart';
+import 'package:tanku/screens/home_page.dart';
+import 'package:tanku/screens/tank_list_page.dart.dart';
 
 class MainPage extends StatefulWidget {
   final User user;

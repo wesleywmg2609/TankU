@@ -1,25 +1,32 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tanku/components/my_app_bar.dart';
-import 'package:tanku/components/my_button.dart';
-import 'package:tanku/components/my_icon.dart';
-import 'package:tanku/components/my_text.dart';
+import 'package:tanku/models/task.dart';
+import 'package:tanku/widgets/my_app_bar.dart';
+import 'package:tanku/widgets/my_button.dart';
+import 'package:tanku/widgets/my_icon.dart';
+import 'package:tanku/widgets/my_text.dart';
 
 class QuickTaskSelectionPage extends StatefulWidget {
-  final Function(List<String> selectedTasks) onSelectionComplete;
+  final User user;
+  final Function(List<Task> selectedTasks) onSelectionComplete;
 
-  QuickTaskSelectionPage({required this.onSelectionComplete});
+  QuickTaskSelectionPage({
+  required this.user,
+  required this.onSelectionComplete
+});
 
   @override
   State<QuickTaskSelectionPage> createState() => _QuickTaskSelectionPageState();
 }
 
 class _QuickTaskSelectionPageState extends State<QuickTaskSelectionPage> {
-  List<String> tasks = ['Water change', 'Feed', 'Clean glass'];
+  List<Task> tasks = [];
   List<bool> isSelected = [];
 
   @override
   void initState() {
     super.initState();
+    tasks = [Task(widget.user.uid, 'Water change'), Task(widget.user.uid, 'Feed'), Task(widget.user.uid, 'Glasses clean')];
     isSelected = List.generate(tasks.length, (_) => false);
   }
 
@@ -37,7 +44,7 @@ class _QuickTaskSelectionPageState extends State<QuickTaskSelectionPage> {
               },
               trailing: const MyIcon(icon: Icons.check),
               onTrailingPressed: () {
-                List<String> selectedTasks = [
+                List<Task> selectedTasks = [
                   for (int i = 0; i < tasks.length; i++)
                     if (isSelected[i]) tasks[i]
                 ];
@@ -59,7 +66,7 @@ class _QuickTaskSelectionPageState extends State<QuickTaskSelectionPage> {
                       },
                       isPressed: isSelected[index],
                       padding: const EdgeInsets.symmetric(vertical: 15),
-                      child: MyText(text: tasks[index], letterSpacing: 2.0),
+                      child: MyText(text: tasks[index].name, letterSpacing: 2.0),
                     ),
                   );
                 },

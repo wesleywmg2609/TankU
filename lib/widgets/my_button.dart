@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
-import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
-import 'package:tanku/components/my_box_shadow.dart';
+import 'package:flutter/material.dart';
+import 'package:tanku/helper/functions.dart';
 
 // ignore: must_be_immutable
 class MyButton extends StatefulWidget {
@@ -41,26 +40,13 @@ class _MyButtonState extends State<MyButton> {
 
   @override
   Widget build(BuildContext context) {
-    MyBoxShadows shadows = MyBoxShadows();
 
     return GestureDetector(
       onTap: _onTap,
       child: AnimatedContainer(
         duration: widget.isPressed ? const Duration(milliseconds: 100) : const Duration(milliseconds: 200),
         padding: widget.padding,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: widget.isPressed
-              ? [
-                  shadows.darkShadowPressed(context),
-                  shadows.lightShadowPressed(context),
-                ]
-              : [
-                  shadows.darkShadow(context),
-                  shadows.lightShadow(context),
-                ],
-        ),
+        decoration: reusableBoxDecoration(context: context, isPressed: widget.isPressed),
         child: Center(
           child: widget.child,
         ),

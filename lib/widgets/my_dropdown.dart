@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
-import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
-import 'package:tanku/components/my_box_shadow.dart';
+import 'package:flutter/material.dart';
+import 'package:tanku/helper/functions.dart';
 
 class MyDropdown extends StatefulWidget {
   final Widget icon;
@@ -26,18 +25,9 @@ class _MyDropdownState extends State<MyDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    MyBoxShadows shadows = MyBoxShadows();
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 150),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-                shadows.darkShadow(context),
-                shadows.lightShadow(context),
-              ],
-      ),
+    return Container(
+      decoration: reusableBoxDecoration(context: context),
       child: DropdownButtonFormField<String>(
         value: widget.selectedValue,
         hint: Text(

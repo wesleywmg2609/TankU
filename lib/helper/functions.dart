@@ -1,6 +1,25 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+import 'package:tanku/widgets/my_box_shadow.dart';
+
+MyBoxShadows shadows = MyBoxShadows();
+
+BoxDecoration reusableBoxDecoration({
+  required BuildContext context,
+  bool isPressed = false,
+  Color? color,
+  double? borderRadius,
+}) {
+  return BoxDecoration(
+    color: color ?? Theme.of(context).colorScheme.surface,
+    borderRadius: BorderRadius.circular(borderRadius ?? 12),
+    boxShadow: isPressed
+        ? shadows.pressedShadows(context)
+        : shadows.unpressedShadows(context),
+  );
+}
 
 void logger(String message) {
   final logger = Logger();
@@ -38,21 +57,21 @@ void showLoadingDialog(BuildContext context) {
 }
 
 String getDaysSinceSetup(String setupAtIso8601) {
-    final setupAt = DateTime.parse(setupAtIso8601);
+  final setupAt = DateTime.parse(setupAtIso8601);
 
-    final currentDate = DateTime.now();
-    final currentDateWithoutTime =
-        DateTime(currentDate.year, currentDate.month, currentDate.day);
+  final currentDate = DateTime.now();
+  final currentDateWithoutTime =
+      DateTime(currentDate.year, currentDate.month, currentDate.day);
 
-    final difference = currentDateWithoutTime
-        .difference(DateTime(setupAt.year, setupAt.month, setupAt.day));
+  final difference = currentDateWithoutTime
+      .difference(DateTime(setupAt.year, setupAt.month, setupAt.day));
 
-    if (difference.inDays >= 0) {
-      return '${difference.inDays} day${difference.inDays != 1 ? 's' : ''}';
-    }
-
-    return '? days';
+  if (difference.inDays >= 0) {
+    return '${difference.inDays} day${difference.inDays != 1 ? 's' : ''}';
   }
+
+  return '? days';
+}
 
 void displayMessageToUser(String message, BuildContext context) {
   showGeneralDialog(

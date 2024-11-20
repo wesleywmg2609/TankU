@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:tanku/components/my_overlay_icon.dart';
+import 'package:tanku/widgets/my_overlay_icon.dart';
 
 // ignore: must_be_immutable
 class MyImageLoader extends StatelessWidget {

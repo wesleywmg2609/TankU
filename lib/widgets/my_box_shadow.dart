@@ -63,4 +63,18 @@ class MyBoxShadows {
       true,
     );
   }
+
+  List<BoxShadow> unpressedShadows(BuildContext context) {
+    return [
+      darkShadow(context),
+      lightShadow(context),
+    ];
+  }
+
+  List<BoxShadow> pressedShadows(BuildContext context) {
+    return [
+      darkShadowPressed(context),
+      lightShadowPressed(context),
+    ];
+  }
 }

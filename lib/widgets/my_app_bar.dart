@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tanku/components/my_button.dart';
-import 'package:tanku/components/my_icon.dart';
-import 'package:tanku/components/my_text.dart';
+import 'package:tanku/widgets/my_button.dart';
+import 'package:tanku/widgets/my_icon.dart';
+import 'package:tanku/widgets/my_text.dart';
 
 // ignore: must_be_immutable
 class MyAppBar extends StatefulWidget {
