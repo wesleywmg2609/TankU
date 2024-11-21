@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -36,7 +35,7 @@ class _MyNavBar2State extends State<MyNavBar2> {
                 child: Column(
                   children: [
                     AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 200),
                       transitionBuilder: (child, animation) {
                         return ScaleTransition(scale: animation, child: child);
                       },
@@ -72,7 +71,7 @@ class _MyNavBar2State extends State<MyNavBar2> {
                 child: Column(
                   children: [
                     AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 200),
                       transitionBuilder: (child, animation) {
                         return ScaleTransition(scale: animation, child: child);
                       },
@@ -108,7 +107,7 @@ class _MyNavBar2State extends State<MyNavBar2> {
                 child: Column(
                   children: [
                     AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 200),
                       transitionBuilder: (child, animation) {
                         return ScaleTransition(scale: animation, child: child);
                       },
@@ -144,7 +143,7 @@ class _MyNavBar2State extends State<MyNavBar2> {
                 child: Column(
                   children: [
                     AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 200),
                       transitionBuilder: (child, animation) {
                         return ScaleTransition(scale: animation, child: child);
                       },

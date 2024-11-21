@@ -72,10 +72,21 @@ class _CalendarPageState extends State<CalendarPage> {
                       ],
                     ),
                     GestureDetector(
-                      child: const Icon(
-                        Ionicons.ellipsis_horizontal_circle_outline,
-                        color: Color(0xff282a29),
-                        size: 40,
+                      onTap: () {
+                        setState(() {});
+                      },
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        transitionBuilder: (child, animation) {
+                          return ScaleTransition(
+                              scale: animation, child: child);
+                        },
+                        child: Icon(
+                          Ionicons.ellipsis_horizontal_circle_outline,
+                          key: UniqueKey(),
+                          color: const Color(0xff282a29),
+                          size: 40,
+                        ),
                       ),
                     )
                   ],
@@ -210,61 +221,64 @@ class _CalendarPageState extends State<CalendarPage> {
           Expanded(
             child: Container(
               //color: Colors.orange,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 15),
-                      child: Container(
-                        height: 100,
-                        decoration: BoxDecoration(
-                            color: const Color(0xffffffff),
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Row(
-                            children: [
-                              const CircleAvatar(
-                                radius: 25,
-                                backgroundColor: Color(0xff282a29),
-                              ),
-                              const SizedBox(width: 20),
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text('My Lovely Tank',
-                                        style: TextStyle(
-                                            fontFamily: 'NotoSans',
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xff282a29))),
-                                    Text(
-                                        DateFormat('MMMM d, yyyy')
-                                            .format(_focusDate),
-                                        style: const TextStyle(
-                                            fontFamily: 'NotoSans',
-                                            fontSize: 14,
-                                            color: Color(0xff282a29))),
-                                  ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 20),
+                        child: Container(
+                          height: 100,
+                          decoration: BoxDecoration(
+                              color: const Color(0xffffffff),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              children: [
+                                const CircleAvatar(
+                                  radius: 25,
+                                  backgroundColor: Color(0xff282a29),
                                 ),
-                              ),
-                              const SizedBox(width: 20),
-                              GestureDetector(
-                                child: const Icon(
-                                  Icons.expand_more_rounded,
-                                  color: Color(0xff282a29),
-                                  size: 30,
+                                const SizedBox(width: 20),
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text('My Lovely Tank',
+                                          style: TextStyle(
+                                              fontFamily: 'NotoSans',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xff282a29))),
+                                      Text(
+                                          DateFormat('MMMM d, yyyy')
+                                              .format(_focusDate),
+                                          style: const TextStyle(
+                                              fontFamily: 'NotoSans',
+                                              fontSize: 14,
+                                              color: Color(0xff282a29))),
+                                    ],
+                                  ),
                                 ),
-                              )
-                            ],
+                                const SizedBox(width: 20),
+                                GestureDetector(
+                                  child: const Icon(
+                                    Icons.expand_more_rounded,
+                                    color: Color(0xff282a29),
+                                    size: 30,
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

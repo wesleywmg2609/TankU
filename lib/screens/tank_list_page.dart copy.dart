@@ -2,6 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:provider/provider.dart';
+import 'package:tanku/models/tank.dart';
+import 'package:tanku/screens/add_tank_page.dart';
+import 'package:tanku/services/tank_service.dart';
 
 // ignore: must_be_immutable
 class TankListPage2 extends StatefulWidget {
@@ -17,9 +21,24 @@ class TankListPage2 extends StatefulWidget {
 }
 
 class TankListPage2State extends State<TankListPage2> {
+  late TankService _tankService;
+  List<Tank?> _tanks = [];
+  bool _isLoading = true;
+
   @override
   void initState() {
     super.initState();
+    _tankService = Provider.of<TankService>(context, listen: false);
+    _tankService.listenToAllTanksUpdates();
+
+    _tankService.addListener(() {
+      if (mounted) {
+        setState(() {
+          _tanks = _tankService.tanks;
+          _isLoading = _tankService.isLoading;
+        });
+      }
+    });
   }
 
   @override
@@ -64,12 +83,32 @@ class TankListPage2State extends State<TankListPage2> {
                       ],
                     ),
                     GestureDetector(
-                      child: const Icon(
-                        Ionicons.add_circle_outline,
-                        color: Color(0xff282a29),
-                        size: 40,
+                      onTap: () {
+                        setState(() {});
+                        Future.delayed(const Duration(milliseconds: 300), () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  AddTankPage(user: widget.user),
+                            ),
+                          );
+                        });
+                      },
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        transitionBuilder: (child, animation) {
+                          return ScaleTransition(
+                              scale: animation, child: child);
+                        },
+                        child: Icon(
+                          Ionicons.add_circle_outline,
+                          key: UniqueKey(),
+                          color: const Color(0xff282a29),
+                          size: 40,
+                        ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -77,13 +116,16 @@ class TankListPage2State extends State<TankListPage2> {
           ),
           Expanded(
             child: Container(
-              //color: Colors.orange,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Padding(
+              color: Colors.green,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                child: ListView.builder(
+                  itemCount: _tanks.length,
+                  itemBuilder: (context, index) {
+                    var tank = _tanks[index];
+                    return Padding(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 15),
+                          vertical: 5, horizontal: 20),
                       child: Container(
                         height: 100,
                         decoration: BoxDecoration(
@@ -111,13 +153,13 @@ class TankListPage2State extends State<TankListPage2> {
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
                                                 color: Color(0xff282a29))),
-                                                const SizedBox(width: 5),
+                                        const SizedBox(width: 5),
                                         Container(
                                           padding: const EdgeInsets.all(3),
                                           decoration: BoxDecoration(
-                                             color: Colors.lightBlue,
-                                            borderRadius: BorderRadius.circular(5)
-                                          ),
+                                              color: Colors.lightBlue,
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
                                           child: const Text('Freshwater',
                                               style: TextStyle(
                                                   fontFamily: 'NotoSans',
@@ -138,19 +180,32 @@ class TankListPage2State extends State<TankListPage2> {
                               ),
                               const SizedBox(width: 20),
                               GestureDetector(
-                                child: const Icon(
-                                  Ionicons.chevron_forward_circle_outline,
-                                  color: Color(0xff282a29),
-                                  size: 30,
+                                onTap: () {
+                                  setState(() {
+                                    
+                                  });
+                                },
+                                child: AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 200),
+                                  transitionBuilder: (child, animation) {
+                                    return ScaleTransition(
+                                        scale: animation, child: child);
+                                  },
+                                  child: Icon(
+                                    Ionicons.chevron_forward_circle_outline,
+                                    key: UniqueKey(),
+                                    color: const Color(0xff282a29),
+                                    size: 30,
+                                  ),
                                 ),
                               )
                             ],
                           ),
                         ),
                       ),
-                    )
-                  ],
-                )
+                    );
+                  },
+                ),
               ),
             ),
           )
