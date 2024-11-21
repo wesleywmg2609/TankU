@@ -44,12 +44,9 @@ dependencies:
   flutter_cube: ^0.1.1
   provider: ^6.1.2
   flutter_slidable: ^3.1.1
-  easy_date_timeline: ^1.1.3
+  easy_date_timeline: ^2.0.3
   numberpicker: ^2.1.2
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
+  ionicons: ^0.2.2
 
 
 dev_dependencies:
@@ -90,12 +87,10 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: SFPro
+    - family: NotoSans
       fonts:
-        - asset: assets/fonts/SFPro-Regular.otf
-        - asset: assets/fonts/SFPro-Bold.otf
-          weight: 700
-        - asset: assets/fonts/SFPro-Italic.otf
+        - asset: assets/fonts/NotoSans-VariableFont_wdth,wght.ttf
+        - asset: assets/fonts/NotoSans-Italic-VariableFont_wdth,wght.ttf
           style: italic
   #
   # For details regarding fonts from package dependencies,

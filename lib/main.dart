@@ -60,9 +60,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     bool isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: isDarkMode ? Colors.grey.shade900 : Colors.grey.shade300,
+      statusBarColor: const Color(0xfff6f6f6),
       statusBarIconBrightness: isDarkMode ? Brightness.light : Brightness.dark,
-      systemNavigationBarColor: isDarkMode ? Colors.grey.shade900 : Colors.grey.shade300,
+      systemNavigationBarColor: const Color(0xffffffff),
       systemNavigationBarIconBrightness: isDarkMode ? Brightness.light : Brightness.dark,
     ));
   }

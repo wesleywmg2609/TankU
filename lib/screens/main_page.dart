@@ -1,16 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tanku/widgets/my_app_bar.dart';
-import 'package:tanku/widgets/my_box_shadow.dart';
-import 'package:tanku/widgets/my_drawer.dart';
+import 'package:tanku/screens/tank_list_page.dart%20copy.dart';
 import 'package:tanku/widgets/my_icon.dart';
 import 'package:tanku/widgets/my_nav_bar.dart';
 import 'package:tanku/screens/calendar_page.dart';
 import 'package:tanku/screens/3_page.dart';
 import 'package:tanku/screens/4_page.dart';
 import 'package:tanku/screens/add_tank_page.dart';
-import 'package:tanku/screens/home_page.dart';
-import 'package:tanku/screens/tank_list_page.dart.dart';
 
 class MainPage extends StatefulWidget {
   final User user;
@@ -22,12 +18,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final GlobalKey<TankListPageState> _tankListKey = GlobalKey();
-  final ValueNotifier<bool> _isDrawerOpen = ValueNotifier<bool>(false);
   int _selectedIndex = 0;
-  double _xOffset = 0;
-  double _yOffset = 0;
-  double _scaleFactor = 1;
   PageController _pageController = PageController();
 
   @override
@@ -48,25 +39,6 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
-  void _openDrawer() {
-    setState(() {
-      double screenHeight = MediaQuery.of(context).size.height;
-      _scaleFactor = 0.8;
-      _xOffset = 150;
-      _yOffset = (screenHeight - (screenHeight * _scaleFactor)) / 2;
-      _isDrawerOpen.value = true;
-    });
-  }
-
-  void _closeDrawer() {
-    setState(() {
-      _xOffset = 0;
-      _yOffset = 0;
-      _scaleFactor = 1;
-      _isDrawerOpen.value = false;
-    });
-  }
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -76,24 +48,20 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    MyBoxShadows shadows = MyBoxShadows();
 
     final List<Map<String, dynamic>> pageConfigs = [
-      {
-        'title': 'Home',
-        'trailing': null,
-        'onTrailingPressed': null,
-        'page': HomePage(user: widget.user),
-      },
       {
         'title': 'Tanks',
         'trailing': const MyIcon(icon: Icons.add),
         'onTrailingPressed': () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => AddTankPage(user: widget.user,)));
-                      },
-        'page': TankListPage(key: _tankListKey, user: widget.user),
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AddTankPage(
+                        user: widget.user,
+                      )));
+        },
+        'page': TankListPage2(user: widget.user),
       },
       {
         'title': 'Calendar',
@@ -116,65 +84,25 @@ class _MainPageState extends State<MainPage> {
     ];
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            MyDrawer(
-              selectedIndex: _selectedIndex,
-              onItemTapped: _onItemTapped,
-            ),
-            GestureDetector(
-              onTap: () => _isDrawerOpen.value ? _closeDrawer() : null,
-              child: ValueListenableBuilder<bool>(
-                valueListenable: _isDrawerOpen,
-                builder: (context, isDrawerOpen, child) {
-                  return AnimatedContainer(
-                    duration: const Duration(milliseconds: 275),
-                    transform: Matrix4.translationValues(_xOffset, _yOffset, 0)
-                      ..scale(_scaleFactor),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                      borderRadius: _isDrawerOpen.value
-                          ? BorderRadius.circular(12)
-                          : BorderRadius.circular(0),
-                      boxShadow: _isDrawerOpen.value
-                          ? [
-                              shadows.darkShadow(context),
-                              shadows.lightShadow(context),
-                            ]
-                          : [],
-                    ),
-                    child: Column(
-                      children: [
-                        MyAppBar(
-                          title: pageConfigs[_selectedIndex]['title'],
-                          leading: const MyIcon(icon: Icons.menu),
-                          onLeadingPressed: _openDrawer,
-                          isLeadingPressed: _isDrawerOpen.value,
-                          trailing: pageConfigs[_selectedIndex]['trailing'],
-                          onTrailingPressed: pageConfigs[_selectedIndex]['onTrailingPressed'],
-                        ),
-                        Expanded(
-                          child: PageView(
-                            controller: _pageController,
-                            onPageChanged: _onPageChanged,
-                            children: pageConfigs.map((config) => config['page'] as Widget).toList(),
-                          ),
-                        ),
-                        MyNavBar(
-                          selectedIndex: _selectedIndex,
-                          onItemTapped: _onItemTapped,
-                        ),
-                      ],
-                    ),
-                  );
-                },
+        backgroundColor: const Color(0xfff6f6f6),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  onPageChanged: _onPageChanged,
+                  children: pageConfigs
+                      .map((config) => config['page'] as Widget)
+                      .toList(),
+                ),
               ),
-            )
-          ],
-        ),
-      ),
-    );
+              MyNavBar2(
+                selectedIndex: _selectedIndex,
+                onItemTapped: _onItemTapped,
+              ),
+            ],
+          ),
+        ));
   }
 }

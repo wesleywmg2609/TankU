@@ -2,11 +2,7 @@ import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tanku/widgets/my_box_shadow.dart';
-import 'package:tanku/widgets/my_button.dart';
-import 'package:tanku/widgets/my_date_field.dart';
-import 'package:tanku/widgets/my_icon.dart';
-import 'package:tanku/widgets/my_text.dart';
+import 'package:ionicons/ionicons.dart';
 
 class CalendarPage extends StatefulWidget {
   final User user;
@@ -21,177 +17,260 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  MyBoxShadows shadows = MyBoxShadows();
-  final EasyInfiniteDateTimelineController _timelineController =
-      EasyInfiniteDateTimelineController();
-  final TextEditingController _dateController = TextEditingController();
   DateTime _focusDate = DateTime.now();
-  bool _isToday = true;
-  bool _isPlanning = true;
 
   DateTime get today {
     final now = DateTime.now();
     return DateTime(now.year, now.month, now.day);
   }
 
+  late DateTime startOfMonth;
+  late DateTime endOfMonth;
+
   @override
   void initState() {
     super.initState();
     _focusDate = today;
-    _dateController.text = DateFormat('dd/MM/yyyy').format(today);
-  }
-
-  void _updateDateField() {
-    _dateController.text = DateFormat('dd/MM/yyyy').format(_focusDate);
-    _isToday = _focusDate == DateTime(today.year, today.month, today.day);
-  }
-
-  void _onDateChange(DateTime selectedDate) {
-    setState(() {
-      _focusDate = selectedDate;
-      _updateDateField();
-      _timelineController.animateToDate(selectedDate);
-    });
-  }
-
-  Widget _buildActionButton(String label, VoidCallback onPressed, {bool isPressed = false}) {
-    return MyButton(
-      onPressed: onPressed,
-      resetAfterPress: false,
-      isPressed: isPressed,
-      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-      child: MyText(
-        text: label,
-        letterSpacing: 2.0,
-        isBold: true,
-      ),
-    );
+    startOfMonth = DateTime(today.year, today.month, 1);
+    endOfMonth = DateTime(today.year, today.month + 1, 0);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: const Color(0xfff6f6f6),
       body: SafeArea(
-        child: Column(
-          children: [
-            EasyInfiniteDateTimeLine(
-              controller: _timelineController,
-              firstDate: DateTime(_focusDate.year),
-              focusDate: _focusDate,
-              lastDate: DateTime(_focusDate.year, 12, 31),
-              onDateChange: _onDateChange,
-              showTimelineHeader: false,
-              timeLineProps: const EasyTimeLineProps(
-                hPadding: 0,
-                separatorPadding: 0,
-              ),
-              dayProps: const EasyDayProps(
-                width: 96,
-                height: 128,
-              ),
-              itemBuilder: (
-                BuildContext context,
-                DateTime date,
-                bool isSelected,
-                VoidCallback onTap,
-              ) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-                  child: MyButton(
-                    onPressed: onTap,
-                    resetAfterPress: false,
-                    isPressed: !isSelected,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+          child: Column(
+        children: [
+          Container(
+            // color: Colors.green,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              child: Container(
+                //color: Colors.orange,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        MyText(
-                          text: EasyDateFormatter.shortMonthName(date, "en_US")
-                              .toUpperCase(),
-                          letterSpacing: 2.0,
-                          size: 12,
+                        Text(
+                          'Calendar',
+                          style: TextStyle(
+                              fontFamily: 'NotoSans',
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xff282a29)),
                         ),
-                        const SizedBox(height: 5),
-                        MyText(
-                          text: date.day.toString(),
-                          letterSpacing: 2.0,
-                          isBold: true,
-                          size: 20,
+                        Text(
+                          'Good Morning!',
+                          style: TextStyle(
+                              fontFamily: 'NotoSans',
+                              fontSize: 20,
+                              color: Color(0xff282a29)),
                         ),
-                        const SizedBox(height: 5),
-                        MyText(
-                          text: EasyDateFormatter.shortDayName(date, "en_US")
-                              .toUpperCase(),
-                          letterSpacing: 2.0,
-                          size: 12,
-                        )
                       ],
                     ),
-                  ),
-                );
-              },
+                    GestureDetector(
+                      child: const Icon(
+                        Ionicons.ellipsis_horizontal_circle_outline,
+                        color: Color(0xff282a29),
+                        size: 40,
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: MyDateField(
-                      controller: _dateController,
-                      icon: const MyIcon(icon: Icons.calendar_month),
-                      initialDate: _focusDate,
-                      onDateSelected: _onDateChange,
-                      firstDate: DateTime(_focusDate.year),
-                      lastDate: DateTime(_focusDate.year, 12, 31),
+          ),
+          Container(
+            //color: Colors.lightGreen,
+            child: Container(
+              //color: Colors.orange,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            child: const Icon(Icons.arrow_back_ios_rounded,
+                                color: Color(0xff282a29)),
+                            onTap: () {
+                              setState(() {
+                                DateTime newDate = _focusDate
+                                    .subtract(const Duration(days: 30));
+                                if (newDate.isAfter(
+                                    today.subtract(const Duration(days: 93)))) {
+                                  _focusDate = newDate;
+                                  startOfMonth = DateTime(
+                                      _focusDate.year, _focusDate.month, 1);
+                                  endOfMonth = DateTime(
+                                      _focusDate.year, _focusDate.month + 1, 0);
+                                }
+                              });
+                            },
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                  DateFormat('MMMM d, yyyy').format(_focusDate),
+                                  style: const TextStyle(
+                                      fontFamily: 'NotoSans',
+                                      fontSize: 16,
+                                      //fontWeight: FontWeight.bold,
+                                      color: Color(0xff282a29))),
+                            ],
+                          ),
+                          GestureDetector(
+                            child: const Icon(Icons.arrow_forward_ios_rounded,
+                                color: Color(0xff282a29)),
+                            onTap: () {
+                              setState(() {
+                                DateTime newDate =
+                                    _focusDate.add(const Duration(days: 30));
+                                if (newDate.isBefore(
+                                    today.add(const Duration(days: 93)))) {
+                                  _focusDate = newDate;
+                                  startOfMonth = DateTime(
+                                      _focusDate.year, _focusDate.month, 1);
+                                  endOfMonth = DateTime(
+                                      _focusDate.year, _focusDate.month + 1, 0);
+                                }
+                              });
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  _buildActionButton('Today', () => _onDateChange(today), isPressed: !_isToday),
-                ],
+                    const SizedBox(height: 20),
+                    EasyDateTimeLinePicker.itemBuilder(
+                      firstDate: startOfMonth,
+                      lastDate: endOfMonth,
+                      focusedDate: _focusDate,
+                      itemExtent: 70.0,
+                      selectionMode: const SelectionMode.autoCenter(),
+                      headerOptions: const HeaderOptions(
+                        headerType: HeaderType.none,
+                      ),
+                      timelineOptions: const TimelineOptions(
+                          height: 80, padding: EdgeInsets.all(0)),
+                      daySeparatorPadding: 15,
+                      itemBuilder: (context, date, isSelected, isDisabled,
+                          isToday, onTap) {
+                        return GestureDetector(
+                          onTap: onTap,
+                          child: Container(
+                            height: 80,
+                            decoration: BoxDecoration(
+                                color: isSelected
+                                    ? const Color(0xff282a29)
+                                    : const Color(0xffffffff),
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                    EasyDateFormatter.shortDayName(
+                                        date, "en_US"),
+                                    style: TextStyle(
+                                        fontFamily: 'NotoSans',
+                                        fontSize: 14,
+                                        color: isSelected
+                                            ? const Color(0xffffffff)
+                                            : const Color(0xff282a29))),
+                                Text(date.day.toString(),
+                                    style: TextStyle(
+                                        fontFamily: 'NotoSans',
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                        color: isSelected
+                                            ? const Color(0xffffffff)
+                                            : const Color(0xff282a29)))
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      onDateChange: (date) {
+                        setState(() {
+                          _focusDate = date;
+                        });
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
-            if (_isToday)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              child: Row(
-                children: [
-                  Expanded(child: _buildActionButton('Plan', () {
-                    setState(() {
-                      if (!_isPlanning) {
-                        _isPlanning = !_isPlanning;
-                      }  
-                    });
-                  }, isPressed: _isPlanning)),
-                  const SizedBox(width: 10),
-                  Expanded(child: _buildActionButton('Schedule', () {
-                    setState(() {
-                      if (_isPlanning) {
-                        _isPlanning = !_isPlanning;
-                      }  
-                    });
-                  }, isPressed: !_isPlanning)),
-                ],
+          ),
+          Expanded(
+            child: Container(
+              //color: Colors.orange,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15, horizontal: 15),
+                      child: Container(
+                        height: 100,
+                        decoration: BoxDecoration(
+                            color: const Color(0xffffffff),
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            children: [
+                              const CircleAvatar(
+                                radius: 25,
+                                backgroundColor: Color(0xff282a29),
+                              ),
+                              const SizedBox(width: 20),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text('My Lovely Tank',
+                                        style: TextStyle(
+                                            fontFamily: 'NotoSans',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xff282a29))),
+                                    Text(
+                                        DateFormat('MMMM d, yyyy')
+                                            .format(_focusDate),
+                                        style: const TextStyle(
+                                            fontFamily: 'NotoSans',
+                                            fontSize: 14,
+                                            color: Color(0xff282a29))),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 20),
+                              GestureDetector(
+                                child: const Icon(
+                                  Icons.expand_more_rounded,
+                                  color: Color(0xff282a29),
+                                  size: 30,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ) else if (_focusDate.isAfter(today))
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              child: Row(
-                children: [
-                  const SizedBox(width: 10),
-                  Expanded(child: _buildActionButton('Schedule', () {
-                    setState(() {
-                      if (_isPlanning) {
-                        _isPlanning = !_isPlanning;
-                      }  
-                    });
-                  }, isPressed: !_isPlanning)),
-                ],
-              ),
-            )
-            ,
-          ],
-        ),
-      ),
+            ),
+          ),
+        ],
+      )),
     );
   }
 }

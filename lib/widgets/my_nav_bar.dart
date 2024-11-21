@@ -1,61 +1,175 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tanku/widgets/my_button.dart';
-import 'package:tanku/widgets/my_icon.dart';
-import 'package:tanku/widgets/my_overlay_icon.dart';
+import 'package:ionicons/ionicons.dart';
 
-class MyNavBar extends StatefulWidget {
+class MyNavBar2 extends StatefulWidget {
   final int selectedIndex;
   final Function(int) onItemTapped;
 
-  const MyNavBar({
+  const MyNavBar2({
     super.key,
     required this.selectedIndex,
     required this.onItemTapped,
   });
 
   @override
-  State<MyNavBar> createState() => _MyNavBarState();
+  State<MyNavBar2> createState() => _MyNavBar2State();
 }
 
-class _MyNavBarState extends State<MyNavBar> {
-
+class _MyNavBar2State extends State<MyNavBar2> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-      color: Theme.of(context).colorScheme.surface,
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      decoration: const BoxDecoration(
+          color: Color(0xffffffff),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(40), topRight: Radius.circular(40))),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          MyButton(
-            onPressed: () => widget.onItemTapped(0),
-            resetAfterPress: false,
-            isPressed: widget.selectedIndex == 0,
-            child: const MyIcon(icon: Icons.home)
+          Expanded(
+            child: GestureDetector(
+              onTap: () => widget.onItemTapped(0),
+              child: Container(
+                color: Colors.transparent,
+                child: Column(
+                  children: [
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder: (child, animation) {
+                        return ScaleTransition(scale: animation, child: child);
+                      },
+                      child: Icon(
+                        widget.selectedIndex == 0
+                            ? Ionicons.fish
+                            : Ionicons.fish_outline,
+                        key:
+                            ValueKey(widget.selectedIndex == 0), // Ensure rebuild
+                        color: const Color(0xff282a29),
+                        size: 30,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    const Text(
+                      'Tanks',
+                      style: TextStyle(
+                          fontFamily: 'NotoSans',
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff282a29)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
-          MyButton(
-            onPressed: () => widget.onItemTapped(1),
-            resetAfterPress: false,
-            isPressed: widget.selectedIndex == 1,
-            child: const MyOverlayIcon(icon: Icons.call_to_action, svgFilepath: 'assets/fish.svg', padding: 3)
+          Expanded(
+            child: GestureDetector(
+              onTap: () => widget.onItemTapped(1),
+              child: Container(
+                color: Colors.transparent,
+                child: Column(
+                  children: [
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder: (child, animation) {
+                        return ScaleTransition(scale: animation, child: child);
+                      },
+                      child: Icon(
+                        widget.selectedIndex == 1
+                            ? Ionicons.calendar_number
+                            : Ionicons.calendar_number_outline,
+                        key:
+                            ValueKey(widget.selectedIndex == 1), // Ensure rebuild
+                        color: const Color(0xff282a29),
+                        size: 30,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    const Text(
+                      'Calendar',
+                      style: TextStyle(
+                          fontFamily: 'NotoSans',
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff282a29)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
-          MyButton(
-            onPressed: () => widget.onItemTapped(2),
-            resetAfterPress: false,
-            isPressed: widget.selectedIndex == 2,
-            child: const MyIcon(icon: Icons.add_rounded)
+          Expanded(
+            child: GestureDetector(
+              onTap: () => widget.onItemTapped(2),
+              child: Container(
+                color: Colors.transparent,
+                child: Column(
+                  children: [
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder: (child, animation) {
+                        return ScaleTransition(scale: animation, child: child);
+                      },
+                      child: Icon(
+                        widget.selectedIndex == 2
+                            ? Ionicons.people
+                            : Ionicons.people_outline,
+                        key:
+                            ValueKey(widget.selectedIndex == 2), // Ensure rebuild
+                        color: const Color(0xff282a29),
+                        size: 30,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    const Text(
+                      'Community',
+                      style: TextStyle(
+                          fontFamily: 'NotoSans',
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff282a29)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
-          MyButton(
-            onPressed: () => widget.onItemTapped(3),
-            resetAfterPress: false,
-            isPressed: widget.selectedIndex == 3,
-            child: const MyIcon(icon: Icons.group)
-          ),
-          MyButton( 
-            onPressed: () => widget.onItemTapped(4),
-            resetAfterPress: false,
-            isPressed: widget.selectedIndex == 4,
-            child: const MyIcon(icon: Icons.settings)
+          Expanded(
+            child: GestureDetector(
+              onTap: () => widget.onItemTapped(3),
+              child: Container(
+                color: Colors.transparent,
+                child: Column(
+                  children: [
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder: (child, animation) {
+                        return ScaleTransition(scale: animation, child: child);
+                      },
+                      child: Icon(
+                        widget.selectedIndex == 3
+                            ? Ionicons.grid
+                            : Ionicons.grid_outline,
+                        key: ValueKey(widget.selectedIndex == 3),
+                        color: const Color(0xff282a29),
+                        size: 30,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    const Text(
+                      'More',
+                      style: TextStyle(
+                          fontFamily: 'NotoSans',
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff282a29)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
       ),
