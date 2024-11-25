@@ -16,7 +16,7 @@ import 'package:tanku/services/tank_service.dart';
 import 'package:tanku/helper/functions.dart';
 import 'package:tanku/models/tank.dart';
 import 'package:tanku/services/image_service.dart';
-import 'package:tanku/screens/quick_task_page.dart';
+import 'package:tanku/views/quick_task_page.dart';
 
 class AddTankPage extends StatefulWidget {
   final User user;

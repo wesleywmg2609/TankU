@@ -10,7 +10,7 @@ import 'package:tanku/widgets/my_svg_icon.dart';
 import 'package:tanku/widgets/my_text.dart';
 import 'package:tanku/widgets/my_text_field.dart';
 import 'package:tanku/helper/functions.dart';
-import 'package:tanku/screens/main_page.dart';
+import 'package:tanku/views/main_page.dart';
 
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;

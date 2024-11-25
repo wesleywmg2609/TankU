@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:tanku/widgets/my_button2.dart';
 
 class MyNavBar2 extends StatefulWidget {
   final int selectedIndex;
@@ -28,147 +29,40 @@ class _MyNavBar2State extends State<MyNavBar2> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Expanded(
-            child: GestureDetector(
-              onTap: () => widget.onItemTapped(0),
-              child: Container(
-                color: Colors.transparent,
-                child: Column(
-                  children: [
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 200),
-                      transitionBuilder: (child, animation) {
-                        return ScaleTransition(scale: animation, child: child);
-                      },
-                      child: Icon(
-                        widget.selectedIndex == 0
-                            ? Ionicons.fish
-                            : Ionicons.fish_outline,
-                        key:
-                            ValueKey(widget.selectedIndex == 0), // Ensure rebuild
-                        color: const Color(0xff282a29),
-                        size: 30,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    const Text(
-                      'Tanks',
-                      style: TextStyle(
-                          fontFamily: 'NotoSans',
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xff282a29)),
-                    ),
-                  ],
-                ),
+            child: MyButton2(
+              icon: Ionicons.fish_outline, 
+              iconPressed: Ionicons.fish,
+              labelText: 'Tanks',
+              isPressed: widget.selectedIndex == 0,
+              onTap: () => widget.onItemTapped(0)
               ),
-            ),
           ),
           Expanded(
-            child: GestureDetector(
-              onTap: () => widget.onItemTapped(1),
-              child: Container(
-                color: Colors.transparent,
-                child: Column(
-                  children: [
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 200),
-                      transitionBuilder: (child, animation) {
-                        return ScaleTransition(scale: animation, child: child);
-                      },
-                      child: Icon(
-                        widget.selectedIndex == 1
-                            ? Ionicons.calendar_number
-                            : Ionicons.calendar_number_outline,
-                        key:
-                            ValueKey(widget.selectedIndex == 1), // Ensure rebuild
-                        color: const Color(0xff282a29),
-                        size: 30,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    const Text(
-                      'Calendar',
-                      style: TextStyle(
-                          fontFamily: 'NotoSans',
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xff282a29)),
-                    ),
-                  ],
-                ),
+            child: MyButton2(
+              icon: Ionicons.calendar_number_outline, 
+              iconPressed: Ionicons.calendar_number,
+              labelText: 'Calendar',
+              isPressed: widget.selectedIndex == 1,
+              onTap: () => widget.onItemTapped(1)
               ),
-            ),
           ),
           Expanded(
-            child: GestureDetector(
-              onTap: () => widget.onItemTapped(2),
-              child: Container(
-                color: Colors.transparent,
-                child: Column(
-                  children: [
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 200),
-                      transitionBuilder: (child, animation) {
-                        return ScaleTransition(scale: animation, child: child);
-                      },
-                      child: Icon(
-                        widget.selectedIndex == 2
-                            ? Ionicons.people
-                            : Ionicons.people_outline,
-                        key:
-                            ValueKey(widget.selectedIndex == 2), // Ensure rebuild
-                        color: const Color(0xff282a29),
-                        size: 30,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    const Text(
-                      'Community',
-                      style: TextStyle(
-                          fontFamily: 'NotoSans',
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xff282a29)),
-                    ),
-                  ],
-                ),
+            child: MyButton2(
+              icon: Ionicons.people_outline, 
+              iconPressed: Ionicons.people,
+              labelText: 'Community',
+              isPressed: widget.selectedIndex == 2,
+              onTap: () => widget.onItemTapped(2)
               ),
-            ),
           ),
           Expanded(
-            child: GestureDetector(
-              onTap: () => widget.onItemTapped(3),
-              child: Container(
-                color: Colors.transparent,
-                child: Column(
-                  children: [
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 200),
-                      transitionBuilder: (child, animation) {
-                        return ScaleTransition(scale: animation, child: child);
-                      },
-                      child: Icon(
-                        widget.selectedIndex == 3
-                            ? Ionicons.grid
-                            : Ionicons.grid_outline,
-                        key: ValueKey(widget.selectedIndex == 3),
-                        color: const Color(0xff282a29),
-                        size: 30,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    const Text(
-                      'More',
-                      style: TextStyle(
-                          fontFamily: 'NotoSans',
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xff282a29)),
-                    ),
-                  ],
-                ),
+            child: MyButton2(
+              icon: Ionicons.grid_outline, 
+              iconPressed: Ionicons.grid,
+              labelText: 'More',
+              isPressed: widget.selectedIndex == 3,
+              onTap: () => widget.onItemTapped(3)
               ),
-            ),
           ),
         ],
       ),

@@ -8,7 +8,7 @@ import 'package:tanku/widgets/my_text.dart';
 import 'package:tanku/services/tank_service.dart';
 import 'package:tanku/helper/functions.dart';
 import 'package:tanku/models/tank.dart';
-import 'package:tanku/screens/edit_tank_page.dart';
+import 'package:tanku/views/edit_tank_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:tanku/widgets/my_cube.dart';
