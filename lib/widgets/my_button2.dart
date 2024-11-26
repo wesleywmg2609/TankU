@@ -40,9 +40,12 @@ class _MyButton2State extends State<MyButton2> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 300),
               transitionBuilder: (child, animation) {
-                return ScaleTransition(scale: animation, child: child);
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
               },
               child: Icon(
                 widget.iconPressed != null
