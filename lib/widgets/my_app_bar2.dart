@@ -8,6 +8,7 @@ class MyAppBar2 extends StatefulWidget {
   String? subtitle;
   VoidCallback onTap;
   bool? isBackAllowed;
+  //IconData leading
 
   MyAppBar2({
     super.key,
@@ -27,19 +28,24 @@ class _MyAppBar2State extends State<MyAppBar2> {
     return Container(
       //color: Colors.orange,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               children: [
-                if (widget.isBackAllowed!) ...[MyButton2(
-                      icon: Ionicons.chevron_back_outline,
+                if (widget.isBackAllowed!) ...[
+                  MyButton2(
+                      icon: Ionicons.chevron_back_circle_outline,
                       onTap: () {
-                        Navigator.pop(context);
-                      }),
-                      const SizedBox(width: 10)
-                    ],
+                        Future.delayed(const Duration(milliseconds: 300), () {
+                          Navigator.pop(context);
+                        });
+                      },
+                      size: 40,
+                      ),
+                  const SizedBox(width: 10)
+                ],
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

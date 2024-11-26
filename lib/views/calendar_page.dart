@@ -75,7 +75,7 @@ class _CalendarPageState extends State<CalendarPage> {
           Container(
             //color: Colors.green,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+              padding: const EdgeInsets.symmetric(vertical: 10),
               child: Column(
                 children: [
                   Padding(
@@ -189,7 +189,7 @@ class _CalendarPageState extends State<CalendarPage> {
             child: Container(
               //color: Colors.lightGreen,
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15),
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 child: ListView.builder(
                   itemCount: _tanks.length,
                   itemBuilder: (context, index) {

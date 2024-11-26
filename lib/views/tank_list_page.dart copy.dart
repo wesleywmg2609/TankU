@@ -7,7 +7,6 @@ import 'package:tanku/helper/functions.dart';
 import 'package:tanku/models/tank.dart';
 import 'package:tanku/views/add_tank_page.dart';
 import 'package:tanku/views/my_tank_info2.dart';
-import 'package:tanku/views/tank_info_page.dart';
 import 'package:tanku/services/tank_service.dart';
 import 'package:tanku/widgets/my_app_bar2.dart';
 
@@ -73,7 +72,7 @@ class TankListPage2State extends State<TankListPage2> {
             child: Container(
               //color: Colors.green,
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15),
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 child: ListView.builder(
                   itemCount: _tanks.length,
                   itemBuilder: (context, index) {
