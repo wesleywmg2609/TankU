@@ -27,20 +27,27 @@ class _TankInfoPage2State extends State<TankInfoPage2> {
           child: Column(
         children: [
           MyAppBar2(
-              title: widget.tank.name,
-              subtitle: 'Tank Info',
-              onTap: () {
-                
-              },
-              isBackAllowed: true,
-              ),
+            title: widget.tank.name,
+            subtitle: 'Tank Info',
+            onTap: () {},
+            isBackAllowed: true,
+          ),
           Expanded(
             child: Container(
               //color: Colors.green,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                child: Container()
-              ),
+              child: Column(children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  child: Container(
+                    // height: 100,
+                    width: double.infinity,
+                   color: Colors.orange,
+                   child: const Padding(
+                    padding: EdgeInsets.all(20)),
+                  ),
+                ),
+
+              ]),
             ),
           )
         ],
