@@ -58,6 +58,7 @@ class TankListPage2State extends State<TankListPage2> {
           MyAppBar2(
               title: 'Tanks',
               subtitle: 'Good Morning!',
+              icon: Ionicons.add_circle_outline,
               onTap: () {
                 Future.delayed(const Duration(milliseconds: 300), () {
                   Navigator.push(
@@ -72,12 +73,12 @@ class TankListPage2State extends State<TankListPage2> {
             child: Container(
               //color: Colors.green,
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 child: ListView.builder(
                   itemCount: _tanks.length,
                   itemBuilder: (context, index) {
                     var tank = _tanks[index];
-                    return _buildTankItem(tank!, key: ValueKey(tank.id));
+                    return _buildTankItem(tank!);
                   },
                 ),
               ),
@@ -88,9 +89,8 @@ class TankListPage2State extends State<TankListPage2> {
     );
   }
 
-  Widget _buildTankItem(Tank tank, {Key? key}) {
+  Widget _buildTankItem(Tank tank) {
     return Padding(
-      key: key,
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       child: GestureDetector(
         onTap: () {

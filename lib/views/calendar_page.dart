@@ -68,6 +68,7 @@ class _CalendarPageState extends State<CalendarPage> {
           MyAppBar2(
             title: 'Calendar',
             subtitle: 'Good Morning!',
+            icon: Ionicons.add_circle_outline,
             onTap: () {
               Future.delayed(const Duration(milliseconds: 300), () {});
             },
@@ -189,7 +190,7 @@ class _CalendarPageState extends State<CalendarPage> {
             child: Container(
               //color: Colors.lightGreen,
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 child: ListView.builder(
                   itemCount: _tanks.length,
                   itemBuilder: (context, index) {

@@ -6,14 +6,15 @@ import 'package:tanku/widgets/my_button2.dart';
 class MyAppBar2 extends StatefulWidget {
   String title;
   String? subtitle;
+  IconData icon;
   VoidCallback onTap;
   bool? isBackAllowed;
-  //IconData leading
 
   MyAppBar2({
     super.key,
     required this.title,
     this.subtitle,
+    required this.icon,
     required this.onTap,
     this.isBackAllowed = false,
   });
@@ -70,7 +71,7 @@ class _MyAppBar2State extends State<MyAppBar2> {
               ],
             ),
             MyButton2(
-                icon: Ionicons.add_circle_outline,
+                icon: widget.icon,
                 onTap: widget.onTap,
                 size: 40),
           ],
