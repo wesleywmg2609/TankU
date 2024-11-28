@@ -62,13 +62,17 @@ class _TankInfoPage2State extends State<TankInfoPage2> {
           MyAppBar2(
             title: widget.tank.name,
             subtitle: 'Tank Info',
+<<<<<<< HEAD:lib/views/my_tank_info2.dart
             icon: Ionicons.add_circle_outline,
+=======
+>>>>>>> e0082d16d33bad849b2b5ca9082f43671b7ed2ed:lib/views/tank_info_page2.dart
             onTap: () {},
             isBackAllowed: true,
           ),
           Expanded(
             child: Container(
               //color: Colors.green,
+<<<<<<< HEAD:lib/views/my_tank_info2.dart
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: Column(
@@ -148,6 +152,21 @@ class _TankInfoPage2State extends State<TankInfoPage2> {
                   ],
                 ),
               ),
+=======
+              child: Column(children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  child: Container(
+                    // height: 100,
+                    width: double.infinity,
+                   color: Colors.orange,
+                   child: const Padding(
+                    padding: EdgeInsets.all(20)),
+                  ),
+                ),
+
+              ]),
+>>>>>>> e0082d16d33bad849b2b5ca9082f43671b7ed2ed:lib/views/tank_info_page2.dart
             ),
           ),
           MyNavBar2(buttons: [

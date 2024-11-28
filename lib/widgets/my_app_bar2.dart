@@ -27,7 +27,7 @@ class _MyAppBar2State extends State<MyAppBar2> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      //color: Colors.orange,
+      color: Colors.orange,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
         child: Row(
