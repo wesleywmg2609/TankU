@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tanku/helper/functions.dart';
 import 'package:tanku/widgets/my_theme.dart';
 
 class MyDateField extends StatefulWidget {
   final TextEditingController controller;
-  final Widget icon;
+  final IconData icon;
   final DateTime initialDate;
   final DateTime firstDate;
   final DateTime lastDate;
@@ -40,11 +39,16 @@ class _MyDateFieldState extends State<MyDateField> {
       context: context,
       initialDate: _selectedDate,
       firstDate: widget.firstDate,
-      lastDate:  widget.lastDate,
+      lastDate: widget.lastDate,
       builder: (BuildContext context, Widget? child) {
+        final ThemeData modifiedLightMode = lightMode.copyWith(
+          colorScheme: lightMode.colorScheme.copyWith(
+            primary: Theme.of(context).colorScheme.onSurface,
+          ),
+        );
         return Theme(
           data: Theme.of(context).brightness == Brightness.light
-              ? lightMode
+              ? modifiedLightMode
               : darkMode,
           child: child ?? Container(),
         );
@@ -54,8 +58,7 @@ class _MyDateFieldState extends State<MyDateField> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
-        widget.controller.text =
-            DateFormat('dd/MM/yyyy').format(_selectedDate);
+        widget.controller.text = DateFormat('dd/MM/yyyy').format(_selectedDate);
         if (widget.onDateSelected != null) {
           widget.onDateSelected!(_selectedDate);
         }
@@ -65,33 +68,32 @@ class _MyDateFieldState extends State<MyDateField> {
 
   @override
   Widget build(BuildContext context) {
-
-    return Container(
-      decoration: reusableBoxDecoration(context: context),
-      child: TextSelectionTheme(
-        data: TextSelectionThemeData(
-          cursorColor: Theme.of(context).colorScheme.onSurface,
-          selectionColor: Theme.of(context).colorScheme.primary,
-          selectionHandleColor: Theme.of(context).colorScheme.onSurface,
+    return TextField(
+        controller: widget.controller,
+        onTap: () => _selectDate(context),
+        readOnly: true,
+        style: TextStyle(
+          fontFamily: 'NotoSans',
+          fontSize: 12,
+          color: Theme.of(context).colorScheme.onSurface,
         ),
-        child: TextField(
-            controller: widget.controller,
-            onTap: () => _selectDate(context),
-            readOnly: true,
-            style: const TextStyle(
-              letterSpacing: 2.0,
-              fontFamily: 'SFPro',
-              fontSize: 12,
+        decoration: InputDecoration(
+          prefixIcon:
+              Icon(widget.icon, color: Theme.of(context).colorScheme.onSurface),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.onSurface,
+              width: 2.5,
             ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              prefixIcon: widget.icon,
-              floatingLabelBehavior: FloatingLabelBehavior.never,
-              contentPadding: const EdgeInsets.only(top: 15),
-            )),
-      ),
-    );
+          ),
+          contentPadding: const EdgeInsets.all(10),
+          fillColor: Theme.of(context).colorScheme.primary,
+          filled: true,
+        ));
   }
 }

@@ -5,13 +5,10 @@ ThemeData lightMode = ThemeData(
   useMaterial3: true,
   visualDensity: VisualDensity.adaptivePlatformDensity,
   colorScheme: const ColorScheme.light(
-    surface: Color.fromARGB(255, 224, 224, 224),
-    primary: Color.fromARGB(255, 66, 66, 66),
-    secondary: Color.fromARGB(255, 97, 97, 97),
-    onSurface: Color.fromARGB(255, 66, 66, 66),
+    surface: Color(0xfff6f6f6),
+    primary: Color(0xffffffff),
+    onSurface: Color(0xff282a29),
   ),
-  shadowColor: const Color.fromARGB(255, 117, 117, 117),
-  highlightColor: const Color.fromARGB(255, 255, 255, 255),
 );
 
 ThemeData darkMode = ThemeData(
@@ -21,9 +18,6 @@ ThemeData darkMode = ThemeData(
   colorScheme: const ColorScheme.dark(
     surface: Color.fromARGB(255, 32, 32, 32),
     primary:  Color.fromARGB(255, 224, 224, 224),
-    secondary: Color.fromARGB(255, 224, 224, 224),
     onSurface: Color.fromARGB(255, 224, 224, 224), 
   ),
-  shadowColor: const Color.fromARGB(255, 0, 0, 0),
-  highlightColor: const Color.fromARGB(255, 44, 44, 44),
 );

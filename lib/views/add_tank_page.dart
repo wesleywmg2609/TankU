@@ -1,15 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:tanku/models/task.dart';
 import 'package:tanku/services/task_service.dart';
-import 'package:tanku/widgets/my_app_bar.dart';
-import 'package:tanku/widgets/my_button.dart';
+import 'package:tanku/widgets/my_app_bar2.dart';
+import 'package:tanku/widgets/my_button2.dart';
 import 'package:tanku/widgets/my_date_field.dart';
 import 'package:tanku/widgets/my_dropdown.dart';
 import 'package:tanku/widgets/my_icon.dart';
-import 'package:tanku/widgets/my_image_picker.dart';
-import 'package:tanku/widgets/my_overlay_icon.dart';
 import 'package:tanku/widgets/my_text.dart';
 import 'package:tanku/widgets/my_text_field.dart';
 import 'package:tanku/services/tank_service.dart';
@@ -82,7 +81,8 @@ class _AddTankPageState extends State<AddTankPage> {
     List<Task>? selectedTasks = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => QuickTaskSelectionPage(user: widget.user,
+        builder: (context) => QuickTaskSelectionPage(
+          user: widget.user,
           onSelectionComplete: (tasks) {
             Navigator.pop(context, tasks);
           },
@@ -148,20 +148,6 @@ class _AddTankPageState extends State<AddTankPage> {
     });
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required Widget icon,
-    required String labelText,
-    bool isNumeric = false,
-  }) {
-    return MyTextField(
-      controller: controller,
-      icon: icon,
-      labelText: labelText,
-      isNumeric: isNumeric,
-    );
-  }
-
   Widget _buildVolumeDisplay() {
     return ValueListenableBuilder<int>(
       valueListenable: _volumeNotifier,
@@ -174,12 +160,24 @@ class _AddTankPageState extends State<AddTankPage> {
         String depthDisplay = depthText.isEmpty ? 'D' : depthText;
         String heightDisplay = heightText.isEmpty ? 'H' : heightText;
 
-        return MyText(
-          text:
-              'Volume: $widthDisplay x $depthDisplay x $heightDisplay = ${volume}cm³',
-          letterSpacing: 2.0,
-          isBold: true,
-          size: 14,
+        return RichText(
+          text: TextSpan(
+            style: const TextStyle(
+              fontFamily: 'NotoSans',
+              fontSize: 14,
+              color: Color(0xff282a29),
+            ),
+            children: [
+              TextSpan(
+                  text:
+                      'Volume: $widthDisplay x $depthDisplay x $heightDisplay = '),
+              TextSpan(
+                text: '${volume}cm³',
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold), // Bold style
+              ),
+            ],
+          ),
         );
       },
     );
@@ -193,7 +191,7 @@ class _AddTankPageState extends State<AddTankPage> {
           Expanded(
             child: MyTextField(
               controller: _equipmentControllers[index],
-              icon: const MyIcon(icon: Icons.build),
+              icon: Icons.build,
               labelText: 'Equipment Name',
             ),
           ),
@@ -217,43 +215,34 @@ class _AddTankPageState extends State<AddTankPage> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: const Color(0xfff6f6f6),
         body: SafeArea(
           child: Column(
             children: [
-              MyAppBar(
+              MyAppBar2(
                 title: 'Add Tank',
-                onLeadingPressed: () {
-                  if (_imageUrl != null && _imageUrl!.isNotEmpty) {
-                    _imageService.deleteImage(_imageUrl!);
-                  }
-                  Navigator.pop(context);
-                },
-                trailing: const MyIcon(icon: Icons.check),
-                onTrailingPressed: _addTank,
+                subtitle: 'Add new tank',
+                icon: Ionicons.arrow_forward_circle_outline,
+                onTap: _addTank,
+                isBackAllowed: true,
               ),
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        MyImagePicker(),
-                        _buildTextField(
-                          controller: _controllers['name']!,
-                          icon: const MyOverlayIcon(
-                            icon: Icons.call_to_action,
-                            svgFilepath: 'assets/fish.svg',
-                            padding: 3,
-                          ),
-                          labelText: 'Tank Name',
-                        ),
-                        const SizedBox(height: 15),
+                        //MyImagePicker(),
+                        MyTextField(
+                            controller: _controllers['name']!,
+                            icon: Ionicons.fish,
+                            labelText: 'Tank Name'),
+                        const SizedBox(height: 10),
                         MyDropdown(
-                          icon: const MyIcon(icon: Icons.water),
+                          icon: Ionicons.water,
                           labelText: 'Water Type',
                           selectedValue: _selectedWaterType,
                           items: const ['Freshwater', 'Saltwater', 'Brackish'],
@@ -263,43 +252,37 @@ class _AddTankPageState extends State<AddTankPage> {
                             });
                           },
                         ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 10),
                         _buildVolumeDisplay(),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 10),
                         Row(
                           children: [
                             Expanded(
-                              child: _buildTextField(
-                                controller: _controllers['width']!,
-                                icon: const MyIcon(icon: Icons.aspect_ratio),
-                                labelText: 'Width',
-                                isNumeric: true,
-                              ),
+                              child: MyTextField(
+                                  controller: _controllers['width']!,
+                                  icon: Ionicons.resize,
+                                  labelText: 'Width'),
                             ),
                             const SizedBox(width: 10),
                             Expanded(
-                              child: _buildTextField(
-                                controller: _controllers['depth']!,
-                                icon: const MyIcon(icon: Icons.aspect_ratio),
-                                labelText: 'Depth',
-                                isNumeric: true,
-                              ),
+                              child: MyTextField(
+                                  controller: _controllers['depth']!,
+                                  icon: Ionicons.resize,
+                                  labelText: 'Depth'),
                             ),
                             const SizedBox(width: 10),
                             Expanded(
-                              child: _buildTextField(
-                                controller: _controllers['height']!,
-                                icon: const MyIcon(icon: Icons.aspect_ratio),
-                                labelText: 'Height',
-                                isNumeric: true,
-                              ),
+                              child: MyTextField(
+                                  controller: _controllers['height']!,
+                                  icon: Ionicons.resize,
+                                  labelText: 'Height'),
                             ),
                           ],
                         ),
                         const SizedBox(height: 15),
                         MyDateField(
                           controller: _controllers['setupAt']!,
-                          icon: const MyIcon(icon: Icons.calendar_today),
+                          icon: Ionicons.calendar_number,
                           initialDate: DateTime.now(),
                           firstDate: DateTime(2000),
                           lastDate: DateTime.now(),
@@ -319,10 +302,10 @@ class _AddTankPageState extends State<AddTankPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            MyButton(
-                              onPressed: _addEquipmentField,
-                              child: const MyIcon(icon: Icons.add),
-                            )
+                            MyButton2(
+                                icon: Ionicons.add_circle_outline,
+                                onTap: _addEquipmentField,
+                                size: 40)
                           ],
                         ),
                       ],

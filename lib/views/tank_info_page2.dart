@@ -6,6 +6,7 @@ import 'package:tanku/helper/functions.dart';
 import 'package:tanku/models/tank.dart';
 import 'package:tanku/widgets/my_app_bar2.dart';
 import 'package:tanku/widgets/my_button2.dart';
+import 'package:tanku/widgets/my_cube.dart';
 import 'package:tanku/widgets/my_nav_bar.dart';
 
 // ignore: must_be_immutable
@@ -65,6 +66,7 @@ class _TankInfoPage2State extends State<TankInfoPage2> {
             icon: Ionicons.add_circle_outline,
             onTap: () {},
             isBackAllowed: true,
+            previousNavBarColor: const Color(0xffffffff),
           ),
           Expanded(
             child: Container(
@@ -142,7 +144,11 @@ class _TankInfoPage2State extends State<TankInfoPage2> {
                         child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 20, horizontal: 20),
-                            child: Container()),
+                            child: MyCube(
+                  width: widget.tank.width ?? 0,
+                  depth: widget.tank.depth ?? 0,
+                  height: widget.tank.height ?? 0,
+                ),),
                       ),
                     )
                   ],

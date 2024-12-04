@@ -17,7 +17,7 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
     _updateSystemUIColors();
-    Future.delayed(Duration(seconds: 3), _routeUser);
+    Future.delayed(const Duration(seconds: 3), _routeUser);
   }
 
   void _updateSystemUIColors() {
@@ -31,10 +31,7 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   void dispose() {
-    // Reset to default when leaving this page
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Color(0xfff6f6f6),
-      statusBarIconBrightness: Brightness.dark,
       systemNavigationBarColor: Color(0xffffffff),
       systemNavigationBarIconBrightness: Brightness.dark,
     ));

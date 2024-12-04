@@ -9,7 +9,6 @@ import 'package:tanku/widgets/my_dropdown.dart';
 import 'package:tanku/widgets/my_icon.dart';
 import 'package:tanku/widgets/my_image_picker.dart';
 import 'package:tanku/widgets/my_loading_indicator.dart';
-import 'package:tanku/widgets/my_overlay_icon.dart';
 import 'package:tanku/widgets/my_text.dart';
 import 'package:tanku/widgets/my_text_field.dart';
 import 'package:tanku/services/tank_service.dart';
@@ -177,7 +176,7 @@ class EditTankPageState extends State<EditTankPage> {
 
   Widget _buildTextField({
     required TextEditingController controller,
-    required Widget icon,
+    required IconData icon,
     required String labelText,
     bool isNumeric = false,
   }) {
@@ -220,7 +219,7 @@ class EditTankPageState extends State<EditTankPage> {
           Expanded(
             child: MyTextField(
               controller: _equipmentControllers[index],
-              icon: const MyIcon(icon: Icons.build),
+              icon: Icons.build,
               labelText: 'Equipment Name',
             ),
           ),
@@ -276,16 +275,12 @@ class EditTankPageState extends State<EditTankPage> {
                             imageUrl: _tank!.imageUrl!, tankRef: _tank!.id),
                         _buildTextField(
                           controller: _controllers['name']!,
-                          icon: const MyOverlayIcon(
-                            icon: Icons.call_to_action,
-                            svgFilepath: 'assets/fish.svg',
-                            padding: 3,
-                          ),
+                          icon: Icons.call_to_action,
                           labelText: 'Tank Name',
                         ),
                         const SizedBox(height: 15),
                         MyDropdown(
-                          icon: const MyIcon(icon: Icons.water),
+                          icon: Icons.water,
                           labelText: 'Water Type',
                           selectedValue: _selectedWaterType,
                           items: const [
@@ -307,7 +302,7 @@ class EditTankPageState extends State<EditTankPage> {
                             Expanded(
                                 child: _buildTextField(
                               controller: _controllers['width']!,
-                              icon: const MyIcon(icon: Icons.aspect_ratio),
+                              icon: Icons.aspect_ratio,
                               labelText: 'Width',
                               isNumeric: true,
                             )),
@@ -315,7 +310,7 @@ class EditTankPageState extends State<EditTankPage> {
                             Expanded(
                               child: _buildTextField(
                                 controller: _controllers['depth']!,
-                                icon: const MyIcon(icon: Icons.aspect_ratio),
+                                icon: Icons.aspect_ratio,
                                 labelText: 'Depth',
                                 isNumeric: true,
                               ),
@@ -324,7 +319,7 @@ class EditTankPageState extends State<EditTankPage> {
                             Expanded(
                               child: _buildTextField(
                                 controller: _controllers['height']!,
-                                icon: const MyIcon(icon: Icons.aspect_ratio),
+                                icon: Icons.aspect_ratio,
                                 labelText: 'Height',
                                 isNumeric: true,
                               ),
@@ -334,7 +329,7 @@ class EditTankPageState extends State<EditTankPage> {
                         const SizedBox(height: 15),
                         MyDateField(
                           controller: _controllers['setupAt']!,
-                          icon: const MyIcon(icon: Icons.calendar_today),
+                          icon: Icons.calendar_today,
                           initialDate: _initialDate!,
                           firstDate: DateTime(2000),
                           lastDate: DateTime.now(),

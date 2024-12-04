@@ -5,7 +5,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:tanku/helper/functions.dart';
 import 'package:tanku/models/tank.dart';
-import 'package:tanku/views/add_tank_page.dart';
+import 'package:tanku/views/add_tank_page2.dart';
 import 'package:tanku/views/tank_info_page2.dart';
 import 'package:tanku/services/tank_service.dart';
 import 'package:tanku/widgets/my_app_bar2.dart';
@@ -64,7 +64,7 @@ class TankListPage2State extends State<TankListPage2> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AddTankPage(user: widget.user),
+                      builder: (context) => AddTankPage2(user: widget.user),
                     ),
                   );
                 });

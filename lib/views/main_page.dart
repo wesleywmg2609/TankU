@@ -1,14 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:tanku/views/tank_list_page.dart%20copy.dart';
+import 'package:tanku/views/tank_list_page.dart';
 import 'package:tanku/widgets/my_button2.dart';
-import 'package:tanku/widgets/my_icon.dart';
 import 'package:tanku/widgets/my_nav_bar.dart';
 import 'package:tanku/views/calendar_page.dart';
 import 'package:tanku/views/3_page.dart';
 import 'package:tanku/views/4_page.dart';
-import 'package:tanku/views/add_tank_page.dart';
 
 class MainPage extends StatefulWidget {
   final User user;
@@ -26,6 +24,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    
     _pageController = PageController(initialPage: _selectedIndex);
   }
 
@@ -52,34 +51,15 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> pageConfigs = [
       {
-        'title': 'Tanks',
-        'trailing': const MyIcon(icon: Icons.add),
-        'onTrailingPressed': () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AddTankPage(
-                        user: widget.user,
-                      )));
-        },
         'page': TankListPage2(user: widget.user),
       },
       {
-        'title': 'Calendar',
-        'trailing': null,
-        'onTrailingPressed': null,
         'page': CalendarPage(user: widget.user),
       },
       {
-        'title': 'Page 3',
-        'trailing': null,
-        'onTrailingPressed': null,
         'page': Page3(user: widget.user),
       },
       {
-        'title': 'Page 4',
-        'trailing': null,
-        'onTrailingPressed': null,
         'page': Page4(user: widget.user),
       },
     ];
@@ -105,7 +85,7 @@ class _MainPageState extends State<MainPage> {
                       iconPressed: Ionicons.fish,
                       labelText: 'Tanks',
                       isPressed: _selectedIndex == 0,
-                      onTap: () => _onItemTapped(0)),
+                      onTap: () => _onItemTapped(0),),
                   MyButton2(
                       icon: Ionicons.calendar_number_outline,
                       iconPressed: Ionicons.calendar_number,

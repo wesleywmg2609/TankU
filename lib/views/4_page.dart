@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:tanku/auth/auth.dart';
 
 // ignore: must_be_immutable
 class Page4 extends StatefulWidget {
@@ -54,6 +55,7 @@ class _Page4State extends State<Page4> {
                       ],
                     ),
                     GestureDetector(
+                      onTap: () => signOut(context),
                       child: const Icon(
                         Ionicons.add_circle_outline,
                         color: Color(0xff282a29),

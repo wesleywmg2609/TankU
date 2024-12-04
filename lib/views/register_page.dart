@@ -5,7 +5,6 @@ import 'package:tanku/auth/auth.dart';
 import 'package:tanku/widgets/my_button.dart';
 import 'package:tanku/widgets/my_confetti.dart';
 import 'package:tanku/widgets/my_hyperlink.dart';
-import 'package:tanku/widgets/my_icon.dart';
 import 'package:tanku/widgets/my_svg_icon.dart';
 import 'package:tanku/widgets/my_text.dart';
 import 'package:tanku/widgets/my_text_field.dart';
@@ -121,19 +120,19 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         MyTextField(
                           controller: _emailController, 
-                          icon: const MyIcon(icon: Icons.mail), 
+                          icon: Icons.mail, 
                           labelText: 'Email',
                           ),
                         const SizedBox(height: 15),
                         MyTextField( 
                             controller: _passwordController, 
-                            icon: const MyIcon(icon: Icons.key), labelText: 'Password', 
+                            icon: Icons.key, labelText: 'Password', 
                             isPassword: true,
                           ),
                         const SizedBox(height: 15),
                         MyTextField(
                           controller: _confirmPwController, 
-                          icon: const MyIcon(icon: Icons.key),
+                          icon: Icons.key,
                           labelText: 'Confirm Password', 
                           isPassword:  true,
                         ),

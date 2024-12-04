@@ -8,6 +8,7 @@ class MyButton2 extends StatefulWidget {
   bool isPressed;
   VoidCallback onTap;
   double? size;
+  Color? color;
 
   MyButton2({
     super.key,
@@ -17,6 +18,7 @@ class MyButton2 extends StatefulWidget {
     this.isPressed = false,
     required this.onTap,
     this.size = 30,
+    this.color,
   });
 
   @override
@@ -52,7 +54,7 @@ class _MyButton2State extends State<MyButton2> {
                     ? (widget.isPressed ? widget.iconPressed : widget.icon)
                     : widget.icon,
                 key: ValueKey(widget.isPressed),
-                color: const Color(0xff282a29),
+                color: widget.color ?? Theme.of(context).colorScheme.onSurface,
                 size: widget.size,
               ),
             ),
@@ -60,11 +62,11 @@ class _MyButton2State extends State<MyButton2> {
               const SizedBox(height: 2),
               Text(
                 widget.labelText!,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'NotoSans',
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xff282a29),
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ]
